@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source:  /
+  - source: /
     destination: /home/ec2-user/jenkins  # EC2 내부 배포 할 위치
     overwrite: yes
 
