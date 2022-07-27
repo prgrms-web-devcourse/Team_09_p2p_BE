@@ -1,7 +1,9 @@
 package com.prgrms.p2p.domain.course.entity;
 
+import com.prgrms.p2p.domain.bookmark.entity.Bookmark;
 import com.prgrms.p2p.domain.comment.entity.Comment;
 import com.prgrms.p2p.domain.common.BaseEntity;
+import com.prgrms.p2p.domain.like.entity.Like;
 import com.prgrms.p2p.domain.user.entity.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +58,12 @@ public class Course extends BaseEntity {
 
   @OneToMany(mappedBy = "courses", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments = new ArrayList<>();
+
+  @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Bookmark> bookmarks = new ArrayList<>();
+
+  @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Like> likes = new ArrayList<>();
 
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
