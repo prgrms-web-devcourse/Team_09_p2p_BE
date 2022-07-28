@@ -47,20 +47,20 @@ public class Place extends BaseEntity {
   private Address address;
 
   @Column(name = "latitude")
-  private Double latitude;
+  private String latitude;
 
   @Column(name = "longitude")
-  private Double longitude;
+  private String longitude;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "category")
   private Category category;
 
   @Embedded
-  @Column(name = "phoneNumber")
+  @Column(name = "phone_number")
   private PhoneNumber phoneNumber;
 
-  @Column(name = "imageUrl")
+  @Column(name = "image_url")
   private String imageUrl;
 
   @OneToMany(mappedBy = "place")
@@ -78,8 +78,8 @@ public class Place extends BaseEntity {
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
-  public Place(Long kakaoMapId, String name, Address address, Double latitude,
-      Double longitude, Category category, PhoneNumber phoneNumber, String imageUrl) {
+  public Place(Long kakaoMapId, String name, Address address, String latitude,
+      String longitude, Category category, PhoneNumber phoneNumber, String imageUrl) {
     this.kakaoMapId = kakaoMapId;
     this.name = name;
     this.address = address;
@@ -128,11 +128,11 @@ public class Place extends BaseEntity {
     this.address = address;
   }
 
-  private void setLatitude(Double latitude) {
+  private void setLatitude(String latitude) {
     this.latitude = latitude;
   }
 
-  private void setLongitude(Double longitude) {
+  private void setLongitude(String longitude) {
     this.longitude = longitude;
   }
 
