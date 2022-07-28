@@ -1,16 +1,11 @@
 {
-  "LABEL": {
-    "name": "title needs formatting",
-    "color": "EEEEEE"
-  },
   "CHECKS": {
     "prefixes": ["fix: ", "feat: ", "docs: "],
     "regexp": "*",
-    "ignoreLabels" : ["dont-check-PRs-with-this-label", "meta"]
+    "ignoreLabels" : ["dont-check-PR"]
   },
   "MESSAGES": {
     "success": "All OK",
     "failure": "Failing CI test",
-    "notice": ""
   }
 }
