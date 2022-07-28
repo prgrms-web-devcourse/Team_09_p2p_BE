@@ -28,8 +28,8 @@ public class PlaceBookmark extends Bookmark {
   @JoinColumn(name = "place_id")
   private Place place;
 
-  public PlaceBookmark(String comment, Long userId, Place place) {
-    super(comment, userId);
+  public PlaceBookmark(Long userId, Place place) {
+    super(userId);
     this.addPlace(place);
   }
 

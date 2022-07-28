@@ -28,8 +28,8 @@ public class CourseBookmark extends Bookmark {
   @JoinColumn(name = "course_id")
   private Course course;
 
-  public CourseBookmark(String comment, Long userId, Course course) {
-    super(comment, userId);
+  public CourseBookmark(Long userId, Course course) {
+    super(userId);
     this.addCourse(course);
   }
 

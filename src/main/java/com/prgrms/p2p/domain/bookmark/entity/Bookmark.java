@@ -21,7 +21,7 @@ public abstract class Bookmark extends BaseEntity {
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
-  public Bookmark(String comment, Long userId) {
+  public Bookmark(Long userId) {
     this.userId = userId;
   }
 
