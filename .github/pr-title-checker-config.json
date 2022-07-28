@@ -5,7 +5,7 @@
   },
   "CHECKS": {
     "prefixes": ["fix: ", "feat: ", "docs: "],
-    "regexp": "*",
+    "regexp": "\\[P2P-",
     "ignoreLabels" : ["dont-check-PR"]
   },
   "MESSAGES": {
