@@ -7,14 +7,31 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-// TODO: 2022/07/27 kakao에서 넘어오는 형식 맞춰서 수정 필요
 @Embeddable
 @Access(value = AccessType.FIELD)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class PhoneNumber {
 
-  private Integer number1;
-  private Integer number2;
-  private Integer number3;
+  private final String PHONE_REGX = "^\\d{3}-\\d{3,4}-\\d{4}$";
+  private String number;
+
+  public PhoneNumber(String number) {
+    validationPhone(number);
+    this.number = number;
+  }
+
+  public static PhoneNumber of(String number) {
+    return new PhoneNumber(number);
+  }
+
+  public String getNumber() {
+    return number;
+  }
+
+  public void validationPhone(String number) {
+    if (number != null || !number.matches(PHONE_REGX)) {
+      throw new IllegalArgumentException();
+    }
+  }
 }
