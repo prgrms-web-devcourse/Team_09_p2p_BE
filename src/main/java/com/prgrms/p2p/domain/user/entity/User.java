@@ -36,22 +36,27 @@ public class User extends BaseEntity {
   @Column(name = "id")
   private Long id;
 
+  @Column(name = "email")
   private String email;
 
+  @Column(name = "password")
   private String password;
 
+  @Column(name = "nickname")
   private String nickname;
 
+  @Column(name = "birth")
   private LocalDate birth;
 
   @Enumerated(EnumType.STRING)
+  @Column(name = "sex")
   private Sex sex;
 
+  @Column(name = "profile_url")
   private String profileUrl;
 
-  private LocalDateTime deletedAt;
-
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL ,orphanRemoval = true)
+  @Column(name = "courses")
   private List<Course> courses = new ArrayList<>();
 
   @Column(name = "is_deleted")
