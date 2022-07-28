@@ -1,11 +1,11 @@
 {
   "CHECKS": {
     "prefixes": ["fix: ", "feat: ", "docs: "],
-    "regexp": "*",
+    "regexp": "/^P2P-*",
     "ignoreLabels" : ["dont-check-PR"]
   },
   "MESSAGES": {
     "success": "All OK",
-    "failure": "Failing CI test",
+    "failure": "Failing CI test"
   }
 }
