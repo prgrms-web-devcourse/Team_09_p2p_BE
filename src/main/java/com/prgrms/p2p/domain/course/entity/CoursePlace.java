@@ -37,7 +37,7 @@ public class CoursePlace extends BaseEntity {
   @Column(name = "description")
   private String description;
 
-  @Column(name = "imageUrl")
+  @Column(name = "image_url")
   private String imageUrl;
 
   @Column(name = "recommended")
