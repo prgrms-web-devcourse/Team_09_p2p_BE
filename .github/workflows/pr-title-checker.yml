@@ -12,6 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: dylanvann/check-pull-request-title@v1
+      - uses: dylanvann/check-pull-request-title@v0.1.14
         with:
           pattern: '^P2P-\d* - '
