@@ -2,15 +2,13 @@ package com.prgrms.p2p.domain.user.entity;
 
 import static org.apache.logging.log4j.util.Strings.isBlank;
 
-import com.prgrms.p2p.domain.comment.entity.Comment;
 import com.prgrms.p2p.domain.common.BaseEntity;
 import com.prgrms.p2p.domain.course.entity.Course;
-import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.user.util.PasswordEncrypter;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,9 +23,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Where(clause = "is_deleted = false")
 @SQLDelete(sql = "UPDATE room SET is_deleted = true WHERE id = ?")
 @Getter
@@ -96,6 +95,14 @@ public class User extends BaseEntity {
 
   public void changeSex(Sex Sex) {
     setSex(sex);
+  }
+
+  public Optional<String> getProfileUrl() {
+    if(this.profileUrl == null) {
+      return Optional.empty();
+    } else {
+      return Optional.of(this.profileUrl);
+    }
   }
 
   private void checkBlank(String target) {
