@@ -14,8 +14,8 @@ public class CreatePlaceRequest {
 
   private String kakaoMapId;
   private String name;
-  private String address1;
-  private String address2;
+  private String addressName;
+  private String roadAddressName;
   private String latitude;
   private String longitude;
   private Category category;
