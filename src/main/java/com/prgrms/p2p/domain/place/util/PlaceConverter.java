@@ -2,6 +2,7 @@ package com.prgrms.p2p.domain.place.util;
 
 import com.prgrms.p2p.domain.place.dto.CreatePlaceRequest;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
+import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
 import com.prgrms.p2p.domain.place.entity.Place;
 
@@ -18,8 +19,8 @@ public class PlaceConverter {
         null);
   }
 
-  public static DetailPlaceResponse toDetailPlaceResponse(Place place, String imageUrl,
-      Long likeCount, Long usedCount) {
+  public static DetailPlaceResponse toDetailPlaceResponse(
+      Place place, String imageUrl, Long likeCount, Long usedCount) {
 
     return DetailPlaceResponse.builder()
         .id(place.getId())
@@ -33,6 +34,19 @@ public class PlaceConverter {
         .imageUrl(imageUrl)
         .likeCount(likeCount)
         .usedCount(usedCount)
+        .build();
+  }
+
+  public static SummaryPlaceResponse toSummaryPlaceResponse(
+      Place place, String imageUrl, Long likeCount, Long usedCount) {
+
+    return SummaryPlaceResponse.builder()
+        .id(place.getId())
+        .title(place.getName())
+        .likeCount(likeCount)
+        .usedCount(usedCount)
+        .category(place.getCategory().toString())
+        .thumbnail(imageUrl)
         .build();
   }
 }
