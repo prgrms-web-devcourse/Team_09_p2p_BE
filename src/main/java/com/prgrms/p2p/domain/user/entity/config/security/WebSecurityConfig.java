@@ -1,6 +1,5 @@
 package com.prgrms.p2p.domain.user.entity.config.security;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
