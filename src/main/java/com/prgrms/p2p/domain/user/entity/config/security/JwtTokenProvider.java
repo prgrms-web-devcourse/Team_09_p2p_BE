@@ -9,22 +9,29 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
+@PropertySource("classpath:application.yaml")
 public class JwtTokenProvider {
 
-  private String secretKey = "beomsicgood";
+  @Value("${jwt.secretKey}")
+  private String secretKey; // yaml에서 부르기
 
   private long tokenValidTime = 60 * 60 * 1000L;
 
   private final UserDetailsService userDetailsService;
+
+  public JwtTokenProvider(
+      UserDetailsService userDetailsService) {
+    this.userDetailsService = userDetailsService;
+  }
 
   @PostConstruct
   protected void init() {
@@ -32,9 +39,9 @@ public class JwtTokenProvider {
   }
 
 
-  public String createToken(String userPk, List<String> roles){
-    Claims claims = Jwts.claims().setSubject(userPk);
-    claims.put("roles",roles);
+  public String createToken(Long userId, List<String> roles) {
+    Claims claims = Jwts.claims().setSubject(String.valueOf(userId));
+    claims.put("roles", roles);
     Date now = new Date();
 
     return Jwts.builder()
@@ -45,16 +52,16 @@ public class JwtTokenProvider {
         .compact();
   }
 
-  public String getUserPk(String token){
+  public String getUserId(String token) {
     return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
   }
 
-  public Authentication getAuthentication(String token){
-    UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
+  public Authentication getAuthentication(String token) {
+    UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(token));
     return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
   }
 
-  // Request의 Header에서 token 값을 가져옵니다. "X-AUTH-TOKEN" : "TOKEN값'
+  // Request의 Header에서 token 값을 가져옵니다. "Authorization" : "TOKEN값'
   public String resolveToken(HttpServletRequest request) {
     return request.getHeader("Authorization");
   }
