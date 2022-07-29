@@ -6,6 +6,7 @@ import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import com.prgrms.p2p.domain.user.util.UserConverter;
 import com.prgrms.p2p.domain.user.util.Validation;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,5 +37,13 @@ public class UserService {
         .orElseThrow(IllegalArgumentException::new);
 
     return UserConverter.detailFromUser(user);
+  }
+
+  //TODO: Exception 만들기
+  public void validateEmail(String email) {
+    userRepository.findByEmail(email)
+        .ifPresent((s) -> {
+          throw new IllegalArgumentException();
+        });
   }
 }

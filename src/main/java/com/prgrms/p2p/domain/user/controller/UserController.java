@@ -24,4 +24,9 @@ public class UserController {
     String nickname = userService.SignUp(signUpRequest);
     return ResponseEntity.created(URI.create("/")).body(nickname);
   }
+
+  @PostMapping("/email")
+  public void validateEmail(@RequestBody String email) {
+    userService.validateEmail(email);
+  }
 }
