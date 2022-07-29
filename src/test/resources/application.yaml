@@ -37,7 +37,7 @@ cloud:
     credentials:
       instance-profile: true
       accessKey: accessKey
-      secretKey: secretKey/NqCdxONbgV
+      secretKey: secretKey
     region:
       static: ap-northeast-2
     stack:
