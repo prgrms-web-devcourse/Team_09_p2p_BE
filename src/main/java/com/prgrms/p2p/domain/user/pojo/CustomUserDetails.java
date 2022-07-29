@@ -6,14 +6,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CustomUserDetails implements UserDetails {
 
   private String email;
@@ -21,9 +24,6 @@ public class CustomUserDetails implements UserDetails {
 
   @Builder.Default
   private List<String> roles = new ArrayList<>();
-
-  public CustomUserDetails() {
-  }
 
   public CustomUserDetails(String email, String password, List<String> roles) {
     this.email = email;
