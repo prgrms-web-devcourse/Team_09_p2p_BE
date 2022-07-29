@@ -56,4 +56,8 @@ public class User extends BaseEntity {
 
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
+
+  public void addCourse(Course course) {
+    this.courses.add(course);
+  }
 }
