@@ -46,4 +46,11 @@ public class UserService {
           throw new IllegalArgumentException();
         });
   }
+
+  public void validateNickname(String nickname) {
+    userRepository.findByNickname(nickname)
+        .ifPresent((s) -> {
+          throw new IllegalArgumentException();
+        });
+  }
 }

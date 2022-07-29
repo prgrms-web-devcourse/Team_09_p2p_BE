@@ -29,4 +29,9 @@ public class UserController {
   public void validateEmail(@RequestBody String email) {
     userService.validateEmail(email);
   }
+
+  @PostMapping("/nickname")
+  public void validateNickname(@RequestBody String nickname) {
+    userService.validateNickname(nickname);
+  }
 }
