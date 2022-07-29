@@ -1,4 +1,4 @@
-package com.prgrms.p2p.domain.user.entity.config.security;
+package com.prgrms.p2p.domain.user.config.security;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,24 +18,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CustomUserDetails implements UserDetails {
 
-  @Id
-  @GeneratedValue
-  @Column(name = "id")
-  private Long id;
-
-  @Column(name = "email")
   private String email;
 
-  @Column(name = "password")
   private String password;
 
-  @ElementCollection(fetch = FetchType.EAGER)
   private List<String> roles = new ArrayList<>();
 
   public CustomUserDetails(String email, String password, List<String> roles) {
