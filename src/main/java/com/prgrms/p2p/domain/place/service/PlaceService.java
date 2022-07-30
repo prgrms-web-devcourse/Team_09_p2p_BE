@@ -38,8 +38,8 @@ public class PlaceService {
   }
 
   public Slice<SummaryPlaceResponse> findSummaryList(
-      SearchPlaceRequest searchPlaceRequest, Pageable pageable) {
-    Slice<Place> placeList = placeRepository.searchPlace(searchPlaceRequest, pageable);
+      SearchPlaceRequest searchPlaceReq, Pageable pageable) {
+    Slice<Place> placeList = placeRepository.searchPlace(searchPlaceReq, pageable);
     return placeList.map(PlaceConverter::toSummaryPlaceResponse);
   }
 }

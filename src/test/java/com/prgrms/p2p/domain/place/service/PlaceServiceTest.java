@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.prgrms.p2p.domain.place.dto.CreatePlaceRequest;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
+import com.prgrms.p2p.domain.place.dto.SearchPlaceRequest;
+import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.place.repository.PlaceRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +14,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -97,7 +102,8 @@ class PlaceServiceTest {
           .isEqualTo(place);
 
       assertThat(createPlaceReq.getAddressName()).isEqualTo(place.getAddress().getAddressName());
-      assertThat(createPlaceReq.getRoadAddressName()).isEqualTo(place.getAddress().getRoadAddressName());
+      assertThat(createPlaceReq.getRoadAddressName()).isEqualTo(
+          place.getAddress().getRoadAddressName());
       assertThat(createPlaceReq.getCategory()).isEqualTo(place.getCategory().toString());
       assertThat(createPlaceReq.getPhoneNumber()).isEqualTo(place.getPhoneNumber().getNumber());
     }
@@ -129,6 +135,39 @@ class PlaceServiceTest {
       assertThat(detailPlaceResp.getRoadAddressName()).isEqualTo(
           place.getAddress().getRoadAddressName());
       assertThat(detailPlaceResp.getCategory()).isEqualTo(place.getCategory().toString());
+    }
+  }
+
+  @Nested
+  @DisplayName("요약 리스트 조회")
+  class findSummaryList {
+
+    @Test
+    @DisplayName("성공: 요약 리스트 조회 성공")
+    public void findSummaryList() throws Exception {
+
+      //given
+      String keyword = "";
+      String category = null;
+
+      SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder()
+          .keyword(keyword)
+          .category(category)
+          .build();
+
+      Pageable pageable = PageRequest.of(0, 10);
+
+      //when
+      Slice<SummaryPlaceResponse> summaryList
+          = placeService.findSummaryList(searchPlaceReq, pageable);
+
+      //then
+      for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
+        assertThat(summaryPlaceResponse.getTitle()).contains(keyword);
+        if (category != null) {
+          assertThat(summaryPlaceResponse.getCategory()).isEqualTo(category);
+        }
+      }
     }
   }
 }
