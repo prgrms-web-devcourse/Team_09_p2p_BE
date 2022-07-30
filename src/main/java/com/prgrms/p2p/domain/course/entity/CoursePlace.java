@@ -108,7 +108,7 @@ public class CoursePlace extends BaseEntity {
     this.place = place;
   }
 
-  private void setIndex(Long index) {
+  private void setIndex(Integer index) {
     this.index = index;
   }
 }
