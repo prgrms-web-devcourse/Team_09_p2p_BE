@@ -6,31 +6,48 @@ import com.prgrms.p2p.domain.place.dto.SearchPlaceRequest;
 import com.prgrms.p2p.domain.place.entity.Category;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import javax.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
-import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.data.domain.Sort;
 import org.springframework.util.ObjectUtils;
 
-public class PlaceSearchRepositoryImpl extends QuerydslRepositorySupport implements PlaceSearchRepository {
+public class PlaceSearchRepositoryImpl implements PlaceSearchRepository {
 
-  public PlaceSearchRepositoryImpl() {
-    super(Place.class);
+  private final JPAQueryFactory jpaQueryFactory;
+
+  public PlaceSearchRepositoryImpl(EntityManager em) {
+    this.jpaQueryFactory = new JPAQueryFactory(em);
   }
 
   @Override
-  public Slice<Place> searchPlace(SearchPlaceRequest searchPlaceRequest, Pageable pageable) {
-    JPQLQuery<Place> placeJPQLQuery = from(place)
+  public Slice<Place> searchPlace(SearchPlaceRequest request, Pageable pageable) {
+    JPAQuery<Place> placeJPAQuery = jpaQueryFactory.selectFrom(place)
         .where(
-            keywordListContains(searchPlaceRequest.getKeyword()),
-            categoryEq(searchPlaceRequest.getCategory())
+            keywordListContains(request.getKeyword()),
+            categoryEq(request.getCategory())
         )
-        .select(place);
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize() + 1);
 
-    List<Place> placeList = getQuerydsl().applyPagination(pageable, placeJPQLQuery).fetch();
+    for (Sort.Order o : pageable.getSort()) {
+      PathBuilder pathBuilder = new PathBuilder<>(place.getType(), place.getMetadata());
+
+      placeJPAQuery.orderBy(new OrderSpecifier(
+          o.isAscending() ? Order.ASC : Order.DESC, pathBuilder.get(o.getProperty())
+          )
+      );
+    }
+
+    List<Place> placeList = placeJPAQuery.fetch();
 
     boolean hasNext = false;
 
