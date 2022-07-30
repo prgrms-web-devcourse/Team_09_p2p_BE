@@ -30,7 +30,7 @@ public class PhoneNumber {
   }
 
   public void validationPhone(String number) {
-    if (number != null || !number.matches(PHONE_REGX)) {
+    if (number.isBlank() || !number.matches(PHONE_REGX)) {
       throw new IllegalArgumentException();
     }
   }
