@@ -24,7 +24,7 @@ public class CourseService {
     List<Place> places = createCourseRequest.getPlaces().stream().map(CoursePlaceConverter::toPlace)
         .collect(Collectors.toList());
     List<Place> savedPlaces = placeRepository.saveAll(places);
-    return courseRepository.save(place).getId();
+    courseRepository.save(place).getId();
   }
 
 }
