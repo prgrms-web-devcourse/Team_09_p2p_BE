@@ -1,4 +1,4 @@
-package com.prgrms.p2p.domain.user.entity.config.security;
+package com.prgrms.p2p.domain.user.config.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

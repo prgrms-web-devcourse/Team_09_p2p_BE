@@ -37,7 +37,7 @@ public class Place extends BaseEntity {
   private Long id;
 
   @Column(name = "kakao_map_id")
-  private String kakaoMapId;
+  private Long kakaoMapId;
 
   @Column(name = "name")
   private String name;
@@ -78,7 +78,7 @@ public class Place extends BaseEntity {
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
-  public Place(String kakaoMapId, String name, Address address, String latitude,
+  public Place(Long kakaoMapId, String name, Address address, String latitude,
       String longitude, Category category, PhoneNumber phoneNumber, String imageUrl) {
     this.kakaoMapId = kakaoMapId;
     this.name = name;
@@ -116,7 +116,7 @@ public class Place extends BaseEntity {
     this.placeLikes.remove(placeLike);
   }
 
-  private void setKakaoMapId(String kakaoMapId) {
+  private void setKakaoMapId(Long kakaoMapId) {
     this.kakaoMapId = kakaoMapId;
   }
 

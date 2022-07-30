@@ -3,12 +3,16 @@ package com.prgrms.p2p.domain.course.entity;
 
 import com.prgrms.p2p.domain.common.BaseEntity;
 import com.prgrms.p2p.domain.place.entity.Place;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
@@ -47,21 +51,19 @@ public class CoursePlace extends BaseEntity {
   @JoinColumn(name = "place_id")
   private Place place;
 
-  @Column(name = "index")
-  private Long index;
+  // TODO: 2022/07/27 LinkedList 구현. 참조 : https://stackoverflow.com/questions/64096476/how-to-create-linkedlist-of-jpa-entities
+  // Sets the persist operation persist also successors
+  @ManyToMany(cascade = CascadeType.PERSIST)
+  private Set<CoursePlace> successors = new HashSet<>();
+
+  // Sets the persist operation persist also predecessors
+  @ManyToMany(cascade = CascadeType.PERSIST)
+  private Set<CoursePlace> predecessors = new HashSet<>();
 
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
-  public CoursePlace(String description, String imageUrl, boolean recommended,
-      Course course, Place place, Long index) {
-    this.description = description;
-    this.imageUrl = imageUrl;
-    this.recommended = recommended;
-    this.addCourse(course);
-    this.addPlace(place);
-    this.index = index;
-  }
+  // TODO: 2022/07/28 생성자 나중에 만들기
 
   public void addCourse(Course course) {
     if (this.course != null) {
@@ -104,4 +106,11 @@ public class CoursePlace extends BaseEntity {
     this.place = place;
   }
 
+  private void setSuccessors(Set<CoursePlace> successors) {
+    this.successors = successors;
+  }
+
+  private void setPredecessors(Set<CoursePlace> predecessors) {
+    this.predecessors = predecessors;
+  }
 }

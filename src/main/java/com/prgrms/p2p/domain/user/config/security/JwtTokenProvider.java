@@ -1,4 +1,4 @@
-package com.prgrms.p2p.domain.user.entity.config.security;
+package com.prgrms.p2p.domain.user.config.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
