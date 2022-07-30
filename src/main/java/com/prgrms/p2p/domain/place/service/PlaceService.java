@@ -5,7 +5,6 @@ import static com.prgrms.p2p.domain.place.util.PlaceConverter.toPlace;
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSummaryPlaceResponse;
 
 import com.prgrms.p2p.domain.common.service.UploadService;
-import com.prgrms.p2p.domain.course.repository.CoursePlaceRepository;
 import com.prgrms.p2p.domain.place.dto.CreatePlaceRequest;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.SearchPlaceRequest;
