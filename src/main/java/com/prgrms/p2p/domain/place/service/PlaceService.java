@@ -2,7 +2,6 @@ package com.prgrms.p2p.domain.place.service;
 
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toDetailPlaceResponse;
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toPlace;
-import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSummaryPlaceResponse;
 
 import com.prgrms.p2p.domain.common.service.UploadService;
 import com.prgrms.p2p.domain.place.dto.CreatePlaceRequest;
@@ -11,6 +10,7 @@ import com.prgrms.p2p.domain.place.dto.SearchPlaceRequest;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.place.repository.PlaceRepository;
+import com.prgrms.p2p.domain.place.util.PlaceConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -34,24 +34,12 @@ public class PlaceService {
 
   public DetailPlaceResponse findDetail(Long placeId) {
     Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
-    Integer likeCount = place.getPlaceLikes().size();
-    Integer usedCount = place.getCoursePlaces().size();
-    String imageUrl = null;
-    if (usedCount > 0) {
-      imageUrl = place.getCoursePlaces().get(0).getImageUrl();
-    }
-    return toDetailPlaceResponse(place, imageUrl, likeCount, usedCount);
+    return toDetailPlaceResponse(place);
   }
 
-  // TODO: 2022/07/30 imageUrl 다시 확인할 것
   public Slice<SummaryPlaceResponse> findSummaryList(
       SearchPlaceRequest searchPlaceRequest, Pageable pageable) {
     Slice<Place> placeList = placeRepository.searchPlace(searchPlaceRequest, pageable);
-    return placeList.map(place -> toSummaryPlaceResponse(
-        place,
-        place.getCoursePlaces().stream().findFirst().get().getImageUrl(),
-        place.getPlaceLikes().size(),
-        place.getCoursePlaces().size()
-    ));
+    return placeList.map(PlaceConverter::toSummaryPlaceResponse);
   }
 }

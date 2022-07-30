@@ -21,8 +21,11 @@ public class PlaceConverter {
         null);
   }
 
-  public static DetailPlaceResponse toDetailPlaceResponse(
-      Place place, String imageUrl, Integer likeCount, Integer usedCount) {
+  public static DetailPlaceResponse toDetailPlaceResponse(Place place) {
+
+    Integer likeCount = place.getPlaceLikes().size();
+    Integer usedCount = place.getCoursePlaces().size();
+    String imageUrl = getString(place, usedCount);
 
     return DetailPlaceResponse.builder()
         .id(place.getId())
@@ -39,8 +42,11 @@ public class PlaceConverter {
         .build();
   }
 
-  public static SummaryPlaceResponse toSummaryPlaceResponse(
-      Place place, String imageUrl, Integer likeCount, Integer usedCount) {
+  public static SummaryPlaceResponse toSummaryPlaceResponse(Place place) {
+
+    Integer likeCount = place.getPlaceLikes().size();
+    Integer usedCount = place.getCoursePlaces().size();
+    String imageUrl = getString(place, usedCount);
 
     return SummaryPlaceResponse.builder()
         .id(place.getId())
@@ -50,5 +56,9 @@ public class PlaceConverter {
         .category(place.getCategory().toString())
         .thumbnail(imageUrl)
         .build();
+  }
+
+  private static String getString(Place place, Integer usedCount) {
+    return usedCount > 0 ? place.getCoursePlaces().get(0).getImageUrl() : null;
   }
 }
