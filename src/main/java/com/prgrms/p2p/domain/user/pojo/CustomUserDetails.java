@@ -23,17 +23,18 @@ public class CustomUserDetails implements UserDetails {
   private String password;
 
   @Builder.Default
-  private List<String> roles = new ArrayList<>();
+  private List<String> authorities = new ArrayList<>();
 
-  public CustomUserDetails(String email, String password, List<String> roles) {
+  public CustomUserDetails(String email, String password,
+      List<String> authorities) {
     this.email = email;
     this.password = password;
-    this.roles = roles;
+    this.authorities = authorities;
   }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return roles.stream()
+    return authorities.stream()
         .map(SimpleGrantedAuthority::new)
         .collect(Collectors.toList());
   }
