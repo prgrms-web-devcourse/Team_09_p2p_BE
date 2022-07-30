@@ -51,14 +51,8 @@ public class CoursePlace extends BaseEntity {
   @JoinColumn(name = "place_id")
   private Place place;
 
-  // TODO: 2022/07/27 LinkedList 구현. 참조 : https://stackoverflow.com/questions/64096476/how-to-create-linkedlist-of-jpa-entities
-  // Sets the persist operation persist also successors
-  @ManyToMany(cascade = CascadeType.PERSIST)
-  private Set<CoursePlace> successors = new HashSet<>();
-
-  // Sets the persist operation persist also predecessors
-  @ManyToMany(cascade = CascadeType.PERSIST)
-  private Set<CoursePlace> predecessors = new HashSet<>();
+  @Column(name = "index")
+  private Long index;
 
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
@@ -106,11 +100,7 @@ public class CoursePlace extends BaseEntity {
     this.place = place;
   }
 
-  private void setSuccessors(Set<CoursePlace> successors) {
-    this.successors = successors;
-  }
-
-  private void setPredecessors(Set<CoursePlace> predecessors) {
-    this.predecessors = predecessors;
+  private void setIndex(Long index) {
+    this.index = index;
   }
 }

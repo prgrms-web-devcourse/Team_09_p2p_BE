@@ -64,10 +64,10 @@ public class Course extends BaseEntity {
   @JoinColumn(name = "user_id")
   private User user;
 
-  @OneToMany(mappedBy = "courses", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<CoursePlace> coursePlaces = new ArrayList<>();
 
-  @OneToMany(mappedBy = "courses", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<CourseComment> courseComments = new ArrayList<>();
 
   @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
