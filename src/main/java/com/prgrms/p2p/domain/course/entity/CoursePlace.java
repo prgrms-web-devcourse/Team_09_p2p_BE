@@ -3,16 +3,12 @@ package com.prgrms.p2p.domain.course.entity;
 
 import com.prgrms.p2p.domain.common.BaseEntity;
 import com.prgrms.p2p.domain.place.entity.Place;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
@@ -34,6 +30,12 @@ public class CoursePlace extends BaseEntity {
   @Column(name = "id")
   private Long id;
 
+  @Column(name = "index")
+  private Long index;
+
+  @Column(name = "kakao_map_id")
+  private String kakaoMapId;
+
   @Column(name = "description")
   private String description;
 
@@ -51,13 +53,19 @@ public class CoursePlace extends BaseEntity {
   @JoinColumn(name = "place_id")
   private Place place;
 
-  @Column(name = "index")
-  private Long index;
-
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
-  // TODO: 2022/07/28 생성자 나중에 만들기
+  public CoursePlace(Long index, String kakaoMapId, String description, String imageUrl,
+      boolean recommended, Course course, Place place) {
+    this.index = index;
+    this.kakaoMapId = kakaoMapId;
+    this.description = description;
+    this.imageUrl = imageUrl;
+    this.recommended = recommended;
+    this.course = course;
+    this.place = place;
+  }
 
   public void addCourse(Course course) {
     if (this.course != null) {
