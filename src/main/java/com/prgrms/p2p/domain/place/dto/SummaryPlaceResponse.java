@@ -9,8 +9,8 @@ public class SummaryPlaceResponse {
 
   private Long id;
   private String title;
-  private Long likeCount;
-  private Long usedCount;
+  private Integer likeCount;
+  private Integer usedCount;
   private String category;
   private String thumbnail;
 }

@@ -35,8 +35,8 @@ public class PlaceService {
   public DetailPlaceResponse findDetail(Long placeId) {
     Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
     String imageUrl = placeRepository.findFirstImage(placeId);
-    Long likeCount = (long) place.getPlaceLikes().size();
-    Long usedCount = (long) place.getCoursePlaces().size();
+    Integer likeCount = place.getPlaceLikes().size();
+    Integer usedCount = place.getCoursePlaces().size();
 
     return toDetailPlaceResponse(place, imageUrl, likeCount, usedCount);
   }
@@ -47,8 +47,8 @@ public class PlaceService {
     return placeList.map(place -> toSummaryPlaceResponse(
         place,
         placeRepository.findFirstImage(place.getId()),
-        (long) place.getPlaceLikes().size(),
-        (long) place.getCoursePlaces().size()
+        place.getPlaceLikes().size(),
+        place.getCoursePlaces().size()
     ));
   }
 }

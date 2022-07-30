@@ -4,6 +4,7 @@ import com.prgrms.p2p.domain.place.dto.CreatePlaceRequest;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
+import com.prgrms.p2p.domain.place.entity.PhoneNumber;
 import com.prgrms.p2p.domain.place.entity.Place;
 
 public class PlaceConverter {
@@ -15,12 +16,12 @@ public class PlaceConverter {
         createPlaceRequest.getLatitude(),
         createPlaceRequest.getLongitude(),
         createPlaceRequest.getCategory(),
-        createPlaceRequest.getPhoneNumber(),
+        PhoneNumber.of(createPlaceRequest.getPhoneNumber()),
         null);
   }
 
   public static DetailPlaceResponse toDetailPlaceResponse(
-      Place place, String imageUrl, Long likeCount, Long usedCount) {
+      Place place, String imageUrl, Integer likeCount, Integer usedCount) {
 
     return DetailPlaceResponse.builder()
         .id(place.getId())
@@ -38,7 +39,7 @@ public class PlaceConverter {
   }
 
   public static SummaryPlaceResponse toSummaryPlaceResponse(
-      Place place, String imageUrl, Long likeCount, Long usedCount) {
+      Place place, String imageUrl, Integer likeCount, Integer usedCount) {
 
     return SummaryPlaceResponse.builder()
         .id(place.getId())

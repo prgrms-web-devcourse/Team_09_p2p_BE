@@ -1,7 +1,6 @@
 package com.prgrms.p2p.domain.place.dto;
 
 import com.prgrms.p2p.domain.place.entity.Category;
-import com.prgrms.p2p.domain.place.entity.PhoneNumber;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +18,5 @@ public class CreatePlaceRequest {
   private String latitude;
   private String longitude;
   private Category category;
-  private PhoneNumber phoneNumber;
+  private String phoneNumber;
 }
