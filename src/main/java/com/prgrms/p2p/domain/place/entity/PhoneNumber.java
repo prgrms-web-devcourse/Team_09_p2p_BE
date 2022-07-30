@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class PhoneNumber {
 
-  private final String PHONE_REGX = "^\\d{3}-\\d{3,4}-\\d{4}$";
+  private final String PHONE_REGX = "^\\d{2,3}-\\d{3,4}-\\d{4}$";
   private String number;
 
   public PhoneNumber(String number) {
