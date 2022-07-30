@@ -1,6 +1,6 @@
 package com.prgrms.p2p.domain.user.pojo;
 
-import javax.persistence.Id;
+import org.springframework.data.annotation.Id;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;

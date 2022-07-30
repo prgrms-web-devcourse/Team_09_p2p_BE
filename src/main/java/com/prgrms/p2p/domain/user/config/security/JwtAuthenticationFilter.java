@@ -9,13 +9,13 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
+@Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
@@ -55,14 +55,4 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     if(jwtTokenProvider.validateToken(token, userDetails)) throw new IllegalArgumentException();
   }
 
-  private void setSecurityAuthentication(HttpServletRequest request, UserDetails userDetails) {
-    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-        userDetails, "", userDetails.getAuthorities());
-
-    usernamePasswordAuthenticationToken.setDetails(
-        new WebAuthenticationDetailsSource()
-            .buildDetails(request));
-
-    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-  }
 }
