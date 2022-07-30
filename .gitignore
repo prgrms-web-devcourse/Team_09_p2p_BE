@@ -166,4 +166,6 @@ gradle-app.setting
 HELP.md
 # End of https://www.toptal.com/developers/gitignore/api/gradle,java,intellij
 p2p.iml
-**/application.yaml
+
+src/main/resources/application.yaml
+src/main/resources/application.yml
