@@ -80,17 +80,35 @@ public class Place extends BaseEntity {
 
   public Place(String kakaoMapId, String name, Address address, String latitude,
       String longitude, Category category, PhoneNumber phoneNumber, String imageUrl) {
-    this.kakaoMapId = kakaoMapId;
-    this.name = name;
-    this.address = address;
-    this.latitude = latitude;
-    this.longitude = longitude;
-    this.category = category;
-    this.phoneNumber = phoneNumber;
-    this.imageUrl = imageUrl;
+    setKakaoMapId(kakaoMapId);
+    setName(name);
+    setAddress(address);
+    setLatitude(latitude);
+    setLongitude(longitude);
+    setCategory(category);
+    setPhoneNumber(phoneNumber);
+    setImageUrl(imageUrl);
   }
 
-  // TODO: 2022/07/28 변경 로직은 추후 생성
+  public void changeName(String newName) {
+    setName(newName);
+  }
+
+  public void changeAddress(Address newAddress) {
+    setAddress(newAddress);
+  }
+
+  public void changeCategory(Category newCategory) {
+    setCategory(newCategory);
+  }
+
+  public void changePhoneNumber(PhoneNumber newPhoneNumber) {
+    setPhoneNumber(newPhoneNumber);
+  }
+
+  public void changeImageUrl(String newImageUrl) {
+    setImageUrl(newImageUrl);
+  }
 
   public void addCoursePlace(CoursePlace coursePlace) {
     this.coursePlaces.add(coursePlace);
@@ -117,22 +135,37 @@ public class Place extends BaseEntity {
   }
 
   private void setKakaoMapId(String kakaoMapId) {
+    if (kakaoMapId.isBlank()) {
+      throw new IllegalArgumentException();
+    }
     this.kakaoMapId = kakaoMapId;
   }
 
   private void setName(String name) {
+    if (name.isBlank()) {
+      throw new IllegalArgumentException();
+    }
     this.name = name;
   }
 
   private void setAddress(Address address) {
+    if (address == null) {
+      throw new IllegalArgumentException();
+    }
     this.address = address;
   }
 
   private void setLatitude(String latitude) {
+    if (latitude.isBlank()) {
+      throw new IllegalArgumentException();
+    }
     this.latitude = latitude;
   }
 
   private void setLongitude(String longitude) {
+    if (longitude.isBlank()) {
+      throw new IllegalArgumentException();
+    }
     this.longitude = longitude;
   }
 
