@@ -1,6 +1,7 @@
 package com.prgrms.p2p.domain.like.entity;
 
 import com.prgrms.p2p.domain.place.entity.Place;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -34,7 +35,7 @@ public class PlaceLike extends Like {
   }
 
   public void addPlace(Place place) {
-    if (this.place != null) {
+    if (Objects.nonNull(this.place)) {
       this.place.getPlaceLikes().remove(this);
     }
     place.addPlaceLike(this);
