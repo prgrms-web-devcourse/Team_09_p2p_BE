@@ -26,7 +26,6 @@ public class PlaceService {
 
   private final PlaceRepository placeRepository;
   private final UploadService uploadService;
-  private final CoursePlaceRepository coursePlaceRepository;
 
   @Transactional
   public Long save(CreatePlaceRequest createPlaceRequest) {
@@ -36,8 +35,7 @@ public class PlaceService {
 
   public DetailPlaceResponse findDetail(Long placeId) {
     Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
-    String imageUrl = coursePlaceRepository.findFirstByPlace(place)
-        .orElseThrow(RuntimeException::new).getImageUrl();
+    String imageUrl = placeRepository.findFirstImage(placeId);
     Long likeCount = (long) place.getPlaceLikes().size();
     Long usedCount = (long) place.getCoursePlaces().size();
 
@@ -49,9 +47,7 @@ public class PlaceService {
     Slice<Place> placeList = placeRepository.searchPlace(searchPlaceRequest, pageable);
     return placeList.map(place -> toSummaryPlaceResponse(
         place,
-        coursePlaceRepository.findFirstByPlace(place)
-            .orElseThrow(RuntimeException::new)
-            .getImageUrl(),
+        placeRepository.findFirstImage(place.getId()),
         (long) place.getPlaceLikes().size(),
         (long) place.getCoursePlaces().size()
     ));

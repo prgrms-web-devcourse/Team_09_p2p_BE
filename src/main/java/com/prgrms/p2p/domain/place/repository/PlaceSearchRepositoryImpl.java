@@ -59,6 +59,14 @@ public class PlaceSearchRepositoryImpl implements PlaceSearchRepository {
     return new SliceImpl<>(placeList, pageable, hasNext);
   }
 
+  @Override
+  public String findFirstImage(Long placeId) {
+    return jpaQueryFactory.select(place.coursePlaces.get(0).imageUrl)
+        .from(place)
+        .where(place.id.eq(placeId))
+        .fetchOne();
+  }
+
   private BooleanBuilder keywordListContains(String keyword) {
     if (ObjectUtils.isEmpty(keyword)) {
       return null;
