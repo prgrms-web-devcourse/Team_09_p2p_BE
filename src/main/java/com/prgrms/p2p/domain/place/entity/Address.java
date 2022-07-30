@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-// TODO: 2022/07/27 kakao에서 넘어오는 형식 맞춰서 수정 필요
 @Embeddable
 @Getter
 @Access(value = AccessType.FIELD)
@@ -20,6 +19,9 @@ public class Address {
   private String roadAddressName;
 
   public Address(String addressName, String roadAddressName) {
+    if (addressName == null && roadAddressName == null) {
+      throw new IllegalArgumentException("2가지 주소중 최소한 하나는 있어야 함");
+    }
     this.addressName = addressName;
     this.roadAddressName = roadAddressName;
   }
