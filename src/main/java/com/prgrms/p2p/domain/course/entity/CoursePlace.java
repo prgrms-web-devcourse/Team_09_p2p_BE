@@ -31,7 +31,7 @@ public class CoursePlace extends BaseEntity {
   private Long id;
 
   @Column(name = "index")
-  private Long index;
+  private Integer index;
 
   @Column(name = "kakao_map_id")
   private String kakaoMapId;
@@ -43,7 +43,7 @@ public class CoursePlace extends BaseEntity {
   private String imageUrl;
 
   @Column(name = "recommended")
-  private boolean recommended;
+  private Boolean recommended;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "course_id")
@@ -56,7 +56,7 @@ public class CoursePlace extends BaseEntity {
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
-  public CoursePlace(Long index, String kakaoMapId, String description, String imageUrl,
+  public CoursePlace(Integer index, String kakaoMapId, String description, String imageUrl,
       boolean recommended, Course course, Place place) {
     this.index = index;
     this.kakaoMapId = kakaoMapId;

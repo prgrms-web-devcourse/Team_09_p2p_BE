@@ -15,6 +15,7 @@ public class CreateCoursePlaceRequest {
 
   private String kakaoMapId;
   private String name;
+  private String description;
   private String addressName;
   private String roadAddressName;
   private String latitude;
