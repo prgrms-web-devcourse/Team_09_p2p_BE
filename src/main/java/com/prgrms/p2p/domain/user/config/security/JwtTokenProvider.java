@@ -1,9 +1,14 @@
 package com.prgrms.p2p.domain.user.config.security;
 
+import static com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum.ACCESS_TOKEN_EXPIRATION_TIME;
+import static com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum.REFRESH_TOKEN_EXPIRATION_TIME;
+
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Component
 @PropertySource("classpath:application.yaml")
@@ -27,6 +33,7 @@ public class JwtTokenProvider {
   private long tokenValidTime = 60 * 60 * 1000L;
 
   private final UserDetailsService userDetailsService;
+  private static final String HEADER_PREFIX = "Bearer ";
 
   public JwtTokenProvider(
       UserDetailsService userDetailsService) {
@@ -38,40 +45,62 @@ public class JwtTokenProvider {
     secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
   }
 
-  public String createToken(Long userId, List<String> roles) {
-    Claims claims = Jwts.claims().setSubject(String.valueOf(userId));
-    claims.put("roles", roles);
-    Date now = new Date();
-
-    return Jwts.builder()
-        .setClaims(claims)
-        .setIssuedAt(now)
-        .setExpiration(new Date(now.getTime() + tokenValidTime))
-        .signWith(SignatureAlgorithm.HS256, secretKey)
-        .compact();
+  public String generateAccessToken(String username) {
+    return generateToken(username, ACCESS_TOKEN_EXPIRATION_TIME.getValue());
   }
 
-  public String getUserId(String token) {
-    return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+  public String generateRefreshToken(String username) {
+    return generateToken(username, REFRESH_TOKEN_EXPIRATION_TIME.getValue());
   }
 
-  public Authentication getAuthentication(String token) {
-    UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(token));
+  public String getUserEmail(String token) {
+    return extractClaims(token).getSubject();
+  }
+
+  public Authentication getAuthentication(String token, UserDetails userDetails) {
     return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
   }
 
   // Request의 Header에서 token 값을 가져옵니다. "Authorization" : "TOKEN값'
   public String resolveToken(HttpServletRequest request) {
-    return request.getHeader("Authorization");
+    String header = request.getHeader("Authorization");
+    if(StringUtils.hasText(header) && header.startsWith(HEADER_PREFIX)) return header.substring(7);
+    return null;
   }
 
   // 토큰의 유효성 + 만료일자 확인
-  public boolean validateToken(String jwtToken) {
-    try {
-      Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-      return !claims.getBody().getExpiration().before(new Date());
-    } catch (Exception e) {
-      return false;
-    }
+  public boolean validateToken(String token, UserDetails userDetails) {
+    String userEmail = getUserEmail(token);
+    return userEmail.equals(userDetails.getUsername()) && !isTokenExpired(token);
   }
+
+  private String generateToken(String userEmail, Long expireTime) {
+    Claims claims = Jwts.claims().setSubject(userEmail);
+    Date now = new Date();
+
+    return Jwts.builder()
+        .setClaims(claims)
+        .setIssuedAt(now)
+        .setExpiration(new Date(now.getTime() + expireTime))
+        .signWith(SignatureAlgorithm.HS256, secretKey)
+        .compact();
+  }
+
+  private Claims extractClaims(String token) {
+    return Jwts.parser()
+        .setSigningKey(secretKey)
+        .parseClaimsJws(token)
+        .getBody();
+  }
+
+  private Key getSignKey(String secretKey) {
+    byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+    return Keys.hmacShaKeyFor(keyBytes);
+  }
+
+  private Boolean isTokenExpired(String token) {
+    Date expiration = extractClaims(token).getExpiration();
+    return expiration.before(new Date());
+  }
+
 }
