@@ -34,19 +34,22 @@ public class PlaceService {
 
   public DetailPlaceResponse findDetail(Long placeId) {
     Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
-    String imageUrl = placeRepository.findFirstImage(placeId);
     Integer likeCount = place.getPlaceLikes().size();
     Integer usedCount = place.getCoursePlaces().size();
-
+    String imageUrl = null;
+    if (usedCount > 0) {
+      imageUrl = place.getCoursePlaces().get(0).getImageUrl();
+    }
     return toDetailPlaceResponse(place, imageUrl, likeCount, usedCount);
   }
 
+  // TODO: 2022/07/30 imageUrl 다시 확인할 것
   public Slice<SummaryPlaceResponse> findSummaryList(
       SearchPlaceRequest searchPlaceRequest, Pageable pageable) {
     Slice<Place> placeList = placeRepository.searchPlace(searchPlaceRequest, pageable);
     return placeList.map(place -> toSummaryPlaceResponse(
         place,
-        placeRepository.findFirstImage(place.getId()),
+        place.getCoursePlaces().stream().findFirst().get().getImageUrl(),
         place.getPlaceLikes().size(),
         place.getCoursePlaces().size()
     ));
