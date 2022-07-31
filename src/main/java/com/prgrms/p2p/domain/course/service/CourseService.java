@@ -37,24 +37,31 @@ public class CourseService {
       Long userId) {
     User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
     Course course = courseRepository.save(toCourse(createCourseRequest, user));
-    List<String> urls = images.stream().map(image -> uploadService.uploadImg(image))
-        .collect(Collectors.toList());
-    List<Place> places = IntStream.range(0, createCourseRequest.getPlaces().size())
-        .mapToObj(index -> {
-          CreateCoursePlaceRequest createCoursePlaceRequest = createCourseRequest.getPlaces()
-              .get(index);
-          String url = uploadService.uploadImg(images.get(index));
-          return CoursePlaceConverter.toPlace(createCoursePlaceRequest, url);
-        }).collect(Collectors.toList()).stream().map(place -> {
-          placeRepository.findByKakaoMapId(place.getKakaoMapId())
-              .orElseGet(() -> placeRepository.save(place));
-        }).collect(Collectors.toList());
+    List<Place> places = getOrSavePlaces(createCourseRequest, images);
+    saveCoursePlaces(createCourseRequest, course, places);
+    return course.getId();
+  }
+
+  private void saveCoursePlaces(CreateCourseRequest createCourseRequest, Course course,
+      List<Place> places) {
     IntStream.range(0, places.size()).mapToObj(index -> {
       return coursePlaceRepository.save(
           CoursePlaceConverter.toCoursePlace(createCourseRequest.getPlaces().get(index), index,
               course, places.get(index)));
     });
-    return course.getId();
+  }
+
+  private List<Place> getOrSavePlaces(CreateCourseRequest createCourseRequest,
+      List<MultipartFile> images) {
+    return IntStream.range(0, createCourseRequest.getPlaces().size()).mapToObj(index -> {
+      CreateCoursePlaceRequest createCoursePlaceRequest = createCourseRequest.getPlaces()
+          .get(index);
+      String url = uploadService.uploadImg(images.get(index));
+      return CoursePlaceConverter.toPlace(createCoursePlaceRequest, url);
+    }).collect(Collectors.toList()).stream().map(place -> {
+      return placeRepository.findByKakaoMapId(place.getKakaoMapId())
+          .orElseGet(() -> placeRepository.save(place));
+    }).collect(Collectors.toList());
   }
 
 }
