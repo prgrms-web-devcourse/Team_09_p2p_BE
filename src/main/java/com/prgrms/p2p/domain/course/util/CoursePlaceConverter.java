@@ -15,11 +15,11 @@ public class CoursePlaceConverter {
         createCoursePlaceRequest.getIsRecommended(), course, place);
   }
 
-  public static Place toPlace(CreateCoursePlaceRequest createCoursePlaceRequest) {
+  public static Place toPlace(CreateCoursePlaceRequest createCoursePlaceRequest, String imageUrl) {
     return new Place(createCoursePlaceRequest.getKakaoMapId(), createCoursePlaceRequest.getName(),
         new Address(createCoursePlaceRequest.getAddressName(),
             createCoursePlaceRequest.getRoadAddressName()), createCoursePlaceRequest.getLatitude(),
         createCoursePlaceRequest.getLongitude(), createCoursePlaceRequest.getCategory(),
-        createCoursePlaceRequest.getPhoneNumber(), null);
+        createCoursePlaceRequest.getPhoneNumber(), imageUrl);
   }
 }
