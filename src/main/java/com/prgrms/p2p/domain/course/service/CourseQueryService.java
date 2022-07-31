@@ -1,7 +1,9 @@
 package com.prgrms.p2p.domain.course.service;
 
+import com.prgrms.p2p.domain.course.dto.DetailCourseResponse;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.repository.CourseRepository;
+import com.prgrms.p2p.domain.course.util.CourseConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +15,8 @@ public class CourseQueryService {
 
   private final CourseRepository courseRepository;
 
-  public void findDetail(Long id) {
+  public DetailCourseResponse findDetail(Long id, Long userId) {
     Course course = courseRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-
+    return CourseConverter.ofDetail(course, true, true);
   }
 }
