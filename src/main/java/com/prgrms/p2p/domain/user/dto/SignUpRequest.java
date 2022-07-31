@@ -13,4 +13,13 @@ public class SignUpRequest {
   private String birth;
   private Sex sex;
 
+  public SignUpRequest(String email, String password, String passwordCheck, String nickname,
+      String birth, Sex sex) {
+    this.email = email;
+    this.password = password;
+    this.passwordCheck = passwordCheck;
+    this.nickname = nickname;
+    this.birth = birth;
+    this.sex = sex;
+  }
 }

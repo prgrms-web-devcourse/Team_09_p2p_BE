@@ -27,7 +27,7 @@ public class UserService {
       throw new IllegalArgumentException("입력한 패스워드가 잘못됐습니다.");
     }
     Validation.validatePassword(signUpRequest.getPassword());
-    Validation.validatePassword(signUpRequest.getEmail());
+    Validation.validateEmail(signUpRequest.getEmail());
     Validation.validateNickname(signUpRequest.getNickname());
 
     User user = userRepository.save(UserConverter.toUser(signUpRequest));
