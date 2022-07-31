@@ -3,7 +3,6 @@ package com.prgrms.p2p.domain.user.config.security;
 import com.prgrms.p2p.domain.user.service.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,7 +14,6 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -56,15 +54,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 전에 넣는다
   }
 
-//  @Override
-//  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//    auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-//  }
-
   @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception
-  {
-    auth.parentAuthenticationManager(authenticationManagerBean())
-        .userDetailsService(userDetailsService);
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
   }
 }
