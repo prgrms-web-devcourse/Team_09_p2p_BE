@@ -5,12 +5,8 @@ import javax.persistence.Column;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.springframework.util.ObjectUtils;
 
-
-@Where(clause = "is_deleted = false")
-@SQLDelete(sql = "UPDATE room SET is_deleted = true WHERE id = ?")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class Like extends BaseEntity {
@@ -18,10 +14,14 @@ public abstract class Like extends BaseEntity {
   @Column(name = "user_id")
   private Long userId;
 
-  @Column(name = "is_deleted")
-  private Boolean isDeleted = Boolean.FALSE;
-
   public Like(Long userId) {
+    setUserId(userId);
+  }
+
+  private void setUserId(Long userId) {
+    if (ObjectUtils.isEmpty(userId) || userId < 0) {
+      throw new IllegalArgumentException("잘못된 사용자 아이디가 입력되었습니다.");
+    }
     this.userId = userId;
   }
 }
