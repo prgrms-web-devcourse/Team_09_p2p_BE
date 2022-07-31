@@ -21,7 +21,7 @@ public class UserService {
   }
 
   @Transactional
-  public String SignUp(SignUpRequest signUpRequest) {
+  public String signUp(SignUpRequest signUpRequest) {
 
     if(!validatePassword(signUpRequest.getPassword(), signUpRequest.getPasswordCheck())) {
       throw new IllegalArgumentException("입력한 패스워드가 잘못됐습니다.");
