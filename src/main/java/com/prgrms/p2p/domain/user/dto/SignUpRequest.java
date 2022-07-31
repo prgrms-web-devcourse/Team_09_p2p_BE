@@ -2,8 +2,10 @@ package com.prgrms.p2p.domain.user.dto;
 
 import com.prgrms.p2p.domain.user.entity.Sex;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class SignUpRequest {
 
   private String email;
