@@ -2,12 +2,14 @@ package com.prgrms.p2p.domain.like.entity;
 
 import com.prgrms.p2p.domain.common.BaseEntity;
 import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.ObjectUtils;
 
 @Getter
+@MappedSuperclass
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class Like extends BaseEntity {
 
