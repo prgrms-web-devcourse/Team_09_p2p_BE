@@ -28,6 +28,7 @@ public class UserService {
     }
     Validation.validatePassword(signUpRequest.getPassword());
     Validation.validatePassword(signUpRequest.getEmail());
+    Validation.validateNickname(signUpRequest.getNickname());
 
     User user = userRepository.save(UserConverter.toUser(signUpRequest));
     return user.getNickname();
