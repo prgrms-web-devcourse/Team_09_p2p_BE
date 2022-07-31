@@ -58,10 +58,9 @@ public class CourseService {
           .get(index);
       String url = uploadService.uploadImg(images.get(index));
       return CoursePlaceConverter.toPlace(createCoursePlaceRequest, url);
-    }).collect(Collectors.toList()).stream().map(place -> {
-      return placeRepository.findByKakaoMapId(place.getKakaoMapId())
-          .orElseGet(() -> placeRepository.save(place));
-    }).collect(Collectors.toList());
+    }).collect(Collectors.toList()).stream().map(
+        place -> placeRepository.findByKakaoMapId(place.getKakaoMapId())
+            .orElseGet(() -> placeRepository.save(place))).collect(Collectors.toList());
   }
 
 }
