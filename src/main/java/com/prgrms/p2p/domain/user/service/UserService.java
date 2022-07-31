@@ -23,12 +23,9 @@ public class UserService {
   @Transactional
   public String signUp(SignUpRequest signUpRequest) {
 
-    if(!validatePassword(signUpRequest.getPassword(), signUpRequest.getPasswordCheck())) {
-      throw new IllegalArgumentException("입력한 패스워드가 잘못됐습니다.");
-    }
-    Validation.validatePassword(signUpRequest.getPassword());
-    Validation.validateEmail(signUpRequest.getEmail());
-    Validation.validateNickname(signUpRequest.getNickname());
+    validatePassword(signUpRequest.getPassword(), signUpRequest.getPasswordCheck());
+    validateNickname(signUpRequest.getNickname());
+    validateEmail(signUpRequest.getEmail());
 
     User user = userRepository.save(UserConverter.toUser(signUpRequest));
     return user.getNickname();
@@ -45,6 +42,7 @@ public class UserService {
 
   //TODO: Exception 만들기
   public void validateEmail(String email) {
+    Validation.validateEmail(email);
     userRepository.findByEmail(email)
         .ifPresent((s) -> {
           throw new IllegalArgumentException();
@@ -52,13 +50,15 @@ public class UserService {
   }
 
   public void validateNickname(String nickname) {
+    Validation.validateNickname(nickname);
     userRepository.findByNickname(nickname)
         .ifPresent((s) -> {
           throw new IllegalArgumentException();
         });
   }
 
-  private boolean validatePassword(String password, String passwordCheck) {
-    return password.equals(passwordCheck);
+  private void validatePassword(String password, String passwordCheck) {
+    Validation.validatePassword(password);
+    if(!password.equals(passwordCheck)) throw new IllegalArgumentException("비밀번호가 서로 다릅니다.");
   }
 }
