@@ -23,6 +23,9 @@ public class UserService {
   @Transactional
   public String SignUp(SignUpRequest signUpRequest) {
 
+    if(!validatePassword(signUpRequest.getPassword(), signUpRequest.getPasswordCheck())) {
+      throw new IllegalArgumentException("입력한 패스워드가 잘못됐습니다.");
+    }
     Validation.validatePassword(signUpRequest.getPassword());
     Validation.validatePassword(signUpRequest.getEmail());
 
@@ -52,5 +55,9 @@ public class UserService {
         .ifPresent((s) -> {
           throw new IllegalArgumentException();
         });
+  }
+
+  private boolean validatePassword(String password, String passwordCheck) {
+    return password.equals(passwordCheck);
   }
 }
