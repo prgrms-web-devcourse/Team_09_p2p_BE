@@ -131,6 +131,7 @@ public class User extends BaseEntity {
     this.birth = LocalDate.parse(birth);
   }
   private void setSex(Sex sex) {
+    if(sex == null) throw new RuntimeException();
     this.sex = sex;
   }
 
