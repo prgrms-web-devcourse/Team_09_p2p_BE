@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.user.service;
 
+import com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum;
 import com.prgrms.p2p.domain.user.config.security.JwtTokenProvider;
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
@@ -56,7 +57,7 @@ public class UserService {
     //래디스 추가
     //TODO : 유효시간 가져올 방법
     redisTemplate.opsForValue()
-        .set(email,accessToken ,60 * 60 * 1000L ,TimeUnit.MILLISECONDS);
+        .set(email,accessToken , JwtExpirationEnum.ACCESS_TOKEN_EXPIRATION_TIME.getValue(),TimeUnit.MILLISECONDS);
 
     //토큰 생성및 LoginResponse 변환
     return Optional.of(user).map((u) ->
