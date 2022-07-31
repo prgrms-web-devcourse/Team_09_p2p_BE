@@ -1,8 +1,10 @@
 package com.prgrms.p2p.domain.course.util;
 
 import com.prgrms.p2p.domain.course.dto.CreateCourseRequest;
+import com.prgrms.p2p.domain.course.dto.DetailCourseResponse;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.user.entity.User;
+import java.util.List;
 import java.util.Set;
 
 public class CourseConverter {
@@ -11,6 +13,17 @@ public class CourseConverter {
     return new Course(createCourseRequest.getTitle(), createCourseRequest.getPeriod(),
         createCourseRequest.getRegion(), createCourseRequest.getDescription(),
         Set.copyOf(createCourseRequest.getThemes()), user);
+  }
+
+  public static DetailCourseResponse ofDetail(Course course, Boolean isLiked,
+      Boolean isBookmarked) {
+    return DetailCourseResponse.builder().id(course.getId()).title(course.getTitle())
+        .thumbnail(null).region(course.getRegion()).period(course.getPeriod())
+        .themes(List.copyOf(course.getThemes())).places(course.getCoursePlaces())
+        .likes(course.getCourseLikes().size()).isLiked(isLiked).isBookmarked(isBookmarked)
+        .nickname(course.getUser().getNickname())
+        .profileImage(course.getUser().getProfileUrl().orElse(null))
+        .createdAt(course.getCreatedAt()).updatedAt(course.getUpdatedAt()).build();
   }
 
 }

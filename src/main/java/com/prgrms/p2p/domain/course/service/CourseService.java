@@ -37,27 +37,26 @@ public class CourseService {
       Long userId) {
     User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
     Course course = courseRepository.save(toCourse(createCourseRequest, user));
-    List<Place> places = getOrSavePlaces(createCourseRequest, images);
-    saveCoursePlaces(createCourseRequest, course, places);
+    List<Place> places = getOrSavePlaces(createCourseRequest);
+    saveCoursePlaces(createCourseRequest, course, places, images);
     return course.getId();
   }
 
   private void saveCoursePlaces(CreateCourseRequest createCourseRequest, Course course,
-      List<Place> places) {
+      List<Place> places, List<MultipartFile> images) {
     IntStream.range(0, places.size()).mapToObj(index -> {
+      String url = uploadService.uploadImg(images.get(index));
       return coursePlaceRepository.save(
-          CoursePlaceConverter.toCoursePlace(createCourseRequest.getPlaces().get(index), index,
+          CoursePlaceConverter.toCoursePlace(createCourseRequest.getPlaces().get(index), index, url,
               course, places.get(index)));
     });
   }
 
-  private List<Place> getOrSavePlaces(CreateCourseRequest createCourseRequest,
-      List<MultipartFile> images) {
+  private List<Place> getOrSavePlaces(CreateCourseRequest createCourseRequest) {
     return IntStream.range(0, createCourseRequest.getPlaces().size()).mapToObj(index -> {
       CreateCoursePlaceRequest createCoursePlaceRequest = createCourseRequest.getPlaces()
           .get(index);
-      String url = uploadService.uploadImg(images.get(index));
-      return CoursePlaceConverter.toPlace(createCoursePlaceRequest, url);
+      return CoursePlaceConverter.toPlace(createCoursePlaceRequest);
     }).collect(Collectors.toList()).stream().map(
         place -> placeRepository.findByKakaoMapId(place.getKakaoMapId())
             .orElseGet(() -> placeRepository.save(place))).collect(Collectors.toList());
