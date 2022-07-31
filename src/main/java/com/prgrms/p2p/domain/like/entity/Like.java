@@ -19,7 +19,7 @@ public abstract class Like extends BaseEntity {
   }
 
   private void setUserId(Long userId) {
-    if (ObjectUtils.isEmpty(userId) || userId < 0) {
+    if (ObjectUtils.isEmpty(userId) || userId <= 0) {
       throw new IllegalArgumentException("잘못된 사용자 아이디가 입력되었습니다.");
     }
     this.userId = userId;
