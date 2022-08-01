@@ -52,18 +52,17 @@ class CourseLikeServiceTest {
   @TestMethodOrder(MethodOrderer.DisplayName.class)
   class ToggleTest {
 
-    private User userStub;
-    private Set<Theme> themesStub;
     private Course courseStub;
     private CourseLike courseLikeStub;
 
     @BeforeEach
     void setUp() {
-      userStub = new User("email", "password", "nickName", LocalDate.now().toString(), Sex.FEMALE);
-      themesStub = new HashSet<>();
+      User userStub = new User("email", "password", "nickName",
+          LocalDate.now().toString(), Sex.FEMALE);
+      Set<Theme> themesStub = new HashSet<>();
       themesStub.add(Theme.ALONE);
-      courseStub = new Course("title", Period.ONE_DAY, Region.SEOUL,
-          "description", themesStub, userStub);
+      courseStub = new Course("title", Period.ONE_DAY, Region.SEOUL, "description",
+          themesStub, userStub);
       courseLikeStub = new CourseLike(1L, courseStub);
     }
 

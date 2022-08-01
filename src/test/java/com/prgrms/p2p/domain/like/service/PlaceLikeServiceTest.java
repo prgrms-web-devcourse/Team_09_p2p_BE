@@ -15,6 +15,7 @@ import com.prgrms.p2p.domain.place.entity.PhoneNumber;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.place.repository.PlaceRepository;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -45,10 +46,16 @@ class PlaceLikeServiceTest {
   @TestMethodOrder(MethodOrderer.DisplayName.class)
   class ToggleTest {
 
-    private final Place placeStub = new Place("kakaomapID", "name",
-        new Address("addressName", "roadAddressName"),
-        "12.123", "123.23", null, new PhoneNumber("010-1234-5678"), null);
-    private final PlaceLike placeLikeStub = new PlaceLike(1L, placeStub);
+    private Place placeStub;
+    private PlaceLike placeLikeStub;
+
+    @BeforeEach
+    void setUp() {
+      placeStub = new Place("kakaomapID", "name",
+          new Address("addressName", "roadAddressName"),
+          "12.123", "123.23", null, new PhoneNumber("010-1234-5678"), null);
+      placeLikeStub = new PlaceLike(1L, placeStub);
+    }
 
     @Test
     @DisplayName("성공 : 존재하는 장소에 좋아요가 등록되었습니다.")
