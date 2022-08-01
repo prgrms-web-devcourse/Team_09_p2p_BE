@@ -2,7 +2,6 @@ package com.prgrms.p2p.domain.bookmark.service;
 
 import com.prgrms.p2p.domain.bookmark.entity.CourseBookmark;
 import com.prgrms.p2p.domain.bookmark.repository.CourseBookmarkRepository;
-import com.prgrms.p2p.domain.bookmark.service.BookmarkPolicy;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
