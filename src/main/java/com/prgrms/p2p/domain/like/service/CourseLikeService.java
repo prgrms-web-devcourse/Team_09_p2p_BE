@@ -11,11 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CourseLikeService {
+public class CourseLikeService implements LikePolicy{
 
-  private final CourseLikeRepository courseLikeRepository;
   private final CourseRepository courseRepository;
+  private final CourseLikeRepository courseLikeRepository;
 
+  @Override
   @Transactional
   public void toggle(Long userId, Long courseId) {
     Course course = courseRepository.findById(courseId)
