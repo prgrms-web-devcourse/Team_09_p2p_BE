@@ -27,7 +27,6 @@ public class CourseQueryService {
   public Slice<SummaryCourseResponse> findSummaryList(SearchCourseRequest searchCourseRequest,
       Pageable pageable) {
     Slice<Course> courses = courseRepository.searchCourse(searchCourseRequest, pageable);
-
     return courses.map(course -> CourseConverter.ofSummary(course, true));
   }
 
