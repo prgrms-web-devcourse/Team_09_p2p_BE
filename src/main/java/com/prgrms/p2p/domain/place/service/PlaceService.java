@@ -2,7 +2,6 @@ package com.prgrms.p2p.domain.place.service;
 
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toDetailPlaceResponse;
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toPlace;
-import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSummaryPlaceResponse;
 
 import com.prgrms.p2p.domain.common.service.UploadService;
 import com.prgrms.p2p.domain.place.dto.CreatePlaceRequest;
@@ -11,6 +10,7 @@ import com.prgrms.p2p.domain.place.dto.SearchPlaceRequest;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.place.repository.PlaceRepository;
+import com.prgrms.p2p.domain.place.util.PlaceConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -34,21 +34,12 @@ public class PlaceService {
 
   public DetailPlaceResponse findDetail(Long placeId) {
     Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
-    String imageUrl = placeRepository.findFirstImage(placeId);
-    Long likeCount = (long) place.getPlaceLikes().size();
-    Long usedCount = (long) place.getCoursePlaces().size();
-
-    return toDetailPlaceResponse(place, imageUrl, likeCount, usedCount);
+    return toDetailPlaceResponse(place);
   }
 
   public Slice<SummaryPlaceResponse> findSummaryList(
-      SearchPlaceRequest searchPlaceRequest, Pageable pageable) {
-    Slice<Place> placeList = placeRepository.searchPlace(searchPlaceRequest, pageable);
-    return placeList.map(place -> toSummaryPlaceResponse(
-        place,
-        placeRepository.findFirstImage(place.getId()),
-        (long) place.getPlaceLikes().size(),
-        (long) place.getCoursePlaces().size()
-    ));
+      SearchPlaceRequest searchPlaceReq, Pageable pageable) {
+    Slice<Place> placeList = placeRepository.searchPlace(searchPlaceReq, pageable);
+    return placeList.map(PlaceConverter::toSummaryPlaceResponse);
   }
 }
