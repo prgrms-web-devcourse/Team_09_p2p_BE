@@ -55,13 +55,14 @@ public class CoursePlace extends BaseEntity {
 
   public CoursePlace(Integer index, String description, String imageUrl,
       boolean recommended, Course course, Place place) {
-    this.index = index;
-    this.description = description;
-    this.imageUrl = imageUrl;
-    this.recommended = recommended;
-    this.course = course;
-    this.place = place;
+    setIndex(index);
+    setDescription(description);
+    setImageUrl(imageUrl);
+    setRecommended(recommended);
+    addCourse(course);
+    addPlace(place);
   }
+
 
   public void addCourse(Course course) {
     if (this.course != null) {

@@ -1,8 +1,8 @@
 package com.prgrms.p2p.domain.user.config.security;
 
 import static com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum.ACCESS_TOKEN_EXPIRATION_TIME;
-import static com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum.REFRESH_TOKEN_EXPIRATION_TIME;
 
+import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,7 +11,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,19 +44,22 @@ public class JwtTokenProvider {
     secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
   }
 
-  public String generateAccessToken(String username) {
-    return generateToken(username, ACCESS_TOKEN_EXPIRATION_TIME.getValue());
-  }
-
-  public String generateRefreshToken(String username) {
-    return generateToken(username, REFRESH_TOKEN_EXPIRATION_TIME.getValue());
+  public String generateAccessToken(Long id, String username) {
+    return generateToken(id, username, ACCESS_TOKEN_EXPIRATION_TIME.getValue());
   }
 
   public String getUserEmail(String token) {
-    return extractClaims(token).getSubject();
+    Object email = extractClaims(token).get("email");
+    return String.valueOf(email);
   }
 
-  public Authentication getAuthentication(String token, UserDetails userDetails) {
+  public Long getUserId(String token){
+    Object id = extractClaims(token).get("id");
+    return Long.valueOf(String.valueOf(id));
+  }
+
+
+  public Authentication getAuthentication(CustomUserDetails userDetails) {
     return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
   }
 
@@ -69,13 +71,17 @@ public class JwtTokenProvider {
   }
 
   // 토큰의 유효성 + 만료일자 확인
-  public boolean validateToken(String token, UserDetails userDetails) {
+  public boolean validateToken(String token, CustomUserDetails userDetails) {
+    Long userId = getUserId(token);
     String userEmail = getUserEmail(token);
-    return userEmail.equals(userDetails.getUsername()) && !isTokenExpired(token);
+
+    return userDetails.validate(userId,userEmail) && !isTokenExpired(token);
   }
 
-  private String generateToken(String userEmail, Long expireTime) {
-    Claims claims = Jwts.claims().setSubject(userEmail);
+  private String generateToken(Long id ,String userEmail, Long expireTime) {
+    Claims claims = Jwts.claims();
+    claims.put("id",id);
+    claims.put("email",userEmail);
     Date now = new Date();
 
     return Jwts.builder()

@@ -1,5 +1,8 @@
 package com.prgrms.p2p.domain.user.controller;
 
+import com.prgrms.p2p.domain.user.config.security.JwtTokenProvider;
+import com.prgrms.p2p.domain.user.dto.LoginRequest;
+import com.prgrms.p2p.domain.user.dto.LoginResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.service.UserService;
 import java.net.URI;
@@ -14,15 +17,28 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
   private final UserService userService;
+  private final JwtTokenProvider jwtTokenProvider;
 
-  public UserController(UserService userService) {
+  public UserController(UserService userService,
+      JwtTokenProvider jwtTokenProvider) {
     this.userService = userService;
+    this.jwtTokenProvider = jwtTokenProvider;
   }
 
   @PostMapping("/")
   public ResponseEntity<String> signUp(@RequestBody SignUpRequest signUpRequest) {
     String nickname = userService.signUp(signUpRequest);
     return ResponseEntity.created(URI.create("/")).body(nickname);
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+
+    //TODO: UnAuthorizedAccessException 만들기
+    LoginResponse login = userService.login(loginRequest.getEmail(), loginRequest.getPassword())
+        .orElseThrow(RuntimeException::new);
+
+    return ResponseEntity.ok(login);
   }
 
   @PostMapping("/email")

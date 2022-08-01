@@ -15,17 +15,20 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
+import javax.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.ObjectUtils;
 
-@RequiredArgsConstructor
 public class CourseSearchRepositoryImpl implements CourseSearchRepository {
 
   private final JPAQueryFactory jpaQueryFactory;
+
+  public CourseSearchRepositoryImpl(EntityManager em) {
+    this.jpaQueryFactory = new JPAQueryFactory(em);
+  }
 
   @Override
   public Slice<Course> searchCourse(SearchCourseRequest request, Pageable pageable) {

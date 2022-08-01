@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.user.util;
 
+import com.prgrms.p2p.domain.user.dto.LoginResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
 import com.prgrms.p2p.domain.user.entity.User;
@@ -43,4 +44,19 @@ public class UserConverter {
     return date.toString();
   }
 
+  public static LoginResponse fromUserAndToken(User user, String token) {
+    String profileUrl = user.getProfileUrl()
+        .orElse(null);
+
+    LoginResponse response = LoginResponse.builder()
+        .accessToken(token)
+        .build();
+
+    LoginResponse.User data = response.new User(
+        user.getId(),
+        user.getNickname(),
+        profileUrl
+    );
+    return response;
+  }
 }
