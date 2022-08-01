@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -19,6 +20,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final JwtEntryPoint jwtEntryPoint;
   private final CustomUserDetailService userDetailsService;
+
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
   @Bean
   public PasswordEncoder passwordEncoder(){
     return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -61,7 +64,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .anyRequest().permitAll() // 그외 나머지 요청은 누구나 접근 가능
         .and()
         .exceptionHandling()
-        .authenticationEntryPoint(jwtEntryPoint);
+        .authenticationEntryPoint(jwtEntryPoint)
+        .and()
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
   }
 
   @Override

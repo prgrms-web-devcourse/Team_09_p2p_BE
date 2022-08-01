@@ -2,6 +2,7 @@ package com.prgrms.p2p.domain.user.config.security;
 
 import static com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum.ACCESS_TOKEN_EXPIRATION_TIME;
 
+import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -58,7 +59,7 @@ public class JwtTokenProvider {
   }
 
 
-  public Authentication getAuthentication(String token, UserDetails userDetails) {
+  public Authentication getAuthentication(CustomUserDetails userDetails) {
     return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
   }
 
@@ -70,9 +71,11 @@ public class JwtTokenProvider {
   }
 
   // 토큰의 유효성 + 만료일자 확인
-  public boolean validateToken(String token, UserDetails userDetails) {
+  public boolean validateToken(String token, CustomUserDetails userDetails) {
+    Long userId = getUserId(token);
     String userEmail = getUserEmail(token);
-    return userEmail.equals(userDetails.getUsername()) && !isTokenExpired(token);
+
+    return userDetails.validate(userId,userEmail) && !isTokenExpired(token);
   }
 
   private String generateToken(Long id ,String userEmail, Long expireTime) {

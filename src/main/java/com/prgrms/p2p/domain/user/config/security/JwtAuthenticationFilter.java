@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.user.config.security;
 
+import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import com.prgrms.p2p.domain.user.repository.LogoutTokenRedisRepository;
 import com.prgrms.p2p.domain.user.service.CustomUserDetailService;
 import java.io.IOException;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -34,10 +34,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
       String userEmail = jwtTokenProvider.getUserEmail(token);
       if(userEmail != null) {
-        UserDetails userDetails = customUserDetailService.loadUserByUsername(userEmail);
+        CustomUserDetails userDetails = customUserDetailService.loadUserByUsername(userEmail);
 
         validateAccessToken(token, userDetails);
-        Authentication authentication = jwtTokenProvider.getAuthentication(token, userDetails);
+        Authentication authentication = jwtTokenProvider.getAuthentication(userDetails);
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
     }
@@ -51,7 +51,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
   }
 
   //TODO: 토큰 인증 실패 관련 예외 만들기
-  private void validateAccessToken(String token, UserDetails userDetails) {
+  private void validateAccessToken(String token, CustomUserDetails userDetails) {
     if(jwtTokenProvider.validateToken(token, userDetails)) throw new IllegalArgumentException();
   }
 
