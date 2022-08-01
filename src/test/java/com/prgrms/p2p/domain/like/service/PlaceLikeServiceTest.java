@@ -10,6 +10,8 @@ import static org.mockito.Mockito.when;
 
 import com.prgrms.p2p.domain.like.entity.PlaceLike;
 import com.prgrms.p2p.domain.like.repository.PlaceLikeRepository;
+import com.prgrms.p2p.domain.place.entity.Address;
+import com.prgrms.p2p.domain.place.entity.PhoneNumber;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.place.repository.PlaceRepository;
 import java.util.Optional;
@@ -36,15 +38,15 @@ class PlaceLikeServiceTest {
   private PlaceRepository placeRepository;
 
   @InjectMocks
-  private SimplePlaceLikeService placeLikeService;
+  private PlaceLikeService placeLikeService;
 
   @Nested
   @DisplayName("toggle() : 장소에 좋아요를 등록하거나 삭제합니다.")
   @TestMethodOrder(MethodOrderer.DisplayName.class)
   class ToggleTest {
 
-    private final Place placeStub = new Place("kakaomapID", "name",null,
-        "12.123", "123.23", null, null, null);
+    private final Place placeStub = new Place("kakaomapID", "name",new Address("addressName", "roadAddressName"),
+        "12.123", "123.23", null, new PhoneNumber("010-1234-5678"), null);
     private final PlaceLike placeLikeStub = new PlaceLike(1L, placeStub);
 
     @Test
