@@ -6,7 +6,6 @@ import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import com.prgrms.p2p.domain.user.util.UserConverter;
 import com.prgrms.p2p.domain.user.util.Validation;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +20,11 @@ public class UserService {
   }
 
   @Transactional
-  public String SignUp(SignUpRequest signUpRequest) {
+  public String signUp(SignUpRequest signUpRequest) {
 
-    Validation.validatePassword(signUpRequest.getPassword());
-    Validation.validatePassword(signUpRequest.getEmail());
+    validatePassword(signUpRequest.getPassword(), signUpRequest.getPasswordCheck());
+    validateNickname(signUpRequest.getNickname());
+    validateEmail(signUpRequest.getEmail());
 
     User user = userRepository.save(UserConverter.toUser(signUpRequest));
     return user.getNickname();
@@ -41,6 +41,7 @@ public class UserService {
 
   //TODO: Exception 만들기
   public void validateEmail(String email) {
+    Validation.validateEmail(email);
     userRepository.findByEmail(email)
         .ifPresent((s) -> {
           throw new IllegalArgumentException();
@@ -48,9 +49,15 @@ public class UserService {
   }
 
   public void validateNickname(String nickname) {
+    Validation.validateNickname(nickname);
     userRepository.findByNickname(nickname)
         .ifPresent((s) -> {
           throw new IllegalArgumentException();
         });
+  }
+
+  private void validatePassword(String password, String passwordCheck) {
+    Validation.validatePassword(password);
+    if(!password.equals(passwordCheck)) throw new IllegalArgumentException("비밀번호가 서로 다릅니다.");
   }
 }
