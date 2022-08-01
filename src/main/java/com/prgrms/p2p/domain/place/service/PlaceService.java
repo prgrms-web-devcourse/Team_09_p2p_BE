@@ -50,7 +50,18 @@ public class PlaceService {
   public Slice<SummaryPlaceResponse> findSummaryList(
       SearchPlaceRequest searchPlaceReq, Pageable pageable, Optional<Long> userId) {
     Slice<Place> placeList = placeRepository.searchPlace(searchPlaceReq, pageable);
-    return placeList.map(pl -> toSummaryPlaceResponse(pl, userId));
+    return placeList.map(p -> toSummaryPlaceResponse(p, userId));
+  }
+
+  /**
+   * 북마크한 장소 목록 조회
+   * @param userId
+   * @param pageable
+   * @return
+   */
+  public Slice<SummaryPlaceResponse> findBookmarkedPlaceList(Long userId, Pageable pageable) {
+    Slice<Place> bookmarkedPlace = placeRepository.findBookmarkedPlace(userId, pageable);
+    return bookmarkedPlace.map(p -> toSummaryPlaceResponse(p, Optional.ofNullable(userId)));
   }
 
   private void update(Place place, CreateCoursePlaceRequest updateReq, String imageUrl) {

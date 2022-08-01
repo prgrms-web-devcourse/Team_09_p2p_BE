@@ -9,4 +9,5 @@ public interface PlaceSearchRepository {
 
   Slice<Place> searchPlace(SearchPlaceRequest searchPlaceRequest, Pageable pageable);
 
+  Slice<Place> findBookmarkedPlace(Long userId, Pageable pageable);
 }
