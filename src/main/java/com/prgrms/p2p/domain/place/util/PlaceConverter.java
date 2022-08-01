@@ -16,15 +16,8 @@ public class PlaceConverter {
     Integer usedCount = place.getCoursePlaces().size();
     String imageUrl = getString(place, usedCount);
 
-    Boolean liked = false;
-    Boolean bookmarked = false;
-    if (userId.isPresent()) {
-      List<PlaceLike> placeLikes = place.getPlaceLikes();
-      liked = placeLikes.stream().anyMatch(pl -> pl.getUserId().equals(userId));
-
-      List<PlaceBookmark> placeBookmarks = place.getPlaceBookmarks();
-      bookmarked = placeBookmarks.stream().anyMatch(pb -> pb.getUserId().equals(userId));
-    }
+    Boolean liked = getLiked(place, userId);
+    Boolean bookmarked = getaBoolean(place, userId);
 
     return DetailPlaceResponse.builder()
         .id(place.getId())
@@ -49,11 +42,7 @@ public class PlaceConverter {
     Integer usedCount = place.getCoursePlaces().size();
     String imageUrl = getString(place, usedCount);
 
-    Boolean bookmarked = false;
-    if (userId.isPresent()) {
-      List<PlaceBookmark> placeBookmarks = place.getPlaceBookmarks();
-      bookmarked = placeBookmarks.stream().anyMatch(pb -> pb.getUserId().equals(userId));
-    }
+    Boolean bookmarked = getaBoolean(place, userId);
 
     return SummaryPlaceResponse.builder()
         .id(place.getId())
@@ -68,5 +57,17 @@ public class PlaceConverter {
 
   private static String getString(Place place, Integer usedCount) {
     return usedCount > 0 ? place.getCoursePlaces().get(0).getImageUrl() : null;
+  }
+
+  private static Boolean getLiked(Place place, Optional<Long> userId) {
+    List<PlaceLike> placeLikes = place.getPlaceLikes();
+    return userId.isPresent() && placeLikes.stream()
+        .anyMatch(pl -> pl.getUserId().equals(userId));
+  }
+
+  private static Boolean getaBoolean(Place place, Optional<Long> userId) {
+    List<PlaceBookmark> placeBookmarks = place.getPlaceBookmarks();
+    return userId.isPresent() && placeBookmarks.stream()
+        .anyMatch(pb -> pb.getUserId().equals(userId));
   }
 }
