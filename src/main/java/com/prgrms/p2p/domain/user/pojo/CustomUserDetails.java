@@ -19,17 +19,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CustomUserDetails implements UserDetails {
 
+  private Long id;
   private String email;
-  private String password;
 
   @Builder.Default
   private List<String> authorities = new ArrayList<>();
 
-  public CustomUserDetails(String email, String password,
-      List<String> authorities) {
+  public CustomUserDetails(Long id, String email, List<String> authorities) {
+    this.id = id;
     this.email = email;
-    this.password = password;
     this.authorities = authorities;
+  }
+
+  public boolean validate(Long id, String email){
+    return id.equals(this.id) && email.equals(this.email);
   }
 
   @Override
@@ -41,7 +44,7 @@ public class CustomUserDetails implements UserDetails {
 
   @Override
   public String getPassword() {
-    return password;
+    return null;
   }
 
   @Override
@@ -74,8 +77,8 @@ public class CustomUserDetails implements UserDetails {
 
   public static CustomUserDetails of(User user) {
     return CustomUserDetails.builder()
+        .id(user.getId())
         .email(user.getEmail())
-        .password(user.getPassword())
         .build();
   }
 }
