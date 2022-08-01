@@ -30,12 +30,17 @@ public class CourseService {
       Long userId) {
     User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
     Course course = courseRepository.save(toCourse(createCourseRequest, user));
+    saveCoursePlaces(createCourseRequest, images, course);
+    return course.getId();
+  }
+
+  private void saveCoursePlaces(CreateCourseRequest createCourseRequest, List<MultipartFile> images,
+      Course course) {
     IntStream.range(0, createCourseRequest.getPlaces().size()).forEach(
         index -> {
           String url = uploadService.uploadImg(images.get(index));
           coursePlaceService.save(createCourseRequest.getPlaces().get(index), index, url, course);
         }
     );
-    return course.getId();
   }
 }
