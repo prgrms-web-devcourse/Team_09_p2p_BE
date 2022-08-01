@@ -67,7 +67,7 @@ public class UserService {
 
     //토큰 생성및 LoginResponse 변환
     return Optional.of(user).map((u) ->
-        UserConverter.fromUserAndToken(u, jwtTokenProvider.generateAccessToken(email)));
+        UserConverter.fromUserAndToken(u, jwtTokenProvider.generateAccessToken(user.getId(), user.getEmail())));
   }
 
   public UserDetailResponse getUserInfo(Long userId) {
