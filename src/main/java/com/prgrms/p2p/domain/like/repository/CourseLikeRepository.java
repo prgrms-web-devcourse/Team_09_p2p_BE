@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CourseLikeRepository extends JpaRepository<CourseLike, Long> {
 
   Optional<CourseLike> findByUserIdAndCourse(Long userId, Course course);
+
+  Boolean existsByUserIdAndCourse(Long userId, Course course);
 }

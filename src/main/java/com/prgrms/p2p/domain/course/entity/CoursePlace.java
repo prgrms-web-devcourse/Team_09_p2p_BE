@@ -33,9 +33,6 @@ public class CoursePlace extends BaseEntity {
   @Column(name = "index")
   private Integer index;
 
-  @Column(name = "kakao_map_id")
-  private String kakaoMapId;
-
   @Column(name = "description")
   private String description;
 
@@ -56,10 +53,9 @@ public class CoursePlace extends BaseEntity {
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
-  public CoursePlace(Integer index, String kakaoMapId, String description, String imageUrl,
+  public CoursePlace(Integer index, String description, String imageUrl,
       boolean recommended, Course course, Place place) {
     this.index = index;
-    this.kakaoMapId = kakaoMapId;
     this.description = description;
     this.imageUrl = imageUrl;
     this.recommended = recommended;
