@@ -9,5 +9,4 @@ public interface PlaceSearchRepository {
 
   Slice<Place> searchPlace(SearchPlaceRequest searchPlaceRequest, Pageable pageable);
 
-  String findFirstImage(Long placeId);
 }

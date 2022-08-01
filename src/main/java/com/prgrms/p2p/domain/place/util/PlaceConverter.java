@@ -4,6 +4,8 @@ import com.prgrms.p2p.domain.place.dto.CreatePlaceRequest;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
+import com.prgrms.p2p.domain.place.entity.Category;
+import com.prgrms.p2p.domain.place.entity.PhoneNumber;
 import com.prgrms.p2p.domain.place.entity.Place;
 
 public class PlaceConverter {
@@ -14,13 +16,16 @@ public class PlaceConverter {
         new Address(createPlaceRequest.getAddressName(), createPlaceRequest.getRoadAddressName()),
         createPlaceRequest.getLatitude(),
         createPlaceRequest.getLongitude(),
-        createPlaceRequest.getCategory(),
-        createPlaceRequest.getPhoneNumber(),
+        Category.valueOf(createPlaceRequest.getCategory()),
+        PhoneNumber.of(createPlaceRequest.getPhoneNumber()),
         null);
   }
 
-  public static DetailPlaceResponse toDetailPlaceResponse(
-      Place place, String imageUrl, Long likeCount, Long usedCount) {
+  public static DetailPlaceResponse toDetailPlaceResponse(Place place) {
+
+    Integer likeCount = place.getPlaceLikes().size();
+    Integer usedCount = place.getCoursePlaces().size();
+    String imageUrl = getString(place, usedCount);
 
     return DetailPlaceResponse.builder()
         .id(place.getId())
@@ -37,8 +42,11 @@ public class PlaceConverter {
         .build();
   }
 
-  public static SummaryPlaceResponse toSummaryPlaceResponse(
-      Place place, String imageUrl, Long likeCount, Long usedCount) {
+  public static SummaryPlaceResponse toSummaryPlaceResponse(Place place) {
+
+    Integer likeCount = place.getPlaceLikes().size();
+    Integer usedCount = place.getCoursePlaces().size();
+    String imageUrl = getString(place, usedCount);
 
     return SummaryPlaceResponse.builder()
         .id(place.getId())
@@ -48,5 +56,9 @@ public class PlaceConverter {
         .category(place.getCategory().toString())
         .thumbnail(imageUrl)
         .build();
+  }
+
+  private static String getString(Place place, Integer usedCount) {
+    return usedCount > 0 ? place.getCoursePlaces().get(0).getImageUrl() : null;
   }
 }

@@ -21,8 +21,8 @@ public class DetailPlaceResponse {
   private String phone;
   private String imageUrl;
 
-  private Long likeCount;
-  private Long usedCount;
+  private Integer likeCount;
+  private Integer usedCount;
 
   // TODO: 2022/07/29 사용된 코스 추천 몇가지 들어가야 함
 }
