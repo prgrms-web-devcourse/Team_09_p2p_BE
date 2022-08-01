@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.place.entity;
 
+import java.util.Objects;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
@@ -30,7 +31,7 @@ public class PhoneNumber {
   }
 
   public void validationPhone(String number) {
-    if (number.isBlank() || !number.matches(PHONE_REGX)) {
+    if (Objects.isNull(number) || !number.matches(PHONE_REGX)) {
       throw new IllegalArgumentException();
     }
   }

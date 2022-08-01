@@ -41,7 +41,7 @@ class PhoneNumberTest {
     }
 
     @Test
-    @DisplayName("실패: 전화번호 생성")
+    @DisplayName("실패: 전화번호 패턴(자릿수)에 의한 실패")
     public void failByWrongNumber() throws Exception {
 
       //given

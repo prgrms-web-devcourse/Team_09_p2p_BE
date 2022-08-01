@@ -7,6 +7,7 @@ import com.prgrms.p2p.domain.course.entity.CoursePlace;
 import com.prgrms.p2p.domain.like.entity.PlaceLike;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -149,7 +150,7 @@ public class Place extends BaseEntity {
   }
 
   private void setAddress(Address address) {
-    if (address == null) {
+    if (Objects.isNull(address)) {
       throw new IllegalArgumentException();
     }
     this.address = address;
