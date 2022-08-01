@@ -11,11 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class PlaceLikeService {
+public class PlaceLikeService implements LikePolicy {
 
-  private final PlaceLikeRepository placeLikeRepository;
   private final PlaceRepository placeRepository;
+  private final PlaceLikeRepository placeLikeRepository;
 
+  @Override
   @Transactional
   public void toggle(Long userId, Long placeId) {
     Place place = placeRepository.findById(placeId)
