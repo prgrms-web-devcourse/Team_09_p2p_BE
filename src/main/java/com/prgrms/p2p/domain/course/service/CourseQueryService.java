@@ -8,6 +8,7 @@ import com.prgrms.p2p.domain.course.repository.CourseRepository;
 import com.prgrms.p2p.domain.course.util.CourseConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,11 +24,11 @@ public class CourseQueryService {
     return CourseConverter.ofDetail(course, true, true);
   }
 
-  public SummaryCourseResponse findSummaryList(SearchCourseRequest searchCourseRequest,
+  public Slice<SummaryCourseResponse> findSummaryList(SearchCourseRequest searchCourseRequest,
       Pageable pageable) {
+    Slice<Course> courses = courseRepository.searchCourse(searchCourseRequest, pageable);
 
-    return null;
+    return courses.map(course -> CourseConverter.ofSummary(course, true));
   }
-
 
 }
