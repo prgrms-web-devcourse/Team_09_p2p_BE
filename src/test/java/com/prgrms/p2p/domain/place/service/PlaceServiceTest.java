@@ -2,10 +2,12 @@ package com.prgrms.p2p.domain.place.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.prgrms.p2p.domain.place.dto.CreatePlaceRequest;
+import com.prgrms.p2p.domain.course.dto.CreateCoursePlaceRequest;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.SearchPlaceRequest;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
+import com.prgrms.p2p.domain.place.entity.Category;
+import com.prgrms.p2p.domain.place.entity.PhoneNumber;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.place.repository.PlaceRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,10 +41,11 @@ class PlaceServiceTest {
       String roadAddressName = "roadAddressName" + i;
       String latitude = "latitude" + i;
       String longitude = "longitude" + i;
-      String category = "CAFE";
-      String phoneNumber = "010-1" + i + "4-1234";
+      Category category = Category.CAFE;
+      String number = "010-1" + i + "4-1234";
+      PhoneNumber phoneNumber = new PhoneNumber(number);
 
-      CreatePlaceRequest request = CreatePlaceRequest.builder()
+      CreateCoursePlaceRequest request = CreateCoursePlaceRequest.builder()
           .kakaoMapId(kakaoMapId)
           .name(name)
           .addressName(addressName)
@@ -54,7 +57,7 @@ class PlaceServiceTest {
           .build();
 
       //when
-      placeId = placeService.save(request);
+      placeId = placeService.save(request).getId();
     }
   }
 
@@ -75,10 +78,11 @@ class PlaceServiceTest {
       String roadAddressName = "roadAddressName";
       String latitude = "latitude";
       String longitude = "longitude";
-      String category = "CAFE";
-      String phoneNumber = "010-1234-1234";
+      Category category = Category.CAFE;
+      String number = "010-1234-1234";
+      PhoneNumber phoneNumber = new PhoneNumber(number);
 
-      CreatePlaceRequest createPlaceReq = CreatePlaceRequest.builder()
+      CreateCoursePlaceRequest createPlaceReq = CreateCoursePlaceRequest.builder()
           .kakaoMapId(kakaoMapId)
           .name(name)
           .addressName(addressName)
@@ -90,7 +94,7 @@ class PlaceServiceTest {
           .build();
 
       //when
-      Long placeId = placeService.save(createPlaceReq);
+      Long placeId = placeService.save(createPlaceReq).getId();
 
       Place place = placeRepository.findById(placeId)
           .orElseThrow(RuntimeException::new);
@@ -98,14 +102,12 @@ class PlaceServiceTest {
       //then
       assertThat(createPlaceReq)
           .usingRecursiveComparison()
-          .ignoringFields("addressName", "roadAddressName", "phoneNumber", "category")
+          .ignoringFields("addressName", "roadAddressName", "isRecommended", "description")
           .isEqualTo(place);
 
       assertThat(createPlaceReq.getAddressName()).isEqualTo(place.getAddress().getAddressName());
       assertThat(createPlaceReq.getRoadAddressName()).isEqualTo(
           place.getAddress().getRoadAddressName());
-      assertThat(createPlaceReq.getCategory()).isEqualTo(place.getCategory().toString());
-      assertThat(createPlaceReq.getPhoneNumber()).isEqualTo(place.getPhoneNumber().getNumber());
     }
   }
 
