@@ -128,15 +128,13 @@ class PlaceServiceTest {
       //then
       assertThat(detailPlaceResp)
           .usingRecursiveComparison()
-          .ignoringFields("likeCount", "usedCount", "phone", "addressName", "roadAddressName",
-              "category")
+          .ignoringFields("likeCount", "usedCount", "phone", "addressName", "roadAddressName")
           .isEqualTo(place);
 
-      assertThat(detailPlaceResp.getPhone()).isEqualTo(place.getPhoneNumber().getNumber());
       assertThat(detailPlaceResp.getAddressName()).isEqualTo(place.getAddress().getAddressName());
       assertThat(detailPlaceResp.getRoadAddressName()).isEqualTo(
           place.getAddress().getRoadAddressName());
-      assertThat(detailPlaceResp.getCategory()).isEqualTo(place.getCategory().toString());
+      assertThat(detailPlaceResp.getPhoneNumber().getNumber()).isEqualTo(place.getPhoneNumber().getNumber());
     }
   }
 
@@ -150,7 +148,7 @@ class PlaceServiceTest {
 
       //given
       String keyword = "";
-      String category = null;
+      Category category = null;
 
       SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder()
           .keyword(keyword)

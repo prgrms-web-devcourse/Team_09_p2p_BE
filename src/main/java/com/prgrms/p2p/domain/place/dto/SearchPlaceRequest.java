@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.place.dto;
 
+import com.prgrms.p2p.domain.place.entity.Category;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,5 +9,5 @@ import lombok.Getter;
 public class SearchPlaceRequest {
 
   private String keyword;
-  private String category;
+  private Category category;
 }

@@ -71,7 +71,7 @@ public class PlaceSearchRepositoryImpl implements PlaceSearchRepository {
     return builder;
   }
 
-  private BooleanExpression categoryEq(String category) {
-    return ObjectUtils.isEmpty(category) ? null : place.category.eq(Category.valueOf(category));
+  private BooleanExpression categoryEq(Category category) {
+    return ObjectUtils.isEmpty(category) ? null : place.category.eq(category);
   }
 }

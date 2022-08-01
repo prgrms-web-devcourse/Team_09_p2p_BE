@@ -19,8 +19,8 @@ public class PlaceConverter {
         .roadAddressName(place.getAddress().getRoadAddressName())
         .latitude(place.getLatitude())
         .longitude(place.getLongitude())
-        .category(place.getCategory().toString())
-        .phone(place.getPhoneNumber().getNumber())
+        .category(place.getCategory())
+        .phoneNumber(place.getPhoneNumber())
         .imageUrl(imageUrl)
         .likeCount(likeCount)
         .usedCount(usedCount)
@@ -38,7 +38,7 @@ public class PlaceConverter {
         .title(place.getName())
         .likeCount(likeCount)
         .usedCount(usedCount)
-        .category(place.getCategory().toString())
+        .category(place.getCategory())
         .thumbnail(imageUrl)
         .build();
   }
