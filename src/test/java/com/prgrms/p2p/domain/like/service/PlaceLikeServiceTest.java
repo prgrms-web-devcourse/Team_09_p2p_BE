@@ -52,14 +52,14 @@ class PlaceLikeServiceTest {
     public void successAddition() {
       // Given
       when(placeRepository.findById(any(Long.class))).thenReturn(Optional.of(placeStub));
-      when(placeLikeRepository.findPlaceLikeByUserIdAndPlace(
+      when(placeLikeRepository.findByUserIdAndPlace(
           any(Long.class), any(Place.class))).thenReturn(Optional.empty());
       when(placeLikeRepository.save(any(PlaceLike.class))).thenReturn(placeLikeStub);
       // When
       placeLikeService.toggle(1L, 1L);
       // Then
       verify(placeRepository, times(1)).findById(any(Long.class));
-      verify(placeLikeRepository, times(1)).findPlaceLikeByUserIdAndPlace(any(Long.class), any(Place.class));
+      verify(placeLikeRepository, times(1)).findByUserIdAndPlace(any(Long.class), any(Place.class));
       verify(placeLikeRepository, times(1)).save(any(PlaceLike.class));
     }
 
@@ -68,14 +68,14 @@ class PlaceLikeServiceTest {
     public void successDeletion() {
       // Given
       when(placeRepository.findById(any(Long.class))).thenReturn(Optional.of(placeStub));
-      when(placeLikeRepository.findPlaceLikeByUserIdAndPlace(
+      when(placeLikeRepository.findByUserIdAndPlace(
           any(Long.class), any(Place.class))).thenReturn(Optional.of(placeLikeStub));
       doNothing().when(placeLikeRepository).delete(any(PlaceLike.class));
       // When
       placeLikeService.toggle(1L, 1L);
       // Then
       verify(placeRepository, times(1)).findById(any(Long.class));
-      verify(placeLikeRepository, times(1)).findPlaceLikeByUserIdAndPlace(any(Long.class), any(Place.class));
+      verify(placeLikeRepository, times(1)).findByUserIdAndPlace(any(Long.class), any(Place.class));
       verify(placeLikeRepository, times(1)).delete(any(PlaceLike.class));
     }
 

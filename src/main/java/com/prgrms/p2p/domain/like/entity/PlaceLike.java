@@ -31,15 +31,18 @@ public class PlaceLike extends Like {
 
   public PlaceLike(Long userId, Place place) {
     super(userId);
-    this.addPlace(place);
+    setPlace(place);
   }
 
-  public void addPlace(Place place) {
+  private void setPlace(Place place) {
+    if (Objects.isNull(place)) {
+      throw new RuntimeException("장소로 빈 값을 받을 수 없습니다.");
+    }
     if (Objects.nonNull(this.place)) {
       this.place.getPlaceLikes().remove(this);
     }
-    place.addPlaceLike(this);
     this.place = place;
+    place.addPlaceLike(this);
   }
 
   public void deletePlace(Place place) {
