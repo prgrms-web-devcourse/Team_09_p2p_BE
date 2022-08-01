@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.course.service;
 
+import com.prgrms.p2p.domain.bookmark.repository.CourseBookmarkRepository;
 import com.prgrms.p2p.domain.course.dto.DetailCourseResponse;
 import com.prgrms.p2p.domain.course.dto.SearchCourseRequest;
 import com.prgrms.p2p.domain.course.dto.SummaryCourseResponse;
@@ -19,19 +20,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class CourseQueryService {
 
   private final CourseRepository courseRepository;
-  private final CourseLikeRepository courseLikeRepository;
+  private final CourseLikeRepository likeRepository;
+  private final CourseBookmarkRepository bookmarkRepository;
 
   public DetailCourseResponse findDetail(Long id, Long userId) {
     Course course = courseRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-    Boolean isLiked = courseLikeRepository.existsByUserIdAndCourse(userId, course);
-    Boolean isBookmarked = courseLikeRepository.existsByUserIdAndCourse(userId, course);
+    Boolean isLiked = likeRepository.existsByUserIdAndCourse(userId, course);
+    Boolean isBookmarked = bookmarkRepository.existsByUserIdAndCourse(userId, course);
     return CourseConverter.ofDetail(course, isLiked, isBookmarked);
   }
 
   public Slice<SummaryCourseResponse> findSummaryList(SearchCourseRequest searchCourseRequest,
-      Pageable pageable,Long userId) {
+      Pageable pageable, Long userId) {
     Slice<Course> courses = courseRepository.searchCourse(searchCourseRequest, pageable);
-    return courses.map(course -> CourseConverter.ofSummary(course, true));
+    return courses.map(course -> CourseConverter.ofSummary(course,
+        course.getCourseBookmarks().stream()
+            .anyMatch(courseBookmark -> courseBookmark.getUserId().equals(userId))));
   }
 
 }

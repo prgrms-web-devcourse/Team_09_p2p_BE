@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.course.repository;
 
+import static com.prgrms.p2p.domain.bookmark.entity.QCourseBookmark.courseBookmark;
 import static com.prgrms.p2p.domain.course.entity.QCourse.course;
 
 import com.prgrms.p2p.domain.course.dto.SearchCourseRequest;
@@ -32,7 +33,8 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
 
   @Override
   public Slice<Course> searchCourse(SearchCourseRequest request, Pageable pageable) {
-    JPAQuery<Course> courseJPAQuery = jpaQueryFactory.selectFrom(course)
+    JPAQuery<Course> courseJPAQuery = jpaQueryFactory.select(course).from(course)
+        .leftJoin(course.courseBookmarks, courseBookmark).fetchJoin()
         .where(keywordListContains(request.getKeyword()), regionEq(request.getRegion()),
             themeEq(request.getThemes()), spotEq(request.getSpots())).offset(pageable.getOffset())
         .limit(pageable.getPageSize() + 1);
