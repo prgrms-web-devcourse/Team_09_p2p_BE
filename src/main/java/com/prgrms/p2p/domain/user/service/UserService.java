@@ -1,8 +1,7 @@
 package com.prgrms.p2p.domain.user.service;
 
-import static com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum.ACCESS_TOKEN_EXPIRATION_TIME;
+import static com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum.BAN_EXPIRATION_TIME;
 
-import com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum;
 import com.prgrms.p2p.domain.user.config.security.JwtTokenProvider;
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
@@ -36,8 +35,9 @@ public class UserService {
   @Transactional
   public String signUp(SignUpRequest signUpRequest) {
 
-    Validation.validatePassword(signUpRequest.getPassword());
-    Validation.validatePassword(signUpRequest.getEmail());
+    validatePassword(signUpRequest.getPassword(), signUpRequest.getPasswordCheck());
+    validateNickname(signUpRequest.getNickname());
+    validateEmail(signUpRequest.getEmail());
 
     User user = userRepository.save(UserConverter.toUser(signUpRequest));
     return user.getNickname();
@@ -47,11 +47,12 @@ public class UserService {
   public Optional<LoginResponse> login(String email, String password) {
 
     //래디스 체크
-    if(redisTemplate.getExpire(email) == null){
-      redisTemplate.opsForValue()
-          .set(email,0 ,ACCESS_TOKEN_EXPIRATION_TIME.getValue(),TimeUnit.MILLISECONDS);
-    }
     redisTemplate.opsForValue().increment(email);
+
+    if((int)redisTemplate.opsForValue().get(email) >= 5){
+      redisTemplate.opsForValue().set(email, 5, BAN_EXPIRATION_TIME.getValue(), TimeUnit.MILLISECONDS);
+    }
+
 
     //TODO : 알맞는 예외 설정해주기 - NotFoundException
     //이메일 존재유무 확인
@@ -80,6 +81,7 @@ public class UserService {
 
   //TODO: Exception 만들기
   public void validateEmail(String email) {
+    Validation.validateEmail(email);
     userRepository.findByEmail(email)
         .ifPresent((s) -> {
           throw new IllegalArgumentException();
@@ -87,9 +89,15 @@ public class UserService {
   }
 
   public void validateNickname(String nickname) {
+    Validation.validateNickname(nickname);
     userRepository.findByNickname(nickname)
         .ifPresent((s) -> {
           throw new IllegalArgumentException();
         });
+  }
+
+  private void validatePassword(String password, String passwordCheck) {
+    Validation.validatePassword(password);
+    if(!password.equals(passwordCheck)) throw new IllegalArgumentException("비밀번호가 서로 다릅니다.");
   }
 }
