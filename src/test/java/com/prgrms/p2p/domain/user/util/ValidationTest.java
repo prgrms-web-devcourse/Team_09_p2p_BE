@@ -31,7 +31,7 @@ class ValidationTest {
     }
 
     @Test
-    @DisplayName("실패 테스트")
+    @DisplayName("실패 - 이메일 정규표현식 만족하지 않음")
     void failEmail() {
 
       // Given
@@ -55,7 +55,7 @@ class ValidationTest {
 
     @Test
     @DisplayName("성공 테스트")
-    void successEmail() {
+    void successPassword() {
 
       // Given
       String password1= "test1234!";
@@ -68,8 +68,8 @@ class ValidationTest {
     }
 
     @Test
-    @DisplayName("실패 테스트")
-    void failEmail() {
+    @DisplayName("실패 - 패스워드 정규표현식 만족하지 않음")
+    void failPassword() {
 
       // Given
       String password1= "test123";
@@ -92,7 +92,7 @@ class ValidationTest {
 
     @Test
     @DisplayName("성공 테스트")
-    void successEmail() {
+    void successNickname() {
 
       // Given
       String nickname1= "test";
@@ -109,8 +109,8 @@ class ValidationTest {
     }
 
     @Test
-    @DisplayName("실패 테스트")
-    void failEmail() {
+    @DisplayName("실패 - 닉네임 정규표현식 만족하지 않음")
+    void failNickname() {
 
       // Given
       String nickname1= "test123";

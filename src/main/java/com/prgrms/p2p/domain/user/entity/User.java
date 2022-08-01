@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.user.entity;
 
+import static java.util.Objects.isNull;
 import static org.apache.logging.log4j.util.Strings.isBlank;
 
 import com.prgrms.p2p.domain.common.BaseEntity;
@@ -131,7 +132,7 @@ public class User extends BaseEntity {
     this.birth = LocalDate.parse(birth);
   }
   private void setSex(Sex sex) {
-    if(sex == null) throw new RuntimeException();
+    if(isNull(sex)) throw new RuntimeException();
     this.sex = sex;
   }
 

@@ -130,7 +130,6 @@ class UserTest {
       // Given
       // When
       // Then
-      //given
       assertThrows(RuntimeException.class,
           () ->new User("test@gmail.com",
               "test1234",
@@ -146,7 +145,6 @@ class UserTest {
       // Given
       // When
       // Then
-      //given
       assertThrows(RuntimeException.class,
           () ->new User("test@gmail.com",
               "test1234",
@@ -162,7 +160,6 @@ class UserTest {
       // Given
       // When
       // Then
-      //given
       assertThrows(RuntimeException.class,
           () ->new User("test@gmail.com",
               "test1234",
@@ -178,7 +175,6 @@ class UserTest {
       // Given
       // When
       // Then
-      //given
       assertThrows(RuntimeException.class,
           () ->new User("test@gmail.com",
               "test1234",
@@ -194,7 +190,6 @@ class UserTest {
       // Given
       // When
       // Then
-      //given
       assertThrows(RuntimeException.class,
           () ->new User("test@gmail.com",
               "test1234",
@@ -210,7 +205,6 @@ class UserTest {
       // Given
       // When
       // Then
-      //given
       assertThrows(RuntimeException.class,
           () ->new User("test@gmail.com",
               "test1234",
@@ -226,7 +220,6 @@ class UserTest {
       // Given
       // When
       // Then
-      //given
       assertThrows(RuntimeException.class,
           () ->new User("test@gmail.com",
               "test1234",
