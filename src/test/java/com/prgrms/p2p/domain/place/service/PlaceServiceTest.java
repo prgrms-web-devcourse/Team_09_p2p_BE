@@ -149,6 +149,7 @@ class PlaceServiceTest {
     courseRepository.deleteAll();
     coursePlaceRepository.deleteAll();
     placeRepository.deleteAll();
+    placeLikeRepository.deleteAll();
   }
 
   @Nested
