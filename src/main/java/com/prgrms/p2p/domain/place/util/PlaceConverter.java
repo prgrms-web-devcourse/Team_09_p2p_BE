@@ -62,12 +62,12 @@ public class PlaceConverter {
   private static Boolean getLiked(Place place, Optional<Long> userId) {
     List<PlaceLike> placeLikes = place.getPlaceLikes();
     return userId.isPresent() && placeLikes.stream()
-        .anyMatch(pl -> pl.getUserId().equals(userId));
+        .anyMatch(pl -> pl.getUserId().equals(userId.get()));
   }
 
   private static Boolean getaBoolean(Place place, Optional<Long> userId) {
     List<PlaceBookmark> placeBookmarks = place.getPlaceBookmarks();
     return userId.isPresent() && placeBookmarks.stream()
-        .anyMatch(pb -> pb.getUserId().equals(userId));
+        .anyMatch(pb -> pb.getUserId().equals(userId.get()));
   }
 }
