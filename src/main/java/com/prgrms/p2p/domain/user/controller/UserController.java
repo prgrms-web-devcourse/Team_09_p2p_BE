@@ -21,7 +21,7 @@ public class UserController {
 
   @PostMapping("/")
   public ResponseEntity<String> signUp(@RequestBody SignUpRequest signUpRequest) {
-    String nickname = userService.SignUp(signUpRequest);
+    String nickname = userService.signUp(signUpRequest);
     return ResponseEntity.created(URI.create("/")).body(nickname);
   }
 
