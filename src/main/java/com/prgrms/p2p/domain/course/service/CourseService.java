@@ -44,15 +44,4 @@ public class CourseService {
         }
     );
   }
-
-
-  private List<Place> getOrSavePlaces(List<CreateCoursePlaceRequest> createCoursePlaceRequests) {
-    return IntStream.range(0, createCoursePlaceRequests.size()).mapToObj(index -> {
-      CreateCoursePlaceRequest createCoursePlaceRequest = createCoursePlaceRequests.get(index);
-      return CoursePlaceConverter.toPlace(createCoursePlaceRequest);
-    }).collect(Collectors.toList()).stream().map(
-        place -> placeRepository.findByKakaoMapId(place.getKakaoMapId())
-            .orElseGet(() -> placeRepository.save(place))).collect(Collectors.toList());
-  }
-
 }

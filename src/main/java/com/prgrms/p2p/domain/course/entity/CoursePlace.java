@@ -61,6 +61,7 @@ public class CoursePlace extends BaseEntity {
     setRecommended(recommended);
     addCourse(course);
     addPlace(place);
+  }
 
 
   public void addCourse(Course course) {
