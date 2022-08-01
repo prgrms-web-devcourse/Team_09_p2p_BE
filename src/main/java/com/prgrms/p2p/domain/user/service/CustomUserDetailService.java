@@ -17,7 +17,7 @@ public class CustomUserDetailService implements UserDetailsService {
   private final UserRepository userRepository;
 
   @Override
-  public UserDetails loadUserByUsername(String userEmail){
+  public CustomUserDetails loadUserByUsername(String userEmail){
     User user = userRepository.findByEmail(userEmail)
         .orElseThrow(() -> new IllegalArgumentException("이메일를 찾을 수 없습니다."));
     return CustomUserDetails.of(user);
