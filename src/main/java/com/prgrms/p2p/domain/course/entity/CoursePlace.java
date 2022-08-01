@@ -33,9 +33,6 @@ public class CoursePlace extends BaseEntity {
   @Column(name = "index")
   private Integer index;
 
-  @Column(name = "kakao_map_id")
-  private String kakaoMapId;
-
   @Column(name = "description")
   private String description;
 
@@ -58,13 +55,12 @@ public class CoursePlace extends BaseEntity {
 
   public CoursePlace(Integer index, String kakaoMapId, String description, String imageUrl,
       boolean recommended, Course course, Place place) {
-    this.index = index;
-    this.kakaoMapId = kakaoMapId;
-    this.description = description;
-    this.imageUrl = imageUrl;
-    this.recommended = recommended;
-    this.course = course;
-    this.place = place;
+    setIndex(index);
+    setDescription(description);
+    setImageUrl(imageUrl);
+    setRecommended(recommended);
+    addCourse(course);
+    addPlace(place);
   }
 
   public void addCourse(Course course) {
