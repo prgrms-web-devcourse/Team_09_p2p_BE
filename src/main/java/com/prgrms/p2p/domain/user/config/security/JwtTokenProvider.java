@@ -1,7 +1,6 @@
 package com.prgrms.p2p.domain.user.config.security;
 
 import static com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum.ACCESS_TOKEN_EXPIRATION_TIME;
-import static com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum.REFRESH_TOKEN_EXPIRATION_TIME;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -46,10 +45,6 @@ public class JwtTokenProvider {
 
   public String generateAccessToken(String username) {
     return generateToken(username, ACCESS_TOKEN_EXPIRATION_TIME.getValue());
-  }
-
-  public String generateRefreshToken(String username) {
-    return generateToken(username, REFRESH_TOKEN_EXPIRATION_TIME.getValue());
   }
 
   public String getUserEmail(String token) {
