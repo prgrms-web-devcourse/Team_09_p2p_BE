@@ -1,5 +1,7 @@
 package com.prgrms.p2p.domain.user.service;
 
+import static com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum.ACCESS_TOKEN_EXPIRATION_TIME;
+
 import com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum;
 import com.prgrms.p2p.domain.user.config.security.JwtTokenProvider;
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
@@ -44,6 +46,13 @@ public class UserService {
   @Transactional
   public Optional<LoginResponse> login(String email, String password) {
 
+    //래디스 체크
+    if(redisTemplate.getExpire(email) == null){
+      redisTemplate.opsForValue()
+          .set(email,0 ,ACCESS_TOKEN_EXPIRATION_TIME.getValue(),TimeUnit.MILLISECONDS);
+    }
+    redisTemplate.opsForValue().increment(email);
+
     //TODO : 알맞는 예외 설정해주기 - NotFoundException
     //이메일 존재유무 확인
     User user = userRepository.findByEmail(email)
@@ -52,16 +61,12 @@ public class UserService {
     //비밀번호 확인
     user.matchPassword(password);
 
-    String accessToken = jwtTokenProvider.generateAccessToken(email);
-
-    //래디스 추가
-    //TODO : 유효시간 가져올 방법
-    redisTemplate.opsForValue()
-        .set(email,accessToken , JwtExpirationEnum.ACCESS_TOKEN_EXPIRATION_TIME.getValue(),TimeUnit.MILLISECONDS);
+    //성공적인 로그인시 생성했던 레디스 삭제
+    redisTemplate.delete(email);
 
     //토큰 생성및 LoginResponse 변환
     return Optional.of(user).map((u) ->
-        UserConverter.fromUserAndToken(u, accessToken));
+        UserConverter.fromUserAndToken(u, jwtTokenProvider.generateAccessToken(email)));
   }
 
   public UserDetailResponse getUserInfo(Long userId) {
