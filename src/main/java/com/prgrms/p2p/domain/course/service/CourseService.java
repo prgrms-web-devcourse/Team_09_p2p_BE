@@ -30,6 +30,7 @@ public class CourseService {
       Long userId) {
     User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
     Course course = courseRepository.save(toCourse(createCourseRequest, user));
+
     saveCoursePlaces(createCourseRequest, images, course);
     return course.getId();
   }
@@ -43,4 +44,15 @@ public class CourseService {
         }
     );
   }
+
+
+  private List<Place> getOrSavePlaces(List<CreateCoursePlaceRequest> createCoursePlaceRequests) {
+    return IntStream.range(0, createCoursePlaceRequests.size()).mapToObj(index -> {
+      CreateCoursePlaceRequest createCoursePlaceRequest = createCoursePlaceRequests.get(index);
+      return CoursePlaceConverter.toPlace(createCoursePlaceRequest);
+    }).collect(Collectors.toList()).stream().map(
+        place -> placeRepository.findByKakaoMapId(place.getKakaoMapId())
+            .orElseGet(() -> placeRepository.save(place))).collect(Collectors.toList());
+  }
+
 }

@@ -10,8 +10,7 @@ public class CoursePlaceConverter {
 
   public static CoursePlace toCoursePlace(CreateCoursePlaceRequest createCoursePlaceRequest,
       Integer index, String imageUrl, Course course, Place place) {
-    return new CoursePlace(index, createCoursePlaceRequest.getKakaoMapId(),
-        createCoursePlaceRequest.getDescription(), imageUrl,
+    return new CoursePlace(index, createCoursePlaceRequest.getDescription(), imageUrl,
         createCoursePlaceRequest.getIsRecommended(), course, place);
   }
 

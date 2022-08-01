@@ -53,7 +53,7 @@ public class CoursePlace extends BaseEntity {
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
-  public CoursePlace(Integer index, String kakaoMapId, String description, String imageUrl,
+  public CoursePlace(Integer index, String description, String imageUrl,
       boolean recommended, Course course, Place place) {
     setIndex(index);
     setDescription(description);
@@ -61,7 +61,7 @@ public class CoursePlace extends BaseEntity {
     setRecommended(recommended);
     addCourse(course);
     addPlace(place);
-  }
+
 
   public void addCourse(Course course) {
     if (this.course != null) {
