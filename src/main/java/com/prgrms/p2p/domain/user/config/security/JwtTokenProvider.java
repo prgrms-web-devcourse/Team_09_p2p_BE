@@ -43,13 +43,20 @@ public class JwtTokenProvider {
     secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
   }
 
-  public String generateAccessToken(String username) {
-    return generateToken(username, ACCESS_TOKEN_EXPIRATION_TIME.getValue());
+  public String generateAccessToken(Long id, String username) {
+    return generateToken(id, username, ACCESS_TOKEN_EXPIRATION_TIME.getValue());
   }
 
   public String getUserEmail(String token) {
-    return extractClaims(token).getSubject();
+    Object email = extractClaims(token).get("email");
+    return String.valueOf(email);
   }
+
+  public Long getUserId(String token){
+    Object id = extractClaims(token).get("id");
+    return Long.valueOf(String.valueOf(id));
+  }
+
 
   public Authentication getAuthentication(String token, UserDetails userDetails) {
     return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
@@ -68,8 +75,10 @@ public class JwtTokenProvider {
     return userEmail.equals(userDetails.getUsername()) && !isTokenExpired(token);
   }
 
-  private String generateToken(String userEmail, Long expireTime) {
-    Claims claims = Jwts.claims().setSubject(userEmail);
+  private String generateToken(Long id ,String userEmail, Long expireTime) {
+    Claims claims = Jwts.claims();
+    claims.put("id",id);
+    claims.put("email",userEmail);
     Date now = new Date();
 
     return Jwts.builder()
