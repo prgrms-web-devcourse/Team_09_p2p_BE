@@ -45,7 +45,8 @@ class PlaceLikeServiceTest {
   @TestMethodOrder(MethodOrderer.DisplayName.class)
   class ToggleTest {
 
-    private final Place placeStub = new Place("kakaomapID", "name",new Address("addressName", "roadAddressName"),
+    private final Place placeStub = new Place("kakaomapID", "name",
+        new Address("addressName", "roadAddressName"),
         "12.123", "123.23", null, new PhoneNumber("010-1234-5678"), null);
     private final PlaceLike placeLikeStub = new PlaceLike(1L, placeStub);
 
@@ -70,8 +71,8 @@ class PlaceLikeServiceTest {
     public void successDeletion() {
       // Given
       when(placeRepository.findById(any(Long.class))).thenReturn(Optional.of(placeStub));
-      when(placeLikeRepository.findByUserIdAndPlace(
-          any(Long.class), any(Place.class))).thenReturn(Optional.of(placeLikeStub));
+      when(placeLikeRepository.findByUserIdAndPlace(any(Long.class), any(Place.class)))
+          .thenReturn(Optional.of(placeLikeStub));
       doNothing().when(placeLikeRepository).delete(any(PlaceLike.class));
       // When
       placeLikeService.toggle(1L, 1L);
