@@ -10,6 +10,8 @@ import com.prgrms.p2p.domain.place.entity.Category;
 import com.prgrms.p2p.domain.place.entity.PhoneNumber;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.place.repository.PlaceRepository;
+import java.util.Objects;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -123,18 +125,21 @@ class PlaceServiceTest {
       Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
 
       //when
-      DetailPlaceResponse detailPlaceResp = placeService.findDetail(placeId);
+      DetailPlaceResponse detailPlaceResp = placeService.findDetail(placeId, Optional.empty());
 
       //then
       assertThat(detailPlaceResp)
           .usingRecursiveComparison()
-          .ignoringFields("likeCount", "usedCount", "phone", "addressName", "roadAddressName")
+          .ignoringFields("likeCount", "usedCount", "phone", "addressName", "roadAddressName",
+              "liked", "bookmarked")
           .isEqualTo(place);
 
       assertThat(detailPlaceResp.getAddressName()).isEqualTo(place.getAddress().getAddressName());
       assertThat(detailPlaceResp.getRoadAddressName()).isEqualTo(
           place.getAddress().getRoadAddressName());
       assertThat(detailPlaceResp.getPhoneNumber().getNumber()).isEqualTo(place.getPhoneNumber().getNumber());
+      assertThat(detailPlaceResp.getLiked()).isFalse();
+      assertThat(detailPlaceResp.getBookmarked()).isFalse();
     }
   }
 
@@ -159,12 +164,12 @@ class PlaceServiceTest {
 
       //when
       Slice<SummaryPlaceResponse> summaryList
-          = placeService.findSummaryList(searchPlaceReq, pageable);
+          = placeService.findSummaryList(searchPlaceReq, pageable, Optional.empty());
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
         assertThat(summaryPlaceResponse.getTitle()).contains(keyword);
-        if (category != null) {
+        if (!Objects.isNull(category)) {
           assertThat(summaryPlaceResponse.getCategory()).isEqualTo(category);
         }
       }
