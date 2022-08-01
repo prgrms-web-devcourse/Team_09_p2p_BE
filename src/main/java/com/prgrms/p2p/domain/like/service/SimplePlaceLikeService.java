@@ -21,7 +21,7 @@ public class SimplePlaceLikeService implements PlaceLikeService{
   public void toggle(Long userId, Long placeId) {
     Place place = placeRepository.findById(placeId)
         .orElseThrow(() -> new RuntimeException("존재하지 않는 장소에 좋아요를 시도했습니다."));
-    placeLikeRepository.findPlaceLikeByUserIdAndPlace(userId, place)
+    placeLikeRepository.findByUserIdAndPlace(userId, place)
         .ifPresentOrElse(this::disLike, () -> like(userId, place));
   }
 
