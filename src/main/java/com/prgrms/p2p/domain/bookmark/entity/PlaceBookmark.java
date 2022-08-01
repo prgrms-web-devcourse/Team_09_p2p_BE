@@ -1,6 +1,7 @@
 package com.prgrms.p2p.domain.bookmark.entity;
 
 import com.prgrms.p2p.domain.place.entity.Place;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,11 +31,14 @@ public class PlaceBookmark extends Bookmark {
 
   public PlaceBookmark(Long userId, Place place) {
     super(userId);
-    this.addPlace(place);
+    setPlace(place);
   }
 
-  public void addPlace(Place place) {
-    if (this.place != null) {
+  public void setPlace(Place place) {
+    if (Objects.isNull(place)) {
+      throw new IllegalArgumentException("장소로 빈 값을 받을 수 없습니다.");
+    }
+    if (Objects.nonNull(this.place)) {
       this.place.getPlaceBookmarks().remove(this);
     }
     place.addPlaceBookmark(this);
@@ -44,9 +48,5 @@ public class PlaceBookmark extends Bookmark {
   public void deletePlace(Place place) {
     place.deleteBookmark(this);
     this.place = null;
-  }
-
-  private void setPlace(Place place) {
-    this.place = place;
   }
 }
