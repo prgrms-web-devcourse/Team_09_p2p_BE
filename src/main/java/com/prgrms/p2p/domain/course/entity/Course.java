@@ -57,8 +57,13 @@ public class Course extends BaseEntity {
 
   @Enumerated(EnumType.STRING)
   @ElementCollection(fetch = FetchType.EAGER)
-  @Column(name = "theme")
+  @Column(name = "themes")
   private Set<Theme> themes = new HashSet<>();
+
+  @Enumerated(EnumType.STRING)
+  @ElementCollection(fetch = FetchType.EAGER)
+  @Column(name = "spots")
+  private Set<Spot> spots = new HashSet<>();
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
