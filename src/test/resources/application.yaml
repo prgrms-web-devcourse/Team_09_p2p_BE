@@ -16,6 +16,7 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
+      hibernate.format_sql: true
       hibernate.dialect: org.hibernate.dialect.H2Dialect
       hibernate.default_batch_fetch_size: 30
   datasource:

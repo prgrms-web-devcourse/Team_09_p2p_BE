@@ -4,6 +4,7 @@ import com.prgrms.p2p.domain.course.entity.Period;
 import com.prgrms.p2p.domain.course.entity.Region;
 import com.prgrms.p2p.domain.course.entity.Spot;
 import com.prgrms.p2p.domain.course.entity.Theme;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,9 @@ public class CreateCourseRequest {
   private Region region;
   private Period period;
   private String description;
-  private List<Theme> themes;
-  private List<Spot> spots;
+  @Builder.Default
+  private List<Theme> themes =new ArrayList<>();
+  @Builder.Default
+  private List<Spot> spots = new ArrayList<>();
   private List<CreateCoursePlaceRequest> places;
 }

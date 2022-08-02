@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum Category {
-  MT1("대형마트"), CS2("편의점"),
+  MT1("대형마트"),
+
+  CS2("편의점"),
 
   PS3("어린이집, 유치원"),
 

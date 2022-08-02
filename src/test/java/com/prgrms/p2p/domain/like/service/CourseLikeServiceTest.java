@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.Period;
 import com.prgrms.p2p.domain.course.entity.Region;
+import com.prgrms.p2p.domain.course.entity.Spot;
 import com.prgrms.p2p.domain.course.entity.Theme;
 import com.prgrms.p2p.domain.course.repository.CourseRepository;
 import com.prgrms.p2p.domain.like.entity.CourseLike;
@@ -60,9 +61,11 @@ class CourseLikeServiceTest {
       User userStub = new User("email", "password", "nickName",
           LocalDate.now().toString(), Sex.FEMALE);
       Set<Theme> themesStub = new HashSet<>();
-      themesStub.add(Theme.ALONE);
-      courseStub = new Course("title", Period.ONE_DAY, Region.SEOUL, "description",
-          themesStub, userStub);
+      themesStub.add(Theme.데이트코스);
+      Set<Spot> spots = new HashSet<>();
+      spots.add(Spot.바다);
+      courseStub = new Course("title", Period.ONE_DAY, Region.서울, "description",
+          themesStub, spots, userStub);
       courseLikeStub = new CourseLike(1L, courseStub);
     }
 
