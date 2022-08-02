@@ -6,6 +6,7 @@ import com.prgrms.p2p.domain.user.config.security.JwtTokenProvider;
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
+import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import com.prgrms.p2p.domain.user.util.UserConverter;
@@ -68,6 +69,16 @@ public class UserService {
     //토큰 생성및 LoginResponse 변환
     return Optional.of(user).map((u) ->
         UserConverter.fromUserAndToken(u, jwtTokenProvider.generateAccessToken(user.getId(), user.getEmail())));
+  }
+
+  public void modify(Long userId, String nickname, String birth, Sex sex){
+    User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+
+    user.changeNickname(nickname);
+    user.changeBirth(birth);
+    user.changeSex(sex);
+
+    userRepository.save(user);
   }
 
   public UserDetailResponse getUserInfo(Long userId) {
