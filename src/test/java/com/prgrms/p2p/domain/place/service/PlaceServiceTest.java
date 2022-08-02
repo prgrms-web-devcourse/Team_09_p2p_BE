@@ -2,11 +2,14 @@ package com.prgrms.p2p.domain.place.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.prgrms.p2p.domain.bookmark.entity.PlaceBookmark;
+import com.prgrms.p2p.domain.bookmark.repository.PlaceBookmarkRepository;
 import com.prgrms.p2p.domain.course.dto.CreateCoursePlaceRequest;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.CoursePlace;
 import com.prgrms.p2p.domain.course.entity.Period;
 import com.prgrms.p2p.domain.course.entity.Region;
+import com.prgrms.p2p.domain.course.entity.Spot;
 import com.prgrms.p2p.domain.course.entity.Theme;
 import com.prgrms.p2p.domain.course.repository.CoursePlaceRepository;
 import com.prgrms.p2p.domain.course.repository.CourseRepository;
@@ -23,7 +26,9 @@ import com.prgrms.p2p.domain.place.repository.PlaceRepository;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
@@ -59,6 +64,9 @@ class PlaceServiceTest {
 
   @Autowired
   PlaceLikeRepository placeLikeRepository;
+
+  @Autowired
+  PlaceBookmarkRepository placeBookmarkRepository;
 
   @BeforeEach
   void setup() {
@@ -97,6 +105,8 @@ class PlaceServiceTest {
     Period period = Period.ONE_DAY;
     Region region = Region.서울;
     String courseDescription = "description";
+    List<Spot> spotList = new ArrayList<>();
+    spotList.add(Spot.바다);
 
     Course course = new Course(title, period, region, courseDescription, themes, null, user);
     courseRepository.save(course);
@@ -123,6 +133,7 @@ class PlaceServiceTest {
     coursePlaceRepository.deleteAll();
     placeRepository.deleteAll();
     placeLikeRepository.deleteAll();
+    placeBookmarkRepository.deleteAll();
   }
 
   @Nested
@@ -199,7 +210,7 @@ class PlaceServiceTest {
     }
 
     @Test
-    @DisplayName("성공: 상세조회 성공, 로그인 유저")
+    @DisplayName("성공: 상세조회 성공, 로그인 유저, 좋아요 안했음, 북마크 안했음")
     public void findDetailByLoginUser() throws Exception {
 
       //given
@@ -252,6 +263,27 @@ class PlaceServiceTest {
       assertThat(detailPlaceResp.getUsedCount()).isEqualTo(1);
       assertThat(detailPlaceResp.getLikeCount()).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("성공: 상세조회 성공, 로그인 유저, 북마크는 했음")
+    public void findDetailByLoginUserBookmark() throws Exception {
+
+      //given
+      Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
+      PlaceBookmark placeBookmark = new PlaceBookmark(userId, place);
+      placeBookmarkRepository.save(placeBookmark);
+
+      //when
+      DetailPlaceResponse detailPlaceResp = placeService.findDetail(placeId,
+          Optional.ofNullable(userId));
+
+      //then
+      assertThat(detailPlaceResp.getLiked()).isFalse();
+      assertThat(detailPlaceResp.getBookmarked()).isTrue();
+
+      assertThat(detailPlaceResp.getUsedCount()).isEqualTo(1);
+      assertThat(detailPlaceResp.getLikeCount()).isEqualTo(0);
+    }
   }
 
   @Nested
@@ -276,7 +308,96 @@ class PlaceServiceTest {
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
         assertThat(summaryPlaceResponse.getTitle()).contains(keyword);
+        assertThat(summaryPlaceResponse.getBookmarked()).isFalse();
+      }
+    }
+
+    @Test
+    @DisplayName("성공: 요약 리스트 조회 성공, 로그인 북마크 안했음")
+    public void findSummaryListByLoginUserNonBookmark() throws Exception {
+
+      //given
+      String keyword = "";
+
+      SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder().keyword(keyword).build();
+
+      Pageable pageable = PageRequest.of(0, 10);
+
+      //when
+      Slice<SummaryPlaceResponse> summaryList = placeService.findSummaryList(searchPlaceReq,
+          pageable, Optional.ofNullable(userId));
+
+      //then
+      for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
+        assertThat(summaryPlaceResponse.getTitle()).contains(keyword);
+        assertThat(summaryPlaceResponse.getBookmarked()).isFalse();
+      }
+    }
+
+    @Test
+    @DisplayName("성공: 요약 리스트 조회 성공, 로그인 북마크 했음")
+    public void findSummaryListByLoginAndBookmarkUser() throws Exception {
+
+      //given
+      Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
+      PlaceBookmark placeBookmark = new PlaceBookmark(userId, place);
+      placeBookmarkRepository.save(placeBookmark);
+
+      String keyword = "";
+
+      SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder().keyword(keyword).build();
+
+      Pageable pageable = PageRequest.of(0, 10);
+
+      //when
+      Slice<SummaryPlaceResponse> summaryList = placeService.findSummaryList(searchPlaceReq,
+          pageable, Optional.ofNullable(userId));
+
+      //then
+      for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
+        assertThat(summaryPlaceResponse.getTitle()).contains(keyword);
+        assertThat(summaryPlaceResponse.getBookmarked()).isTrue();
       }
     }
   }
+
+  @Nested
+  @DisplayName("특정 유저의 북마크한 장소 목록 조회")
+  class bookmarkedPlaceByUserId {
+
+    @Test
+    @DisplayName("성공: 북마크 하나도 없어서 조회 개수 0")
+    public void findBookmarkedPlaceList() throws Exception {
+
+      //given
+      Pageable pageable = PageRequest.of(0, 10);
+
+      //when
+      Slice<SummaryPlaceResponse> bookmarkedPlaceList
+          = placeService.findBookmarkedPlaceList(userId, pageable);
+
+      //then
+      assertThat(bookmarkedPlaceList.getNumberOfElements()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("성공: 북마크 하나도 없어서 조회 개수 1")
+    public void findBookmarkedPlaceListResult1() throws Exception {
+
+      //given
+      Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
+      PlaceBookmark placeBookmark = new PlaceBookmark(userId, place);
+      placeBookmarkRepository.save(placeBookmark);
+
+      Pageable pageable = PageRequest.of(0, 10);
+
+      //when
+      Slice<SummaryPlaceResponse> bookmarkedPlaceList
+          = placeService.findBookmarkedPlaceList(userId, pageable);
+
+      //then
+      assertThat(bookmarkedPlaceList.getNumberOfElements()).isEqualTo(1);
+    }
+  }
+
 }
