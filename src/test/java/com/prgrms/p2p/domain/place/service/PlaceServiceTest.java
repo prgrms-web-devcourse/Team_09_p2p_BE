@@ -70,7 +70,7 @@ class PlaceServiceTest {
     String roadAddressName = "roadAddressName";
     String latitude = "latitude";
     String longitude = "longitude";
-    Category category = Category.CAFE;
+    Category category = Category.MT1;
     String number = "010-114-1234";
     PhoneNumber phoneNumber = new PhoneNumber(number);
 
@@ -109,7 +109,7 @@ class PlaceServiceTest {
     themes.add(Theme.ALONE);
     String title = "title";
     Period period = Period.ONE_DAY;
-    Region region = Region.SEOUL;
+    Region region = Region.서울;
     String courseDescription = "description";
 
     Course course = new Course(
@@ -118,6 +118,7 @@ class PlaceServiceTest {
         region,
         courseDescription,
         themes,
+        null,
         user
     );
     courseRepository.save(course);
@@ -167,7 +168,7 @@ class PlaceServiceTest {
       String roadAddressName = "roadAddressName";
       String latitude = "latitude";
       String longitude = "longitude";
-      Category category = Category.CAFE;
+      Category category = Category.MT1;
       String number = "010-1234-1234";
       PhoneNumber phoneNumber = new PhoneNumber(number);
 

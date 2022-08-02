@@ -27,7 +27,7 @@ class PlaceTest {
 
     latitude = "latitude";
     logitude = "logitude";
-    category = Category.CAFE;
+    category = Category.MT1;
 
     number = "010-2345-5678";
     phoneNumber = new PhoneNumber(number);
@@ -361,7 +361,7 @@ class PlaceTest {
     public void changeCategory() throws Exception {
 
       //given
-      Category newCategory = Category.SEA;
+      Category newCategory = Category.MT1;
 
       //when
       place.changeCategory(newCategory);
