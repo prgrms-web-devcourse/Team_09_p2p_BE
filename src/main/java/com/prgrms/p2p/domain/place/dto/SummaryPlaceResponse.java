@@ -14,4 +14,6 @@ public class SummaryPlaceResponse {
   private Integer usedCount;
   private Category category;
   private String thumbnail;
+
+  private Boolean bookmarked;
 }

@@ -23,6 +23,8 @@ public class DetailPlaceResponse {
   private PhoneNumber phoneNumber;
   private String imageUrl;
 
+  private Boolean liked;
+  private Boolean bookmarked;
   private Integer likeCount;
   private Integer usedCount;
 
