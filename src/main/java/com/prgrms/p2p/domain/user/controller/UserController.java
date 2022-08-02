@@ -9,6 +9,7 @@ import com.prgrms.p2p.domain.user.service.UserService;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,6 +44,7 @@ public class UserController {
   }
 
   //TODO: 자신의 정보수정에 유저권한 확인 추가 필요
+  @PutMapping("/")
   public ResponseEntity modify(@RequestBody ModifyRequest modifyRequest) {
     userService.modify(modifyRequest.getId(), modifyRequest.getNickname(), modifyRequest.getBirth(),
         modifyRequest.getSex());
