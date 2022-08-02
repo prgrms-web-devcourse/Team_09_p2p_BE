@@ -6,12 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 public enum LikeType {
-  COURSE("CourseLikeService") {
+  COURSE("courseLikeService") {
     @Override
     public void toggle(Long userId, Long courseId) {
       getLikePolicy().toggle(userId, courseId);
     }
-  }, PLACE("PlaceLikeService") {
+  }, PLACE("placeLikeService") {
     @Override
     public void toggle(Long userId, Long placeId) {
       getLikePolicy().toggle(userId, placeId);
