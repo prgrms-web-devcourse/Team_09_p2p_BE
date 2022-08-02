@@ -26,7 +26,6 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -36,7 +35,6 @@ import org.hibernate.annotations.Where;
 @SQLDelete(sql = "UPDATE course SET is_deleted = true WHERE id = ?")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
 public class Course extends BaseEntity {
 
   @Id
