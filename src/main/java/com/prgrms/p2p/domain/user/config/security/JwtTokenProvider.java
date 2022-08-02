@@ -82,7 +82,7 @@ public class JwtTokenProvider {
         .compact();
   }
 
-  public Claims extractClaims(String token) {
+  private Claims extractClaims(String token) {
     return Jwts.parser()
         .setSigningKey(secretKey)
         .parseClaimsJws(token)
