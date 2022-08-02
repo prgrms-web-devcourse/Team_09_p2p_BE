@@ -57,8 +57,13 @@ public class Course extends BaseEntity {
 
   @Enumerated(EnumType.STRING)
   @ElementCollection(fetch = FetchType.EAGER)
-  @Column(name = "theme")
+  @Column(name = "themes")
   private Set<Theme> themes = new HashSet<>();
+
+  @Enumerated(EnumType.STRING)
+  @ElementCollection(fetch = FetchType.EAGER)
+  @Column(name = "spots")
+  private Set<Spot> spots = new HashSet<>();
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
@@ -79,13 +84,14 @@ public class Course extends BaseEntity {
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
-  public Course(String title, Period period, Region region, String description,
-      Set<Theme> themes, User user) {
+  public Course(String title, Period period, Region region, String description, Set<Theme> themes,
+      Set<Spot> spots, User user) {
     this.title = title;
     this.period = period;
     this.region = region;
     this.description = description;
     this.themes = themes;
+    this.spots = spots;
     this.user = user;
   }
 
@@ -173,13 +179,11 @@ public class Course extends BaseEntity {
     this.coursePlaces = coursePlaces;
   }
 
-  private void setCourseComments(
-      List<CourseComment> courseComments) {
+  private void setCourseComments(List<CourseComment> courseComments) {
     this.courseComments = courseComments;
   }
 
-  private void setCourseBookmarks(
-      List<CourseBookmark> courseBookmarks) {
+  private void setCourseBookmarks(List<CourseBookmark> courseBookmarks) {
     this.courseBookmarks = courseBookmarks;
   }
 

@@ -24,7 +24,7 @@ public class SummaryCourseResponse {
   private Period period;
   private List<Theme> themes = new ArrayList<>();
   private List<CoursePlace> places = new ArrayList<>();
-  private Integer likes;
+  private Integer likeCount;
   private Boolean isBookmarked;
   private String nickname;
 }

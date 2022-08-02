@@ -1,12 +1,13 @@
 package com.prgrms.p2p.domain.course.repository;
 
+import static com.prgrms.p2p.domain.bookmark.entity.QCourseBookmark.courseBookmark;
 import static com.prgrms.p2p.domain.course.entity.QCourse.course;
 
 import com.prgrms.p2p.domain.course.dto.SearchCourseRequest;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.Region;
+import com.prgrms.p2p.domain.course.entity.Spot;
 import com.prgrms.p2p.domain.course.entity.Theme;
-import com.prgrms.p2p.domain.place.entity.Category;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -32,10 +33,11 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
 
   @Override
   public Slice<Course> searchCourse(SearchCourseRequest request, Pageable pageable) {
-    JPAQuery<Course> courseJPAQuery = jpaQueryFactory.selectFrom(course)
+    JPAQuery<Course> courseJPAQuery = jpaQueryFactory.select(course).from(course)
+        .leftJoin(course.courseBookmarks, courseBookmark).fetchJoin()
         .where(keywordListContains(request.getKeyword()), regionEq(request.getRegion()),
-            categoryEq(request.getCategory()), themeEq(request.getTheme()))
-        .offset(pageable.getOffset()).limit(pageable.getPageSize() + 1);
+            themeEq(request.getThemes()), spotEq(request.getSpots())).offset(pageable.getOffset())
+        .limit(pageable.getPageSize() + 1);
 
     for (Sort.Order o : pageable.getSort()) {
       PathBuilder pathBuilder = new PathBuilder<>(course.getType(), course.getMetadata());
@@ -70,26 +72,25 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
     return ObjectUtils.isEmpty(region) ? null : course.region.eq(region);
   }
 
-  private BooleanBuilder categoryEq(String categories) {
-    if (ObjectUtils.isEmpty(categories)) {
+  private BooleanBuilder spotEq(List<Spot> spots) {
+    if (ObjectUtils.isEmpty(spots)) {
       return null;
     }
     BooleanBuilder builder = new BooleanBuilder();
-    String[] splitedCategory = categories.split("-");
-    for (String category : splitedCategory) {
-      builder.or(course.coursePlaces.any().place.category.eq(Category.valueOf(category)));
+
+    for (Spot spot : spots) {
+      builder.or(course.spots.any().eq(spot));
     }
     return builder;
   }
 
-  private BooleanBuilder themeEq(String themes) {
+  private BooleanBuilder themeEq(List<Theme> themes) {
     if (ObjectUtils.isEmpty(themes)) {
       return null;
     }
     BooleanBuilder builder = new BooleanBuilder();
-    String[] splitedTheme = themes.split("-");
-    for (String theme : splitedTheme) {
-      builder.or(course.themes.any().eq(Theme.valueOf(theme)));
+    for (Theme theme : themes) {
+      builder.or(course.themes.any().eq(theme));
     }
     return builder;
   }
