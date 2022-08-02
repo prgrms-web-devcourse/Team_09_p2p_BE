@@ -8,6 +8,7 @@ import com.prgrms.p2p.domain.user.entity.User;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -86,13 +87,13 @@ public class Course extends BaseEntity {
 
   public Course(String title, Period period, Region region, String description, Set<Theme> themes,
       Set<Spot> spots, User user) {
-    this.title = title;
-    this.period = period;
-    this.region = region;
-    this.description = description;
-    this.themes = themes;
-    this.spots = spots;
-    this.user = user;
+    setTitle(title);
+    setPeriod(period);
+    setRegion(region);
+    setDescription(description);
+    setThemes(themes);
+    setSpots(spots);
+    setUser(user);
   }
 
   public void changeTitle(String newTitle) {
@@ -152,6 +153,9 @@ public class Course extends BaseEntity {
   }
 
   private void setTitle(String title) {
+    if (Objects.isNull(title)) {
+      throw new IllegalArgumentException();
+    }
     this.title = title;
   }
 
@@ -164,6 +168,9 @@ public class Course extends BaseEntity {
   }
 
   private void setDescription(String description) {
+    if (Objects.isNull(description)) {
+      throw new IllegalArgumentException();
+    }
     this.description = description;
   }
 
@@ -171,11 +178,21 @@ public class Course extends BaseEntity {
     this.themes = themes;
   }
 
+  private void setSpots(Set<Spot> spots) {
+    this.spots = spots;
+  }
+
   private void setUser(User user) {
+    if (Objects.isNull(user)) {
+      throw new IllegalArgumentException();
+    }
     this.user = user;
   }
 
   private void setCoursePlaces(List<CoursePlace> coursePlaces) {
+    if (coursePlaces.isEmpty()) {
+      throw new IllegalArgumentException();
+    }
     this.coursePlaces = coursePlaces;
   }
 
