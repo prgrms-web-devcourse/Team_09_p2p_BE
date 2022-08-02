@@ -93,7 +93,7 @@ public class Course extends BaseEntity {
     setDescription(description);
     setThemes(themes);
     setSpots(spots);
-    setUser(user);
+    addUser(user);
   }
 
   public void changeTitle(String newTitle) {

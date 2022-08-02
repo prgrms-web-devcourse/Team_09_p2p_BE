@@ -62,8 +62,7 @@ class CoursePlaceTest {
     course = new Course(title, period, region, description, themes, spots, user);
 
     //when
-    place = new Place(kakaoMapId, name, address, latitude, logitude, category, phoneNumber,
-        imageUrl);
+    place = new Place(kakaoMapId, name, address, latitude, logitude, category, phoneNumber);
     coursePlace = new CoursePlace(0, description, imageUrl, true, course, place);
     coursePlace2 = new CoursePlace(1, description, imageUrl, false, course, place);
   }

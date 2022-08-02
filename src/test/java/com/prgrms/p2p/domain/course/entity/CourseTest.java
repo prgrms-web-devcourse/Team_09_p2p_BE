@@ -44,7 +44,8 @@ class CourseTest {
       //when
       //then
       assertThat(course.getTitle()).isEqualTo(title);
-      assertThat(course.getCreatedAt()).isNotNull();
+      assertThat(course.getDescription()).isEqualTo(description);
+      assertThat(course.getThemes()).isNotEmpty();
     }
 
     @Test
@@ -55,6 +56,7 @@ class CourseTest {
           new HashSet<>(), user);
       //then
       assertThat(emptyCourse.getTitle()).isEqualTo(title);
+      assertThat(emptyCourse.getThemes()).isEmpty();
     }
 
     @Test
