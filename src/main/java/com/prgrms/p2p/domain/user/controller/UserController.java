@@ -9,6 +9,7 @@ import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.service.UserService;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,6 +59,14 @@ public class UserController {
   public ResponseEntity changePassword(@RequestBody ChangePasswordRequest changePasswordRequest){
     //TODO: 유저 아이디를 나중에 어노테이션으로 가져올 예정
     userService.changePassword(1L,changePasswordRequest.getOldPassword(),changePasswordRequest.getNewPassword());
+
+    return ResponseEntity.ok().build();
+  }
+
+  @DeleteMapping("/")
+  public ResponseEntity delete(){
+    //TODO: 유저 아이디를 나중에 어노테이션으로 가져올 예정
+    userService.delete(1L);
 
     return ResponseEntity.ok().build();
   }
