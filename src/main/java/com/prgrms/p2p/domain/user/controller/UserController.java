@@ -1,6 +1,7 @@
 package com.prgrms.p2p.domain.user.controller;
 
 import com.prgrms.p2p.domain.user.config.security.JwtTokenProvider;
+import com.prgrms.p2p.domain.user.dto.ChangePasswordRequest;
 import com.prgrms.p2p.domain.user.dto.LoginRequest;
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
 import com.prgrms.p2p.domain.user.dto.ModifyRequest;
@@ -9,6 +10,7 @@ import com.prgrms.p2p.domain.user.service.UserService;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,7 +44,8 @@ public class UserController {
     return ResponseEntity.ok(login);
   }
 
-  //TODO: 자신의 정보수정에 유저권한 확인 추가 필요
+  //TODO: 유저권한 확인 추가 필요
+  @PutMapping("/")
   public ResponseEntity modify(@RequestBody ModifyRequest modifyRequest) {
     userService.modify(modifyRequest.getId(), modifyRequest.getNickname(), modifyRequest.getBirth(),
         modifyRequest.getSex());
@@ -50,6 +53,14 @@ public class UserController {
     return ResponseEntity.ok().build();
   }
 
+  //TODO: 유저권한 확인 추가 필요
+  @PostMapping("/password")
+  public ResponseEntity changePassword(@RequestBody ChangePasswordRequest changePasswordRequest){
+    //TODO: 유저 아이디를 나중에 어노테이션으로 가져올 예정
+    userService.changePassword(1L,changePasswordRequest.getOldPassword(),changePasswordRequest.getNewPassword());
+
+    return ResponseEntity.ok().build();
+  }
 
   @PostMapping("/email")
   public void validateEmail(@RequestBody String email) {
