@@ -66,6 +66,9 @@ public class CoursePlace extends BaseEntity {
 
 
   public void addCourse(Course course) {
+    if (Objects.isNull(course)) {
+      throw new IllegalArgumentException();
+    }
     if (this.course != null) {
       this.course.getCoursePlaces().remove(this);
     }
@@ -79,6 +82,9 @@ public class CoursePlace extends BaseEntity {
   }
 
   public void addPlace(Place place) {
+    if (Objects.isNull(place)) {
+      throw new IllegalArgumentException();
+    }
     if (this.place != null) {
       this.place.getCoursePlaces().remove(this);
     }

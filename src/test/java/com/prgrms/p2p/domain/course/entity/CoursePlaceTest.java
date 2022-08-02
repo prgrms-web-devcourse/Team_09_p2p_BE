@@ -57,7 +57,7 @@ class CoursePlaceTest {
 
     number = "010-2345-5678";
     phoneNumber = new PhoneNumber(number);
-    imageUrl = null;
+    imageUrl = "s3....";
     user = new User("dhkstnaos@gmail.com", "1234", "asdf", "1997-11-29", Sex.FEMALE);
     course = new Course(title, period, region, description, themes, spots, user);
 
