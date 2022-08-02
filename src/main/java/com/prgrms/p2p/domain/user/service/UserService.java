@@ -93,6 +93,14 @@ public class UserService {
     userRepository.save(user);
   }
 
+  public void delete(Long userId){
+
+    User user = userRepository.findById(userId)
+        .orElseThrow(IllegalArgumentException::new);
+
+    userRepository.delete(user);
+  }
+
   public UserDetailResponse getUserInfo(Long userId) {
 
     // TODO: NotFoundException 만들어주기
