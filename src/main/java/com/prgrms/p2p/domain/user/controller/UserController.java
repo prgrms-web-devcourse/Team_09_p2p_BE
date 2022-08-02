@@ -3,6 +3,7 @@ package com.prgrms.p2p.domain.user.controller;
 import com.prgrms.p2p.domain.user.config.security.JwtTokenProvider;
 import com.prgrms.p2p.domain.user.dto.LoginRequest;
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
+import com.prgrms.p2p.domain.user.dto.ModifyRequest;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.service.UserService;
 import java.net.URI;
@@ -40,6 +41,15 @@ public class UserController {
 
     return ResponseEntity.ok(login);
   }
+
+  //TODO: 자신의 정보수정에 유저권한 확인 추가 필요
+  public ResponseEntity modify(@RequestBody ModifyRequest modifyRequest) {
+    userService.modify(modifyRequest.getId(), modifyRequest.getNickname(), modifyRequest.getBirth(),
+        modifyRequest.getSex());
+
+    return ResponseEntity.ok().build();
+  }
+
 
   @PostMapping("/email")
   public void validateEmail(@RequestBody String email) {
