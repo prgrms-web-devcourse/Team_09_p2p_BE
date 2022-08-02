@@ -81,23 +81,23 @@ class CoursePlaceTest {
     }
 
     @Test
-    @DisplayName("성공: 테마나 포함장소가 비어있어도 생성")
-    public void successAsThemesOrSpotsIsEmpty() {
-      //when
-      Course emptyCourse = new Course(title, period, region, description, new HashSet<>(),
-          new HashSet<>(), user);
-      //then
-      assertThat(emptyCourse.getTitle()).isEqualTo(title);
-    }
-
-    @Test
-    @DisplayName("실패: 타이틀이나 설명이 비었을때.")
-    public void failAsTitleOrDescriptionIsNull() {
+    @DisplayName("실패: 인덱스나 설명이 비어있을때")
+    public void failAsIndexOrDescriptionIsNull() {
       //when
       //then
       assertThatThrownBy(
-          () -> new Course(null, period, region, null, new HashSet<>(), new HashSet<>(),
-              user)).isInstanceOf(IllegalArgumentException.class);
+          () -> new CoursePlace(0, null, imageUrl, true, course, place)).isInstanceOf(
+          IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("실패: url이 비었을때.")
+    public void failAsImageUrlIsNull() {
+      //when
+      //then
+      assertThatThrownBy(
+          () -> new CoursePlace(0, description, null, true, course, place)).isInstanceOf(
+          IllegalArgumentException.class);
     }
 
     @Test

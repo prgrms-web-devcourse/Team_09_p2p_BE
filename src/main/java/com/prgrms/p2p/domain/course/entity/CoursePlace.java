@@ -3,6 +3,7 @@ package com.prgrms.p2p.domain.course.entity;
 
 import com.prgrms.p2p.domain.common.BaseEntity;
 import com.prgrms.p2p.domain.place.entity.Place;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -53,8 +54,8 @@ public class CoursePlace extends BaseEntity {
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
-  public CoursePlace(Integer index, String description, String imageUrl,
-      boolean recommended, Course course, Place place) {
+  public CoursePlace(Integer index, String description, String imageUrl, Boolean recommended,
+      Course course, Place place) {
     setIndex(index);
     setDescription(description);
     setImageUrl(imageUrl);
@@ -86,26 +87,44 @@ public class CoursePlace extends BaseEntity {
   }
 
   private void setDescription(String description) {
+    if (Objects.isNull(description)) {
+      throw new IllegalArgumentException();
+    }
     this.description = description;
   }
 
   private void setImageUrl(String imageUrl) {
+    if (Objects.isNull(imageUrl)) {
+      throw new IllegalArgumentException();
+    }
     this.imageUrl = imageUrl;
   }
 
-  private void setRecommended(boolean recommended) {
+  private void setRecommended(Boolean recommended) {
     this.recommended = recommended;
   }
 
   private void setCourse(Course course) {
+    if (Objects.isNull(course)) {
+      throw new IllegalArgumentException();
+    }
     this.course = course;
   }
 
   private void setPlace(Place place) {
+    if (Objects.isNull(course)) {
+      throw new IllegalArgumentException();
+    }
     this.place = place;
   }
 
   private void setIndex(Integer index) {
+    if (Objects.isNull(index)) {
+      throw new IllegalArgumentException();
+    }
+    if (index < 0) {
+      throw new IllegalArgumentException();
+    }
     this.index = index;
   }
 }
