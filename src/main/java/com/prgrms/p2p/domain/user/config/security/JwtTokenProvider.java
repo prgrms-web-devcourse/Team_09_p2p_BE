@@ -17,8 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -29,15 +27,7 @@ public class JwtTokenProvider {
   @Value("${jwt.secretKey}")
   private String secretKey; // yaml에서 부르기
 
-  private long tokenValidTime = 60 * 60 * 1000L;
-
-  private final UserDetailsService userDetailsService;
   private static final String HEADER_PREFIX = "Bearer ";
-
-  public JwtTokenProvider(
-      UserDetailsService userDetailsService) {
-    this.userDetailsService = userDetailsService;
-  }
 
   @PostConstruct
   protected void init() {
@@ -92,7 +82,7 @@ public class JwtTokenProvider {
         .compact();
   }
 
-  private Claims extractClaims(String token) {
+  public Claims extractClaims(String token) {
     return Jwts.parser()
         .setSigningKey(secretKey)
         .parseClaimsJws(token)
