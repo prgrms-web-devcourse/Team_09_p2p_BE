@@ -69,7 +69,6 @@ public class PlaceService {
     Address newAddress =
         new Address(updateReq.getAddressName(), updateReq.getRoadAddressName());
     place.changeAddress(newAddress);
-    place.changeImageUrl(imageUrl);
     place.changeCategory(updateReq.getCategory());
     place.changePhoneNumber(updateReq.getPhoneNumber());
   }

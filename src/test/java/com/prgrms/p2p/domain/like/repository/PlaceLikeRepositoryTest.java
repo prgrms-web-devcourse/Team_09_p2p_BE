@@ -37,7 +37,7 @@ class PlaceLikeRepositoryTest {
     placeLikeRepository.deleteAll();
     placeRepository.deleteAll();
     place = new Place("1234", "1234", new Address("address1", "address2"), "1234", "1234",
-        Category.AC5, new PhoneNumber("010-1234-5678"), null);
+        Category.AC5, new PhoneNumber("010-1234-5678"));
     placeLike = new PlaceLike(1L, place);
   }
 

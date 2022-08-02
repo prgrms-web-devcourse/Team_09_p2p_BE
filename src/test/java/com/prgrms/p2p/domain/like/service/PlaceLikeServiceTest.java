@@ -54,7 +54,7 @@ class PlaceLikeServiceTest {
     void setUp() {
       placeStub = new Place("kakaomapID", "name",
           new Address("addressName", "roadAddressName"),
-          "12.123", "123.23", Category.AC5, new PhoneNumber("010-1234-5678"), null);
+          "12.123", "123.23", Category.AC5, new PhoneNumber("010-1234-5678"));
       placeLikeStub = new PlaceLike(1L, placeStub);
     }
 
