@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -31,8 +32,8 @@ public class CoursePlace extends BaseEntity {
   @Column(name = "id")
   private Long id;
 
-  @Column(name = "index")
-  private Integer index;
+  @Column(name = "seq")
+  private Integer seq;
 
   @Column(name = "description")
   private String description;
@@ -54,9 +55,9 @@ public class CoursePlace extends BaseEntity {
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
-  public CoursePlace(Integer index, String description, String imageUrl, Boolean recommended,
+  public CoursePlace(Integer seq, String description, String imageUrl, Boolean recommended,
       Course course, Place place) {
-    setIndex(index);
+    setSeq(seq);
     setDescription(description);
     setImageUrl(imageUrl);
     setRecommended(recommended);
@@ -93,14 +94,14 @@ public class CoursePlace extends BaseEntity {
   }
 
   private void setDescription(String description) {
-    if (Objects.isNull(description)) {
+    if (Strings.isBlank(description)) {
       throw new IllegalArgumentException();
     }
     this.description = description;
   }
 
   private void setImageUrl(String imageUrl) {
-    if (Objects.isNull(imageUrl)) {
+    if (Strings.isBlank(imageUrl)) {
       throw new IllegalArgumentException();
     }
     this.imageUrl = imageUrl;
@@ -124,13 +125,13 @@ public class CoursePlace extends BaseEntity {
     this.place = place;
   }
 
-  private void setIndex(Integer index) {
+  private void setSeq(Integer index) {
     if (Objects.isNull(index)) {
       throw new IllegalArgumentException();
     }
     if (index < 0) {
       throw new IllegalArgumentException();
     }
-    this.index = index;
+    this.seq = index;
   }
 }
