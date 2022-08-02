@@ -26,6 +26,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -156,7 +157,7 @@ public class Course extends BaseEntity {
   }
 
   private void setTitle(String title) {
-    if (Objects.isNull(title)) {
+    if (Strings.isBlank(title)) {
       throw new IllegalArgumentException();
     }
     this.title = title;
@@ -171,7 +172,7 @@ public class Course extends BaseEntity {
   }
 
   private void setDescription(String description) {
-    if (Objects.isNull(description)) {
+    if (Strings.isBlank(description)) {
       throw new IllegalArgumentException();
     }
     this.description = description;
