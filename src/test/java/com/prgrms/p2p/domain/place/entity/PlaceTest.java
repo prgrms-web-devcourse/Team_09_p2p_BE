@@ -31,7 +31,6 @@ class PlaceTest {
 
     number = "010-2345-5678";
     phoneNumber = new PhoneNumber(number);
-    imageUrl = null;
 
     //when
     place = new Place(
@@ -41,8 +40,8 @@ class PlaceTest {
         latitude,
         logitude,
         category,
-        phoneNumber,
-        imageUrl);
+        phoneNumber
+    );
   }
 
   String kakaoMapId;
@@ -74,8 +73,8 @@ class PlaceTest {
           latitude,
           logitude,
           category,
-          phoneNumber,
-          imageUrl);
+          phoneNumber
+      );
 
       //then
       assertThat(place.getKakaoMapId()).isEqualTo(kakaoMapId);
@@ -83,7 +82,6 @@ class PlaceTest {
       assertThat(place.getLatitude()).isEqualTo(latitude);
       assertThat(place.getLongitude()).isEqualTo(logitude);
       assertThat(place.getCategory()).isEqualTo(category);
-      assertThat(place.getImageUrl()).isEqualTo(imageUrl);
 
       assertThat(place.getAddress())
           .usingRecursiveComparison()
@@ -110,8 +108,8 @@ class PlaceTest {
               latitude,
               logitude,
               category,
-              phoneNumber,
-              imageUrl));
+              phoneNumber
+          ));
     }
 
     @Test
@@ -130,8 +128,8 @@ class PlaceTest {
               latitude,
               logitude,
               category,
-              phoneNumber,
-              imageUrl));
+              phoneNumber
+          ));
     }
 
     @Test
@@ -150,8 +148,8 @@ class PlaceTest {
               latitude,
               logitude,
               category,
-              phoneNumber,
-              imageUrl));
+              phoneNumber
+          ));
     }
 
     @Test
@@ -170,8 +168,8 @@ class PlaceTest {
               latitude,
               logitude,
               category,
-              phoneNumber,
-              imageUrl));
+              phoneNumber
+          ));
     }
 
     @Test
@@ -190,8 +188,8 @@ class PlaceTest {
               latitude,
               logitude,
               category,
-              phoneNumber,
-              imageUrl));
+              phoneNumber
+          ));
     }
 
     @Test
@@ -209,8 +207,8 @@ class PlaceTest {
           latitude,
           logitude,
           category,
-          phoneNumber,
-          imageUrl);
+          phoneNumber
+      );
 
       //then
       assertThat(place.getKakaoMapId()).isEqualTo(kakaoMapId);
@@ -218,7 +216,6 @@ class PlaceTest {
       assertThat(place.getLatitude()).isEqualTo(latitude);
       assertThat(place.getLongitude()).isEqualTo(logitude);
       assertThat(place.getCategory()).isNull();
-      assertThat(place.getImageUrl()).isEqualTo(imageUrl);
 
       assertThat(place.getAddress())
           .usingRecursiveComparison()
@@ -244,8 +241,8 @@ class PlaceTest {
           latitude,
           logitude,
           category,
-          phoneNumber,
-          imageUrl);
+          phoneNumber
+      );
 
       //then
       assertThat(place.getKakaoMapId()).isEqualTo(kakaoMapId);
@@ -253,7 +250,6 @@ class PlaceTest {
       assertThat(place.getLatitude()).isEqualTo(latitude);
       assertThat(place.getLongitude()).isEqualTo(logitude);
       assertThat(place.getCategory()).isEqualTo(category);
-      assertThat(place.getImageUrl()).isEqualTo(imageUrl);
 
       assertThat(place.getAddress())
           .usingRecursiveComparison()
@@ -279,8 +275,8 @@ class PlaceTest {
           latitude,
           logitude,
           category,
-          phoneNumber,
-          imageUrl);
+          phoneNumber
+      );
 
       //then
       assertThat(place.getKakaoMapId()).isEqualTo(kakaoMapId);
@@ -288,7 +284,6 @@ class PlaceTest {
       assertThat(place.getLatitude()).isEqualTo(latitude);
       assertThat(place.getLongitude()).isEqualTo(logitude);
       assertThat(place.getCategory()).isEqualTo(category);
-      assertThat(place.getImageUrl()).isNull();
 
       assertThat(place.getAddress())
           .usingRecursiveComparison()
@@ -411,35 +406,5 @@ class PlaceTest {
       //then
       assertThat(place.getPhoneNumber()).isNull();
     }
-
-    @Test
-    @DisplayName("성공: 대표 이미지 변경")
-    public void changeImageUrl() throws Exception {
-
-      //given
-      String newImageUrl = "/new/Image/Url";
-
-      //when
-      place.changeImageUrl(newImageUrl);
-
-      //then
-      assertThat(place.getImageUrl()).isEqualTo(newImageUrl);
-    }
-
-    @Test
-    @DisplayName("성공: 대표 이미지를 null로 변경")
-    public void changeImageUrlToNull() throws Exception {
-
-      //given
-      String newImageUrl =  null;
-
-      //when
-      place.changeImageUrl(newImageUrl);
-
-      //then
-      assertThat(place.getImageUrl()).isNull();
-    }
-
-
   }
 }

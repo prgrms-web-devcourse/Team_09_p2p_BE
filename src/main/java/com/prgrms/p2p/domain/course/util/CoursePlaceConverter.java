@@ -19,6 +19,6 @@ public class CoursePlaceConverter {
         new Address(createCoursePlaceRequest.getAddressName(),
             createCoursePlaceRequest.getRoadAddressName()), createCoursePlaceRequest.getLatitude(),
         createCoursePlaceRequest.getLongitude(), createCoursePlaceRequest.getCategory(),
-        createCoursePlaceRequest.getPhoneNumber(), null);
+        createCoursePlaceRequest.getPhoneNumber());
   }
 }

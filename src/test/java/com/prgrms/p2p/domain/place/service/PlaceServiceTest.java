@@ -83,7 +83,7 @@ class PlaceServiceTest {
     PhoneNumber phoneNumber = new PhoneNumber(number);
 
     Place place = new Place(kakaoMapId, name, new Address(addressName, roadAddressName), latitude,
-        longitude, category, phoneNumber, null);
+        longitude, category, phoneNumber);
     Place savedPlace = placeRepository.save(place);
     placeId = savedPlace.getId();
 
@@ -156,9 +156,15 @@ class PlaceServiceTest {
       PhoneNumber phoneNumber = new PhoneNumber(number);
 
       CreateCoursePlaceRequest createPlaceReq = CreateCoursePlaceRequest.builder()
-          .kakaoMapId(kakaoMapId).name(name).addressName(addressName)
-          .roadAddressName(roadAddressName).latitude(latitude).longitude(longitude)
-          .category(category).phoneNumber(phoneNumber).build();
+          .kakaoMapId(kakaoMapId)
+          .name(name)
+          .addressName(addressName)
+          .roadAddressName(roadAddressName)
+          .latitude(latitude)
+          .longitude(longitude)
+          .category(category)
+          .phoneNumber(phoneNumber)
+          .build();
 
       //when
       Long placeId = placeService.save(createPlaceReq).getId();

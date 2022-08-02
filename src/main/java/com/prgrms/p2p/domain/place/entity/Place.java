@@ -61,9 +61,6 @@ public class Place extends BaseEntity {
   @Column(name = "phone_number")
   private PhoneNumber phoneNumber;
 
-  @Column(name = "image_url")
-  private String imageUrl;
-
   @OneToMany(mappedBy = "place")
   private List<CoursePlace> coursePlaces = new ArrayList<>();
 
@@ -80,7 +77,7 @@ public class Place extends BaseEntity {
   private Boolean isDeleted = Boolean.FALSE;
 
   public Place(String kakaoMapId, String name, Address address, String latitude,
-      String longitude, Category category, PhoneNumber phoneNumber, String imageUrl) {
+      String longitude, Category category, PhoneNumber phoneNumber) {
     setKakaoMapId(kakaoMapId);
     setName(name);
     setAddress(address);
@@ -88,7 +85,6 @@ public class Place extends BaseEntity {
     setLongitude(longitude);
     setCategory(category);
     setPhoneNumber(phoneNumber);
-    setImageUrl(imageUrl);
   }
 
   public void changeName(String newName) {
@@ -105,10 +101,6 @@ public class Place extends BaseEntity {
 
   public void changePhoneNumber(PhoneNumber newPhoneNumber) {
     setPhoneNumber(newPhoneNumber);
-  }
-
-  public void changeImageUrl(String newImageUrl) {
-    setImageUrl(newImageUrl);
   }
 
   public void addCoursePlace(CoursePlace coursePlace) {
@@ -176,10 +168,6 @@ public class Place extends BaseEntity {
 
   private void setPhoneNumber(PhoneNumber phoneNumber) {
     this.phoneNumber = phoneNumber;
-  }
-
-  private void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
   }
 
   private void setCoursePlaces(List<CoursePlace> coursePlaces) {
