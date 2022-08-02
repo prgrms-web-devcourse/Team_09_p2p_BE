@@ -1,0 +1,27 @@
+package com.prgrms.p2p.domain.like.controller;
+
+import com.prgrms.p2p.domain.like.service.CourseLikeService;
+import com.prgrms.p2p.domain.like.service.PlaceLikeService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/v1/likes")
+@RequiredArgsConstructor
+public class LikeRestController {
+
+  private final PlaceLikeService placeLikeService;
+  private final CourseLikeService courseLikeService;
+
+  @GetMapping("/{type}/{id}")
+  public ResponseEntity<Void> toggle(
+      @PathVariable("type") String type, @PathVariable("id") Long id) {
+    Long userId = 1L;
+    LikeType.of(type).toggle(userId, id);
+    return ResponseEntity.ok().build();
+  }
+}
