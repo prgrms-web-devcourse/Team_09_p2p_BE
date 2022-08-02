@@ -28,10 +28,9 @@ class CourseLikeTest {
 
   @BeforeEach
   void setUp() {
-    user = new User("email", "password", "nickName",
-        LocalDate.now().toString(), Sex.FEMALE);
+    user = new User("email", "password", "nickName", LocalDate.now().toString(), Sex.FEMALE);
     themes = new HashSet<>();
-    themes.add(Theme.ALONE);
+    themes.add(Theme.데이트코스);
     spots = new HashSet<>();
     spots.add(Spot.바다);
   }
@@ -40,8 +39,8 @@ class CourseLikeTest {
   @DisplayName("성공 : 코스 좋아요 객체를 생성합니다.")
   void success() {
     // Given
-    Course course = new Course("title", Period.ONE_DAY, Region.서울, "description",
-        themes, spots, user);
+    Course course = new Course("title", Period.ONE_DAY, Region.서울, "description", themes, spots,
+        user);
     // When
     CourseLike courseLike = new CourseLike(1L, course);
     // Then
@@ -52,8 +51,8 @@ class CourseLikeTest {
   @DisplayName("실패 : 유저 아이디가 빈값인 경우 예외를 반환합니다.")
   void failByUserId1() {
     // Given
-    Course course = new Course("title", Period.ONE_DAY, Region.서울, "description",
-        themes, spots, user);
+    Course course = new Course("title", Period.ONE_DAY, Region.서울, "description", themes, spots,
+        user);
     // When
     Throwable response = catchThrowable(() -> new CourseLike(null, course));
     // Then
@@ -64,8 +63,8 @@ class CourseLikeTest {
   @DisplayName("실패 : 유저 아이디가 0 이하인 경우 예외를 반환합니다.")
   void failByUserId2() {
     // Given
-    Course course = new Course("title", Period.ONE_DAY, Region.서울, "description",
-        themes, spots, user);
+    Course course = new Course("title", Period.ONE_DAY, Region.서울, "description", themes, spots,
+        user);
     // When
     Throwable response = catchThrowable(() -> new CourseLike(0L, course));
     // Then

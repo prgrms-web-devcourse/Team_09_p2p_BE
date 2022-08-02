@@ -74,16 +74,8 @@ class PlaceServiceTest {
     String number = "010-114-1234";
     PhoneNumber phoneNumber = new PhoneNumber(number);
 
-    Place place = new Place(
-        kakaoMapId,
-        name,
-        new Address(addressName, roadAddressName),
-        latitude,
-        longitude,
-        category,
-        phoneNumber,
-        null
-    );
+    Place place = new Place(kakaoMapId, name, new Address(addressName, roadAddressName), latitude,
+        longitude, category, phoneNumber, null);
     Place savedPlace = placeRepository.save(place);
     placeId = savedPlace.getId();
 
@@ -94,33 +86,19 @@ class PlaceServiceTest {
     String birth = "2020-02-02";
     Sex male = Sex.MALE;
 
-    User user = new User(
-        email,
-        password,
-        nickname,
-        birth,
-        male
-    );
+    User user = new User(email, password, nickname, birth, male);
     User savedUser = userRepository.save(user);
     userId = savedUser.getId();
 
     //course
     Set<Theme> themes = new HashSet<>();
-    themes.add(Theme.ALONE);
+    themes.add(Theme.가족여행);
     String title = "title";
     Period period = Period.ONE_DAY;
     Region region = Region.서울;
     String courseDescription = "description";
 
-    Course course = new Course(
-        title,
-        period,
-        region,
-        courseDescription,
-        themes,
-        null,
-        user
-    );
+    Course course = new Course(title, period, region, courseDescription, themes, null, user);
     courseRepository.save(course);
 
     //coursePlace
@@ -128,14 +106,8 @@ class PlaceServiceTest {
     String description = "description";
     String imageUrl = "/imageUrl";
     boolean recommended = false;
-    CoursePlace coursePlace = new CoursePlace(
-        index,
-        description,
-        imageUrl,
-        recommended,
-        course,
-        savedPlace
-    );
+    CoursePlace coursePlace = new CoursePlace(index, description, imageUrl, recommended, course,
+        savedPlace);
 
     CoursePlace savedCoursePlace = coursePlaceRepository.save(coursePlace);
 
@@ -173,25 +145,17 @@ class PlaceServiceTest {
       PhoneNumber phoneNumber = new PhoneNumber(number);
 
       CreateCoursePlaceRequest createPlaceReq = CreateCoursePlaceRequest.builder()
-          .kakaoMapId(kakaoMapId)
-          .name(name)
-          .addressName(addressName)
-          .roadAddressName(roadAddressName)
-          .latitude(latitude)
-          .longitude(longitude)
-          .category(category)
-          .phoneNumber(phoneNumber)
-          .build();
+          .kakaoMapId(kakaoMapId).name(name).addressName(addressName)
+          .roadAddressName(roadAddressName).latitude(latitude).longitude(longitude)
+          .category(category).phoneNumber(phoneNumber).build();
 
       //when
       Long placeId = placeService.save(createPlaceReq).getId();
 
-      Place place = placeRepository.findById(placeId)
-          .orElseThrow(RuntimeException::new);
+      Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
 
       //then
-      assertThat(createPlaceReq)
-          .usingRecursiveComparison()
+      assertThat(createPlaceReq).usingRecursiveComparison()
           .ignoringFields("addressName", "roadAddressName", "isRecommended", "description")
           .isEqualTo(place);
 
@@ -216,18 +180,16 @@ class PlaceServiceTest {
       DetailPlaceResponse detailPlaceResp = placeService.findDetail(placeId, Optional.empty());
 
       //then
-      assertThat(detailPlaceResp)
-          .usingRecursiveComparison()
+      assertThat(detailPlaceResp).usingRecursiveComparison()
           .ignoringFields("likeCount", "usedCount", "phone", "addressName", "roadAddressName",
-              "liked", "bookmarked", "imageUrl")
-          .isEqualTo(place);
+              "liked", "bookmarked", "imageUrl").isEqualTo(place);
 
       assertThat(detailPlaceResp.getAddressName()).isEqualTo(place.getAddress().getAddressName());
-      assertThat(detailPlaceResp.getRoadAddressName())
-          .isEqualTo(place.getAddress().getRoadAddressName());
+      assertThat(detailPlaceResp.getRoadAddressName()).isEqualTo(
+          place.getAddress().getRoadAddressName());
 
-      assertThat(detailPlaceResp.getPhoneNumber().getNumber())
-          .isEqualTo(place.getPhoneNumber().getNumber());
+      assertThat(detailPlaceResp.getPhoneNumber().getNumber()).isEqualTo(
+          place.getPhoneNumber().getNumber());
 
       assertThat(detailPlaceResp.getLiked()).isFalse();
       assertThat(detailPlaceResp.getBookmarked()).isFalse();
@@ -244,21 +206,20 @@ class PlaceServiceTest {
       Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
 
       //when
-      DetailPlaceResponse detailPlaceResp = placeService.findDetail(placeId, Optional.ofNullable(userId));
+      DetailPlaceResponse detailPlaceResp = placeService.findDetail(placeId,
+          Optional.ofNullable(userId));
 
       //then
-      assertThat(detailPlaceResp)
-          .usingRecursiveComparison()
+      assertThat(detailPlaceResp).usingRecursiveComparison()
           .ignoringFields("likeCount", "usedCount", "phone", "addressName", "roadAddressName",
-              "liked", "bookmarked", "imageUrl")
-          .isEqualTo(place);
+              "liked", "bookmarked", "imageUrl").isEqualTo(place);
 
       assertThat(detailPlaceResp.getAddressName()).isEqualTo(place.getAddress().getAddressName());
-      assertThat(detailPlaceResp.getRoadAddressName())
-          .isEqualTo(place.getAddress().getRoadAddressName());
+      assertThat(detailPlaceResp.getRoadAddressName()).isEqualTo(
+          place.getAddress().getRoadAddressName());
 
-      assertThat(detailPlaceResp.getPhoneNumber().getNumber())
-          .isEqualTo(place.getPhoneNumber().getNumber());
+      assertThat(detailPlaceResp.getPhoneNumber().getNumber()).isEqualTo(
+          place.getPhoneNumber().getNumber());
 
       assertThat(detailPlaceResp.getLiked()).isFalse();
       assertThat(detailPlaceResp.getBookmarked()).isFalse();
@@ -281,11 +242,9 @@ class PlaceServiceTest {
           Optional.ofNullable(userId));
 
       //then
-      assertThat(detailPlaceResp)
-          .usingRecursiveComparison()
+      assertThat(detailPlaceResp).usingRecursiveComparison()
           .ignoringFields("likeCount", "usedCount", "phone", "addressName", "roadAddressName",
-              "liked", "bookmarked", "imageUrl")
-          .isEqualTo(place);
+              "liked", "bookmarked", "imageUrl").isEqualTo(place);
 
       assertThat(detailPlaceResp.getLiked()).isTrue();
       assertThat(detailPlaceResp.getBookmarked()).isFalse();
@@ -306,15 +265,13 @@ class PlaceServiceTest {
       //given
       String keyword = "na";
 
-      SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder()
-          .keyword(keyword)
-          .build();
+      SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder().keyword(keyword).build();
 
       Pageable pageable = PageRequest.of(0, 10);
 
       //when
-      Slice<SummaryPlaceResponse> summaryList
-          = placeService.findSummaryList(searchPlaceReq, pageable, Optional.empty());
+      Slice<SummaryPlaceResponse> summaryList = placeService.findSummaryList(searchPlaceReq,
+          pageable, Optional.empty());
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {

@@ -29,6 +29,7 @@ public class DetailCourseResponse {
   private List<Theme> themes = new ArrayList<>();
   @Builder.Default
   private List<Spot> spots = new ArrayList<>();
+  @Builder.Default
   private List<CoursePlace> places = new ArrayList<>();
   private Integer likes;
   private Boolean isLiked;
