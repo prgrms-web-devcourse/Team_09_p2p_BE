@@ -18,7 +18,7 @@ class PlaceLikeTest {
   @DisplayName("성공 : 장소 좋아요 객체를 생성합니다.")
   public void success() {
     // Given
-    Place place = new Place("1234", "1234", new Address("123","234"), "1234", "1234", Category.AC5, null, null);
+    Place place = new Place("1234", "1234", new Address("123","234"), "1234", "1234", Category.AC5, null);
     // When
     PlaceLike placeLike = new PlaceLike(1L, place);
     // Then
@@ -29,7 +29,7 @@ class PlaceLikeTest {
   @DisplayName("실패 : 유저 아이디가 빈값인 경우 예외를 반환합니다.")
   public void failByUserId1() {
     // Given
-    Place place = new Place("1234", "1234", new Address("123","234"), "1234", "1234", Category.AC5, null, null);
+    Place place = new Place("1234", "1234", new Address("123","234"), "1234", "1234", Category.AC5, null);
     // When
     Throwable response = catchThrowable(() -> new PlaceLike(null, place));
     // Then
@@ -40,7 +40,7 @@ class PlaceLikeTest {
   @DisplayName("실패 : 유저 아이디가 0 이하인 경우 예외를 반환합니다.")
   public void failByUserId2() {
     // Given
-    Place place = new Place("1234", "1234", new Address("123","234"), "1234", "1234", Category.AC5, null, null);
+    Place place = new Place("1234", "1234", new Address("123","234"), "1234", "1234", Category.AC5, null);
     // When
     Throwable response = catchThrowable(() -> new PlaceLike(0L, place));
     // Then

@@ -20,7 +20,7 @@ public class Address {
 
   public Address(String addressName, String roadAddressName) {
     if (addressName == null && roadAddressName == null) {
-      throw new IllegalArgumentException("2가지 주소중 최소한 하나는 있어야 함");
+      throw new IllegalArgumentException("2가지 주소 중 최소한 하나는 있어야 함");
     }
     this.addressName = addressName;
     this.roadAddressName = roadAddressName;

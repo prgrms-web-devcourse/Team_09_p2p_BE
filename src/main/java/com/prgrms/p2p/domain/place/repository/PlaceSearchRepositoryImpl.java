@@ -57,36 +57,6 @@ public class PlaceSearchRepositoryImpl implements PlaceSearchRepository {
     return new SliceImpl<>(placeList, pageable, hasNext);
   }
 
-  @Override
-  public Slice<Place> findBookmarkedPlace(Long userId, Pageable pageable) {
-    JPAQuery<Place> jpaQuery = jpaQueryFactory.select(place)
-        .from(place)
-        .leftJoin(place.placeBookmarks, placeBookmark).fetchJoin()
-        .where(placeBookmark.userId.eq(userId))
-        .offset(pageable.getOffset())
-        .limit(pageable.getPageSize() + 1);
-
-    for (Sort.Order o : pageable.getSort()) {
-      PathBuilder pathBuilder = new PathBuilder<>(place.getType(), place.getMetadata());
-
-      jpaQuery.orderBy(new OrderSpecifier(
-              o.isAscending() ? Order.ASC : Order.DESC, pathBuilder.get(o.getProperty())
-          )
-      );
-    }
-
-    List<Place> bookmarkedPlaceList = jpaQuery.fetch();
-
-    boolean hasNext = false;
-
-    if (bookmarkedPlaceList.size() > pageable.getPageSize()) {
-      bookmarkedPlaceList.remove(pageable.getPageSize());
-      hasNext = true;
-    }
-
-    return new SliceImpl<>(bookmarkedPlaceList, pageable, hasNext);
-  }
-
   private BooleanBuilder keywordListContains(String keyword) {
     if (ObjectUtils.isEmpty(keyword)) {
       return null;

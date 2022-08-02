@@ -36,4 +36,13 @@ public class PlaceController {
 
     return ResponseEntity.ok(summaryList);
   }
+
+  @GetMapping("/bookmark")
+  public ResponseEntity<Slice<SummaryPlaceResponse>> getBookmarkPlaceList(
+      Long userId, Pageable pageable) {
+    Slice<SummaryPlaceResponse> bookmarkedPlaceList
+        = placeService.findBookmarkedPlaceList(userId, pageable);
+
+    return ResponseEntity.ok(bookmarkedPlaceList);
+  }
 }
