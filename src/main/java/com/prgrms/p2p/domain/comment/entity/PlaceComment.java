@@ -29,8 +29,8 @@ public class PlaceComment extends Comment {
   private Place place;
 
   public PlaceComment(String comment, Long rootCommentId, Long userId,
-      Place place) {
-    super(comment, rootCommentId, userId);
+      Place place, Long seq) {
+    super(comment, rootCommentId, userId, seq);
     this.addPlace(place);
   }
 
