@@ -1,4 +1,4 @@
-package com.prgrms.p2p.domain.user.config.security;
+package com.prgrms.p2p.domain.user.config.config;
 
 import com.prgrms.p2p.domain.user.pojo.CacheKey;
 import java.time.Duration;
