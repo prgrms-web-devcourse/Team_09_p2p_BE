@@ -22,15 +22,15 @@ public class PlaceBookmarkService implements BookmarkPolicy {
     Place place = placeRepository.findById(placeId)
         .orElseThrow(() -> new RuntimeException("존재하지 않는 장소에 좋아요를 시도했습니다."));
     placeBookmarkRepository.findByUserIdAndPlace(userId, place)
-        .ifPresentOrElse(this::dislike, () -> like(userId, place));
+        .ifPresentOrElse(this::unbookmark, () -> bookmark(userId, place));
   }
 
-  private void like(Long userId, Place place) {
+  private void bookmark(Long userId, Place place) {
     PlaceBookmark placeBookmark = new PlaceBookmark(userId, place);
     placeBookmarkRepository.save(placeBookmark);
   }
 
-  private void dislike(PlaceBookmark placeBookmark) {
+  private void unbookmark(PlaceBookmark placeBookmark) {
     placeBookmark.deletePlace(placeBookmark.getPlace());
     placeBookmarkRepository.delete(placeBookmark);
   }
