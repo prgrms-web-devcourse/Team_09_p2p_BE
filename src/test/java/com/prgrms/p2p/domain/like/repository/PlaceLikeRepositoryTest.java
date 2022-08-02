@@ -3,6 +3,9 @@ package com.prgrms.p2p.domain.like.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.prgrms.p2p.domain.like.entity.PlaceLike;
+import com.prgrms.p2p.domain.place.entity.Address;
+import com.prgrms.p2p.domain.place.entity.Category;
+import com.prgrms.p2p.domain.place.entity.PhoneNumber;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.place.repository.PlaceRepository;
 import java.util.List;
@@ -33,7 +36,8 @@ class PlaceLikeRepositoryTest {
   void setUp() {
     placeLikeRepository.deleteAll();
     placeRepository.deleteAll();
-    place = new Place("1234", "1234", null, "1234", "1234", null, null, null);
+    place = new Place("1234", "1234", new Address("address1", "address2"), "1234", "1234",
+        Category.AC5, new PhoneNumber("010-1234-5678"), null);
     placeLike = new PlaceLike(1L, place);
   }
 
@@ -72,7 +76,8 @@ class PlaceLikeRepositoryTest {
     placeRepository.save(place);
     placeLikeRepository.save(placeLike);
     // When
-    Optional<PlaceLike> actualPlaceLike = placeLikeRepository.findByUserIdAndPlace(placeLike.getUserId(), place);
+    Optional<PlaceLike> actualPlaceLike = placeLikeRepository.findByUserIdAndPlace(
+        placeLike.getUserId(), place);
     // Then
     assertThat(actualPlaceLike).hasValue(placeLike);
   }

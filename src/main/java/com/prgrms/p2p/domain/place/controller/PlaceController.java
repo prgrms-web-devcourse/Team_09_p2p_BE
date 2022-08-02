@@ -4,6 +4,7 @@ import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.SearchPlaceRequest;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.service.PlaceService;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -21,16 +22,17 @@ public class PlaceController {
   private final PlaceService placeService;
 
   @GetMapping("/{placeId}")
-  public ResponseEntity<DetailPlaceResponse> getDetailPlace(@PathVariable("placeId") Long placeId) {
-    DetailPlaceResponse response = placeService.findDetail(placeId);
+  public ResponseEntity<DetailPlaceResponse> getDetailPlace(
+      @PathVariable("placeId") Long placeId, Optional<Long> userId) {
+    DetailPlaceResponse response = placeService.findDetail(placeId, userId);
     return ResponseEntity.ok(response);
   }
 
   @GetMapping("/")
   public ResponseEntity<Slice<SummaryPlaceResponse>> getSummaryPlaceList(
-      SearchPlaceRequest searchPlaceRequest, Pageable pageable) {
+      SearchPlaceRequest searchPlaceRequest, Pageable pageable, Optional<Long> userId) {
     Slice<SummaryPlaceResponse> summaryList =
-        placeService.findSummaryList(searchPlaceRequest, pageable);
+        placeService.findSummaryList(searchPlaceRequest, pageable, userId);
 
     return ResponseEntity.ok(summaryList);
   }

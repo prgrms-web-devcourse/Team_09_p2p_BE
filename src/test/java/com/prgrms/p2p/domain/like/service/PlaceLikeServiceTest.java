@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import com.prgrms.p2p.domain.like.entity.PlaceLike;
 import com.prgrms.p2p.domain.like.repository.PlaceLikeRepository;
 import com.prgrms.p2p.domain.place.entity.Address;
+import com.prgrms.p2p.domain.place.entity.Category;
 import com.prgrms.p2p.domain.place.entity.PhoneNumber;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.place.repository.PlaceRepository;
@@ -53,7 +54,7 @@ class PlaceLikeServiceTest {
     void setUp() {
       placeStub = new Place("kakaomapID", "name",
           new Address("addressName", "roadAddressName"),
-          "12.123", "123.23", null, new PhoneNumber("010-1234-5678"), null);
+          "12.123", "123.23", Category.AC5, new PhoneNumber("010-1234-5678"), null);
       placeLikeStub = new PlaceLike(1L, placeStub);
     }
 

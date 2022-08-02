@@ -25,7 +25,9 @@ public class DetailCourseResponse {
   private Period period;
   private Region region;
   private String description;
+  @Builder.Default
   private List<Theme> themes = new ArrayList<>();
+  @Builder.Default
   private List<Spot> spots = new ArrayList<>();
   private List<CoursePlace> places = new ArrayList<>();
   private Integer likes;

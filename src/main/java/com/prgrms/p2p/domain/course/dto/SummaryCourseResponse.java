@@ -22,7 +22,9 @@ public class SummaryCourseResponse {
   private String thumbnail;
   private Region region;
   private Period period;
+  @Builder.Default
   private List<Theme> themes = new ArrayList<>();
+  @Builder.Default
   private List<CoursePlace> places = new ArrayList<>();
   private Integer likeCount;
   private Boolean isBookmarked;

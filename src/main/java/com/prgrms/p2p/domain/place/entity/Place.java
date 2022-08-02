@@ -27,7 +27,7 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "place")
 @Where(clause = "is_deleted = false")
-@SQLDelete(sql = "UPDATE room SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE place SET is_deleted = true WHERE id = ?")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Place extends BaseEntity {
