@@ -6,6 +6,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.Period;
 import com.prgrms.p2p.domain.course.entity.Region;
+import com.prgrms.p2p.domain.course.entity.Spot;
 import com.prgrms.p2p.domain.course.entity.Theme;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
@@ -23,6 +24,7 @@ class CourseLikeTest {
 
   private User user;
   private Set<Theme> themes;
+  private Set<Spot> spots;
 
   @BeforeEach
   void setUp() {
@@ -30,14 +32,16 @@ class CourseLikeTest {
         LocalDate.now().toString(), Sex.FEMALE);
     themes = new HashSet<>();
     themes.add(Theme.ALONE);
+    spots = new HashSet<>();
+    spots.add(Spot.바다);
   }
 
   @Test
   @DisplayName("성공 : 코스 좋아요 객체를 생성합니다.")
   void success() {
     // Given
-    Course course = new Course("title", Period.ONE_DAY, Region.SEOUL, "description",
-        themes, user);
+    Course course = new Course("title", Period.ONE_DAY, Region.서울, "description",
+        themes, spots, user);
     // When
     CourseLike courseLike = new CourseLike(1L, course);
     // Then
@@ -48,8 +52,8 @@ class CourseLikeTest {
   @DisplayName("실패 : 유저 아이디가 빈값인 경우 예외를 반환합니다.")
   void failByUserId1() {
     // Given
-    Course course = new Course("title", Period.ONE_DAY, Region.SEOUL, "description",
-        themes, user);
+    Course course = new Course("title", Period.ONE_DAY, Region.서울, "description",
+        themes, spots, user);
     // When
     Throwable response = catchThrowable(() -> new CourseLike(null, course));
     // Then
@@ -60,8 +64,8 @@ class CourseLikeTest {
   @DisplayName("실패 : 유저 아이디가 0 이하인 경우 예외를 반환합니다.")
   void failByUserId2() {
     // Given
-    Course course = new Course("title", Period.ONE_DAY, Region.SEOUL, "description",
-        themes, user);
+    Course course = new Course("title", Period.ONE_DAY, Region.서울, "description",
+        themes, spots, user);
     // When
     Throwable response = catchThrowable(() -> new CourseLike(0L, course));
     // Then
