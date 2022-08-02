@@ -81,6 +81,18 @@ public class UserService {
     userRepository.save(user);
   }
 
+  public void changePassword(Long userId, String oldPassword, String newPassword){
+    User user = userRepository.findById(userId)
+        .orElseThrow(IllegalArgumentException::new);
+
+    if(!user.getPassword().equals(oldPassword)){
+      throw new IllegalArgumentException();
+    }
+    user.changePassword(newPassword);
+
+    userRepository.save(user);
+  }
+
   public UserDetailResponse getUserInfo(Long userId) {
 
     // TODO: NotFoundException 만들어주기
