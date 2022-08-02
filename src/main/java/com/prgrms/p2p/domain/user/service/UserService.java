@@ -49,7 +49,7 @@ public class UserService {
     //래디스 체크
     redisTemplate.opsForValue().increment(email);
 
-    if((int)redisTemplate.opsForValue().get(email) >= 5){
+    if(Integer.parseInt(String.valueOf(redisTemplate.opsForValue().get(email))) >= 5){
       redisTemplate.opsForValue().set(email, 5, BAN_EXPIRATION_TIME.getValue(), TimeUnit.MILLISECONDS);
     }
 
