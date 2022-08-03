@@ -5,20 +5,19 @@ import static org.apache.logging.log4j.util.Strings.isBlank;
 
 import com.prgrms.p2p.domain.user.entity.Sex;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class ModifyRequest {
-  private Long id;
   private String nickname;
   private String birth;
   private Sex sex;
 
-
-  public ModifyRequest(Long id, String nickname, String birth, Sex sex) {
-    this.id = id;
-    setNickname(nickname);
-    setBirth(birth);
-    setSex(sex);
+  public ModifyRequest(String nickname, String birth, Sex sex) {
+    this.nickname = nickname;
+    this.birth = birth;
+    this.sex = sex;
   }
 
   public void setNickname(String nickname) {
