@@ -128,7 +128,7 @@ public class User extends BaseEntity {
 
   public void changeBirth(String birth) { setBirth(birth); }
 
-  public void changeSex(Sex Sex) {
+  public void changeSex(Sex sex) {
     setSex(sex);
   }
 
