@@ -61,7 +61,7 @@ public class UserController {
   }
 
   @PostMapping("/nickname")
-  public void validateNickname(Map<String,String> nicknameMap) {
+  public void validateNickname(@RequestBody Map<String,String> nicknameMap) {
     userService.validateNickname(nicknameMap.get("nickname"));
   }
 
