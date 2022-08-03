@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.prgrms.p2p.domain.user.dto.LoginRequest;
+import com.prgrms.p2p.domain.user.dto.OtherUserDetailResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
 import com.prgrms.p2p.domain.user.entity.Sex;
@@ -162,6 +163,35 @@ class UserServiceTest {
       assertThat(userInfo.getProfileImage()).isEqualTo(null);
       assertThat(userInfo.getBirth()).isEqualTo(user.getBirth().toString());
       assertThat(userInfo.getSex()).isEqualTo(user.getSex());
+    }
+
+    @Test
+    @DisplayName("실패 - 존재하지 않는 Id 입력")
+    void failNotExistId() {
+
+      assertThatThrownBy(() -> userService.getUserInfo(100L))
+          .isInstanceOf(IllegalArgumentException.class);
+    }
+  }
+
+  @Nested
+  @DisplayName("타인 상세정보 조회 테스트")
+  class getOtherInfoTest {
+
+    @Test
+    @DisplayName("성공 테스트")
+    void success() {
+      String nickname = userService.signUp(signUpRequest);
+
+      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+
+      OtherUserDetailResponse otherInfo = userService.getOtherInfo(user.getId());
+
+      assertThat(otherInfo.getId()).isEqualTo(user.getId());
+      assertThat(otherInfo.getNickname()).isEqualTo(user.getNickname());
+      assertThat(otherInfo.getProfileImage()).isEqualTo(null);
+      assertThat(otherInfo.getBirth()).isEqualTo(user.getBirth().toString());
+      assertThat(otherInfo.getSex()).isEqualTo(user.getSex());
     }
 
     @Test
