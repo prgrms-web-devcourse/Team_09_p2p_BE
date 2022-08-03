@@ -1,7 +1,7 @@
 package com.prgrms.p2p.domain.bookmark.service;
 
 import com.prgrms.p2p.domain.bookmark.entity.PlaceBookmark;
-import com.prgrms.p2p.domain.bookmark.exception.NotFoundException;
+import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.bookmark.repository.PlaceBookmarkRepository;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.place.repository.PlaceRepository;

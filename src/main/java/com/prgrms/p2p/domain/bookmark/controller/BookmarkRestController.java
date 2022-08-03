@@ -1,12 +1,10 @@
 package com.prgrms.p2p.domain.bookmark.controller;
 
-import com.prgrms.p2p.domain.bookmark.exception.NotFoundException;
 import com.prgrms.p2p.domain.user.aop.annotation.Auth;
 import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,10 +22,5 @@ public class BookmarkRestController {
       @CurrentUser CustomUserDetails user) {
     BookmarkType.of(type).toggle(user.getId(), id);
     return ResponseEntity.ok().build();
-  }
-
-  @ExceptionHandler(NotFoundException.class)
-  public ResponseEntity<Void> handleNotFoundException(Exception e) {
-    return ResponseEntity.notFound().build();
   }
 }

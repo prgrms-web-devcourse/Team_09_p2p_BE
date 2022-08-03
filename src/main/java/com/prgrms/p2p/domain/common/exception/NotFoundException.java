@@ -1,4 +1,4 @@
-package com.prgrms.p2p.domain.bookmark.exception;
+package com.prgrms.p2p.domain.common.exception;
 
 public class NotFoundException extends RuntimeException {
 
