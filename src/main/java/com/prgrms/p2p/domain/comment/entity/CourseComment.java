@@ -29,8 +29,8 @@ public class CourseComment extends Comment {
   private Course course;
 
   public CourseComment(String comment, Long rootCommentId, Long userId,
-      Course course) {
-    super(comment, rootCommentId, userId);
+      Course course, Long seq) {
+    super(comment, rootCommentId, userId, seq);
     this.addCourse(course);
   }
 

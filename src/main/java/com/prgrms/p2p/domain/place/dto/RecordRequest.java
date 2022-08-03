@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchPlaceRequest {
+public class RecordRequest {
 
-  private String keyword;
+  private Long userId;
 }

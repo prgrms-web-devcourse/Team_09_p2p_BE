@@ -303,13 +303,15 @@ class PlaceServiceTest {
       //given
       String keyword = "na";
 
-      SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder().keyword(keyword).build();
+      SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder()
+          .keyword(keyword)
+          .build();
 
       Pageable pageable = PageRequest.of(0, 10);
 
       //when
       Slice<SummaryPlaceResponse> summaryList = placeService.findSummaryList(searchPlaceReq,
-          pageable, Optional.empty());
+          pageable, null);
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
@@ -325,13 +327,15 @@ class PlaceServiceTest {
       //given
       String keyword = "";
 
-      SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder().keyword(keyword).build();
+      SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder()
+          .keyword(keyword)
+          .build();
 
       Pageable pageable = PageRequest.of(0, 10);
 
       //when
-      Slice<SummaryPlaceResponse> summaryList = placeService.findSummaryList(searchPlaceReq,
-          pageable, Optional.ofNullable(userId));
+      Slice<SummaryPlaceResponse> summaryList
+          = placeService.findSummaryList(searchPlaceReq, pageable, userId);
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
@@ -351,13 +355,15 @@ class PlaceServiceTest {
 
       String keyword = "";
 
-      SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder().keyword(keyword).build();
+      SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder()
+          .keyword(keyword)
+          .build();
 
       Pageable pageable = PageRequest.of(0, 10);
 
       //when
-      Slice<SummaryPlaceResponse> summaryList = placeService.findSummaryList(searchPlaceReq,
-          pageable, Optional.ofNullable(userId));
+      Slice<SummaryPlaceResponse> summaryList
+          = placeService.findSummaryList(searchPlaceReq, pageable, userId);
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
@@ -405,5 +411,4 @@ class PlaceServiceTest {
       assertThat(bookmarkedPlaceList.getNumberOfElements()).isEqualTo(1);
     }
   }
-
 }
