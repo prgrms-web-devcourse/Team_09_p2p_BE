@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LikeServiceFactory {
 
-  private final Map<String, LikeService> likePolicyMap;
+  private final Map<String, LikeService> likeServiceMap;
 
   public LikeService getLikeService(String name) {
-    return likePolicyMap.get(name);
+    return likeServiceMap.get(name);
   }
 }
