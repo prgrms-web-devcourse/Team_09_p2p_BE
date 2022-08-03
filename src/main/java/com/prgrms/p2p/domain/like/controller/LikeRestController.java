@@ -1,7 +1,7 @@
 package com.prgrms.p2p.domain.like.controller;
 
-import com.prgrms.p2p.domain.like.service.CourseLikeService;
-import com.prgrms.p2p.domain.like.service.PlaceLikeService;
+import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
+import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/likes")
 @RequiredArgsConstructor
 public class LikeRestController {
-
-  private final PlaceLikeService placeLikeService;
-  private final CourseLikeService courseLikeService;
 
   @GetMapping("/{type}/{id}")
   public ResponseEntity<Void> toggle(

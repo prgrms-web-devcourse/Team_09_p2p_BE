@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class PlaceLikeService implements LikePolicy {
+public class PlaceLikeService implements LikeService {
 
   private final PlaceRepository placeRepository;
   private final PlaceLikeRepository placeLikeRepository;

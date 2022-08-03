@@ -1,6 +1,7 @@
 package com.prgrms.p2p.domain.like.controller;
 
-import com.prgrms.p2p.domain.like.service.LikePolicy;
+import com.prgrms.p2p.domain.like.service.LikeService;
+import com.prgrms.p2p.domain.like.service.LikeServiceFactory;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -9,17 +10,17 @@ public enum LikeType {
   COURSE("courseLikeService") {
     @Override
     public void toggle(Long userId, Long courseId) {
-      getLikePolicy().toggle(userId, courseId);
+      getLikeService().toggle(userId, courseId);
     }
   }, PLACE("placeLikeService") {
     @Override
     public void toggle(Long userId, Long placeId) {
-      getLikePolicy().toggle(userId, placeId);
+      getLikeService().toggle(userId, placeId);
     }
   };
 
   private final String name;
-  private LikePolicy likePolicy;
+  private LikeService likeService;
 
   LikeType(String name) {
     this.name = name;
@@ -29,8 +30,8 @@ public enum LikeType {
     return name;
   }
 
-  public LikePolicy getLikePolicy() {
-    return likePolicy;
+  public LikeService getLikeService() {
+    return likeService;
   }
 
   public abstract void toggle(Long userId, Long targetId);
@@ -48,8 +49,8 @@ public enum LikeType {
     @PostConstruct
     public void postConstruct() {
       try {
-        COURSE.likePolicy = likeServiceFactory.getLikeService(COURSE.name);
-        PLACE.likePolicy = likeServiceFactory.getLikeService(PLACE.name);
+        COURSE.likeService = likeServiceFactory.getLikeService(COURSE.name);
+        PLACE.likeService = likeServiceFactory.getLikeService(PLACE.name);
       } catch (Exception e) {
         throw e;
       }

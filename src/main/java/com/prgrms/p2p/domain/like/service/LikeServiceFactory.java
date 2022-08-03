@@ -1,6 +1,5 @@
-package com.prgrms.p2p.domain.like.controller;
+package com.prgrms.p2p.domain.like.service;
 
-import com.prgrms.p2p.domain.like.service.LikePolicy;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -9,9 +8,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LikeServiceFactory {
 
-  private final Map<String, LikePolicy> likePolicyMap;
+  private final Map<String, LikeService> likePolicyMap;
 
-  public LikePolicy getLikeService(String name) {
+  public LikeService getLikeService(String name) {
     return likePolicyMap.get(name);
   }
 }
