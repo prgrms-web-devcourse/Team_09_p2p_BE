@@ -1,6 +1,7 @@
 package com.prgrms.p2p.domain.place.controller;
 
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
+import com.prgrms.p2p.domain.place.dto.RecordRequest;
 import com.prgrms.p2p.domain.place.dto.SearchPlaceRequest;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.service.PlaceService;
@@ -49,9 +50,9 @@ public class PlaceController {
   @GetMapping("/bookmark")
   public ResponseEntity<Slice<SummaryPlaceResponse>> getBookmarkPlaceList(
       Pageable pageable,
-      @CurrentUser CustomUserDetails user) {
+      @RequestBody RecordRequest recordRequest) {
     Slice<SummaryPlaceResponse> bookmarkedPlaceList
-        = placeService.findBookmarkedPlaceList(user.getId(), pageable);
+        = placeService.findBookmarkedPlaceList(recordRequest, pageable);
     return ResponseEntity.ok(bookmarkedPlaceList);
   }
 }

@@ -6,11 +6,13 @@ import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSummaryPlaceResp
 import com.prgrms.p2p.domain.course.dto.CreateCoursePlaceRequest;
 import com.prgrms.p2p.domain.course.util.CoursePlaceConverter;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
+import com.prgrms.p2p.domain.place.dto.RecordRequest;
 import com.prgrms.p2p.domain.place.dto.SearchPlaceRequest;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.place.repository.PlaceRepository;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -53,13 +55,13 @@ public class PlaceService {
     return placeList.map(p -> toSummaryPlaceResponse(p, Optional.ofNullable(userId)));
   }
 
-  /**
-   * 북마크한 장소 목록 조회
-   * @param userId
-   * @param pageable
-   * @return
-   */
-  public Slice<SummaryPlaceResponse> findBookmarkedPlaceList(Long userId, Pageable pageable) {
+  public Slice<SummaryPlaceResponse> findBookmarkedPlaceList(RecordRequest recordRequest,
+      Pageable pageable) {
+
+    Long userId = recordRequest.getUserId();
+    if (Objects.isNull(userId)) {
+      throw new RuntimeException();
+    }
     Slice<Place> bookmarkedPlace = placeRepository.findBookmarkedPlace(userId, pageable);
     return bookmarkedPlace.map(p -> toSummaryPlaceResponse(p, Optional.ofNullable(userId)));
   }
