@@ -225,4 +225,41 @@ class UserServiceTest {
           .isInstanceOf(IllegalArgumentException.class);
     }
   }
+
+  @Nested
+  @DisplayName("비밀번호 변경 테스트")
+  class changePasswordTest {
+
+    @Test
+    @DisplayName("성공 테스트")
+    void success() {
+      String nickname = userService.signUp(signUpRequest);
+      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      userService.changePassword(user.getId(),user.getPassword(), "change1234");
+
+      assertThat(user.getPassword()).isEqualTo("change1234");
+    }
+
+    @Test
+    @DisplayName("실패 - 잘못된 비밀번호 입력")
+    void failWrongPassword() {
+      String nickname = userService.signUp(signUpRequest);
+      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+
+      assertThatThrownBy(() -> userService.changePassword(user.getId(),"wrong1234", "change1234"))
+          .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("실패 - 새로운 비밀번호 형식이 다른 경우")
+    void failValidatePassword() {
+      String nickname = userService.signUp(signUpRequest);
+      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+
+      assertThatThrownBy(() -> userService.changePassword(user.getId(),user.getPassword(), "abcd"))
+          .isInstanceOf(IllegalArgumentException.class);
+      assertThatThrownBy(() -> userService.changePassword(user.getId(),user.getPassword(), "   "))
+          .isInstanceOf(IllegalArgumentException.class);
+    }
+  }
 }
