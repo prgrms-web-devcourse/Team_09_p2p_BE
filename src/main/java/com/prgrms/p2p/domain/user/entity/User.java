@@ -131,6 +131,10 @@ public class User extends BaseEntity {
     setSex(sex);
   }
 
+  public void changeProfileUrl(String profileUrl) {
+    setProfileUrl(profileUrl);
+  }
+
   public Optional<String> getProfileUrl() {
     if(this.profileUrl == null) {
       return Optional.empty();
