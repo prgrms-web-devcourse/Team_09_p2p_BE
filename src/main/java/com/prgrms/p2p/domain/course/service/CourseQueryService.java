@@ -38,4 +38,9 @@ public class CourseQueryService {
             .anyMatch(courseBookmark -> courseBookmark.getUserId().equals(userId))));
   }
 
+  public Slice<SummaryCourseResponse> findBookmarkedCourseList(Pageable pageable, Long userId) {
+    Slice<Course> courses = courseRepository.findBookmarkedCourse(userId, pageable);
+    return courses.map(course -> CourseConverter.ofSummary(course, true));
+  }
+
 }
