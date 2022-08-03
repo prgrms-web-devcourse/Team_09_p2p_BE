@@ -77,8 +77,7 @@ public class User extends BaseEntity {
 
   public void matchPassword(String password) {
     //TODO: 예외 바꿔주기
-    String encrypted = PasswordEncrypter.encrypt(password);
-    if(!PasswordEncrypter.isMatch(encrypted, this.password)) {
+    if(!PasswordEncrypter.isMatch(password, this.password)) {
       throw new IllegalArgumentException();
     }
   }
