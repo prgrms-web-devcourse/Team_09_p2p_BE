@@ -12,7 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @MappedSuperclass
-@EntityListeners(value = {AuditingEntityListener.class})
+@EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity implements Serializable {
 
   @CreatedDate
