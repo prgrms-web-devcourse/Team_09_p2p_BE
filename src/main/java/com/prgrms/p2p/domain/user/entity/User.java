@@ -63,6 +63,7 @@ public class User extends BaseEntity {
   private String profileUrl;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL ,orphanRemoval = true)
+  @Builder.Default
   private List<Course> courses = new ArrayList<>();
 
   @Column(name = "is_deleted")
