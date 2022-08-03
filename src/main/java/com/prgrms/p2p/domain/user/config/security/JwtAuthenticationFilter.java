@@ -30,7 +30,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
 
     if(token != null){
-      checkLogout(token);
 
       String userEmail = jwtTokenProvider.getUserEmail(token);
       if(userEmail != null) {
@@ -52,7 +51,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
   //TODO: 토큰 인증 실패 관련 예외 만들기
   private void validateAccessToken(String token, CustomUserDetails userDetails) {
-    if(jwtTokenProvider.validateToken(token, userDetails)) throw new IllegalArgumentException();
+    if(!jwtTokenProvider.validateToken(token, userDetails)) throw new IllegalArgumentException();
   }
 
 }

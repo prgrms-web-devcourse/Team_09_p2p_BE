@@ -79,6 +79,7 @@ public class CustomUserDetails implements UserDetails {
     return CustomUserDetails.builder()
         .id(user.getId())
         .email(user.getEmail())
+        .authorities(user.getAuthorities())
         .build();
   }
 }

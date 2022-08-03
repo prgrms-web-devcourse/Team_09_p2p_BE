@@ -3,6 +3,7 @@ package com.prgrms.p2p.domain.user.util;
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
+import com.prgrms.p2p.domain.user.entity.Authority;
 import com.prgrms.p2p.domain.user.entity.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,13 +11,27 @@ import java.time.LocalDateTime;
 public class UserConverter {
 
   public static User toUser(SignUpRequest signUpRequest) {
-    return new User(
-            signUpRequest.getEmail(),
-            PasswordEncrypter.encrypt(signUpRequest.getPassword()),
-            signUpRequest.getNickname(),
-            signUpRequest.getBirth(),
-            signUpRequest.getSex()
-        );
+    User user = new User(
+        signUpRequest.getEmail(),
+        PasswordEncrypter.encrypt(signUpRequest.getPassword()),
+        signUpRequest.getNickname(),
+        signUpRequest.getBirth(),
+        signUpRequest.getSex()
+    );
+    user.addAuthority(Authority.ofUser(user));
+    return user;
+  }
+
+  public static User toAdmin(SignUpRequest signUpRequest) {
+    User user = new User(
+        signUpRequest.getEmail(),
+        PasswordEncrypter.encrypt(signUpRequest.getPassword()),
+        signUpRequest.getNickname(),
+        signUpRequest.getBirth(),
+        signUpRequest.getSex()
+    );
+    user.addAuthority(Authority.ofAdmin(user));
+    return user;
   }
 
   public static UserDetailResponse detailFromUser(User user) {
@@ -37,11 +52,11 @@ public class UserConverter {
   }
 
   private static String fromLocalDate(LocalDate date) {
-    return date.toString();
+    return String.valueOf(date);
   }
 
   private static String fromLocalDateTime(LocalDateTime date) {
-    return date.toString();
+    return String.valueOf(date);
   }
 
   public static LoginResponse fromUserAndToken(User user, String token) {
