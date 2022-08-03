@@ -28,6 +28,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Entity
 @Table(name = "users")
@@ -37,6 +39,8 @@ import org.hibernate.annotations.Where;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
+
+  private static final Logger log = LoggerFactory.getLogger(User.class);
 
   @Id
   @GeneratedValue
@@ -127,7 +131,7 @@ public class User extends BaseEntity {
 
   public void changeBirth(String birth) { setBirth(birth); }
 
-  public void changeSex(Sex Sex) {
+  public void changeSex(Sex sex) {
     setSex(sex);
   }
 

@@ -262,4 +262,59 @@ class UserServiceTest {
           .isInstanceOf(IllegalArgumentException.class);
     }
   }
+
+  @Nested
+  @DisplayName("회원 정보 수정 테스트")
+  class modifyTest {
+
+    @Test
+    @DisplayName("성공 테스트")
+    void success() {
+      String nickname = userService.signUp(signUpRequest);
+
+      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      userService.modify(user.getId(), "KATE","1999-11-29",Sex.FEMALE);
+      User target = userRepository.findById(user.getId()).orElseThrow(IllegalArgumentException::new);
+
+      assertThat(target.getId()).isEqualTo(user.getId());
+      assertThat(target.getNickname()).isEqualTo("KATE");
+      assertThat(target.getBirth()).isEqualTo("1999-11-29");
+      assertThat(target.getSex()).isEqualTo(Sex.FEMALE);
+
+    }
+
+    @Test
+    @DisplayName("실패 - 빈 닉네임 입력")
+    void failBlankNickname() {
+      String nickname = userService.signUp(signUpRequest);
+
+      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+
+      assertThatThrownBy(() -> userService.modify(user.getId(), "  ","1999-11-29",Sex.FEMALE))
+          .isInstanceOf(RuntimeException.class);
+
+    }
+
+    @Test
+    @DisplayName("실패 - 빈 생일 입력")
+    void failBlankBirth() {
+      String nickname = userService.signUp(signUpRequest);
+
+      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+
+      assertThatThrownBy(() -> userService.modify(user.getId(), "KATE","  ",Sex.FEMALE))
+          .isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    @DisplayName("실패 - 성별 null 입력")
+    void failNullSex() {
+      String nickname = userService.signUp(signUpRequest);
+
+      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+
+      assertThatThrownBy(() -> userService.modify(user.getId(), "KATE","1999-11-29",null))
+          .isInstanceOf(RuntimeException.class);
+    }
+  }
 }
