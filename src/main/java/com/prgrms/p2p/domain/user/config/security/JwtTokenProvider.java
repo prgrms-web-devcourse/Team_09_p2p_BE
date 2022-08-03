@@ -27,8 +27,6 @@ public class JwtTokenProvider {
   @Value("${jwt.secretKey}")
   private String secretKey; // yaml에서 부르기
 
-  private static final String HEADER_PREFIX = "Bearer ";
-
   @PostConstruct
   protected void init() {
     secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
@@ -56,7 +54,7 @@ public class JwtTokenProvider {
   // Request의 Header에서 token 값을 가져옵니다. "Authorization" : "TOKEN값'
   public String resolveToken(HttpServletRequest request) {
     String header = request.getHeader("Authorization");
-    if(StringUtils.hasText(header) && header.startsWith(HEADER_PREFIX)) return header.substring(7);
+    if(StringUtils.hasText(header)) return header;
     return null;
   }
 
