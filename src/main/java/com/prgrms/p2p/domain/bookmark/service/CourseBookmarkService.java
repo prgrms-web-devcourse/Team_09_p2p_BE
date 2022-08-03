@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CourseBookmarkService implements BookmarkPolicy {
+public class CourseBookmarkService implements BookmarkService {
 
   private final CourseRepository courseRepository;
   private final CourseBookmarkRepository courseBookmarkRepository;
