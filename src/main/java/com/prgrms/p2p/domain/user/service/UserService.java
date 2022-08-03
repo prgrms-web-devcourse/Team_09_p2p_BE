@@ -139,4 +139,13 @@ public class UserService {
     Validation.validatePassword(password);
     if(!password.equals(passwordCheck)) throw new IllegalArgumentException("비밀번호가 서로 다릅니다.");
   }
+
+  @Transactional
+  public void changeProfileUrl(Long userId, String profileUrl) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(IllegalArgumentException::new);
+
+    user.changeProfileUrl(profileUrl);
+    userRepository.save(user);
+  }
 }
