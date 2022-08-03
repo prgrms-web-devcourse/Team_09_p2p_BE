@@ -1,6 +1,7 @@
 package com.prgrms.p2p.domain.bookmark.service;
 
 import com.prgrms.p2p.domain.bookmark.entity.CourseBookmark;
+import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.bookmark.repository.CourseBookmarkRepository;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.repository.CourseRepository;
@@ -11,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CourseBookmarkService implements BookmarkPolicy {
+public class CourseBookmarkService implements BookmarkService {
 
   private final CourseRepository courseRepository;
   private final CourseBookmarkRepository courseBookmarkRepository;
@@ -20,7 +21,7 @@ public class CourseBookmarkService implements BookmarkPolicy {
   @Transactional
   public void toggle(Long userId, Long courseId) {
     Course course = courseRepository.findById(courseId)
-        .orElseThrow(() -> new RuntimeException("존재하지 않는 코스에 좋아요를 시도했습니다."));
+        .orElseThrow(() -> new NotFoundException("존재하지 않는 코스에 좋아요를 시도했습니다."));
     courseBookmarkRepository.findByUserIdAndCourse(userId, course)
         .ifPresentOrElse(this::unbookmark, () -> bookmark(userId, course));
   }
