@@ -30,6 +30,7 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
     if (!(authentication instanceof AnonymousAuthenticationToken)) {
       return authentication.getPrincipal();
     }
+//    else return null;
     //TODO: 예외 생성해주기 : new PermissionException();
     throw new IllegalArgumentException();
   }
