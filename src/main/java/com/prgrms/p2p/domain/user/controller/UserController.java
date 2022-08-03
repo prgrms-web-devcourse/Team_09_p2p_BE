@@ -6,13 +6,17 @@ import com.prgrms.p2p.domain.user.dto.ChangePasswordRequest;
 import com.prgrms.p2p.domain.user.dto.LoginRequest;
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
 import com.prgrms.p2p.domain.user.dto.ModifyRequest;
+import com.prgrms.p2p.domain.user.dto.OtherUserDetailResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
+import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import com.prgrms.p2p.domain.user.service.UserService;
 import java.net.URI;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,6 +56,19 @@ public class UserController {
         modifyRequest.getSex());
 
     return ResponseEntity.ok().build();
+  }
+
+  @Auth
+  @GetMapping("/")
+  public ResponseEntity<UserDetailResponse> getUserInfo(@CurrentUser CustomUserDetails user) {
+    UserDetailResponse userInfo = userService.getUserInfo(user.getId());
+    return ResponseEntity.ok(userInfo);
+  }
+
+  @GetMapping("/{userId}")
+  public ResponseEntity<OtherUserDetailResponse> getOtherInfo(@PathVariable Long userId) {
+    OtherUserDetailResponse userInfo = userService.getOtherInfo(userId);
+    return ResponseEntity.ok(userInfo);
   }
 
   @Auth

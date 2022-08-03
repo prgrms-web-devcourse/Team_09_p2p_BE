@@ -4,6 +4,7 @@ import static com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum.BAN_E
 
 import com.prgrms.p2p.domain.user.config.security.JwtTokenProvider;
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
+import com.prgrms.p2p.domain.user.dto.OtherUserDetailResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
 import com.prgrms.p2p.domain.user.entity.Sex;
@@ -108,6 +109,13 @@ public class UserService {
         .orElseThrow(IllegalArgumentException::new);
 
     return UserConverter.detailFromUser(user);
+  }
+
+  public OtherUserDetailResponse getOtherInfo(Long userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(IllegalArgumentException::new);
+
+    return UserConverter.otherDetailFromUser(user);
   }
 
   //TODO: Exception 만들기
