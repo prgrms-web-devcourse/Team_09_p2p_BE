@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.comment.service;
 
+import com.prgrms.p2p.domain.comment.dto.CourseCommentResponse;
 import com.prgrms.p2p.domain.comment.dto.CreateCourseCommentRequest;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
 import com.prgrms.p2p.domain.comment.repository.CourseCommentRepository;
@@ -9,6 +10,8 @@ import com.prgrms.p2p.domain.course.repository.CourseRepository;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +39,11 @@ public class CourseCommentService {
     CourseComment courseComment = CommentConverter.toCourseComment(createCommentReq, course, seq);
 
     return courseCommentRepository.save(courseComment).getId();
+  }
 
+  public Slice<CourseCommentResponse> findCourseComment(Long courseId, Pageable pageable) {
+
+    return courseCommentRepository.findCourseComment(courseId, pageable);
   }
 
   private void validateUser(Long userId) {
@@ -59,10 +66,4 @@ public class CourseCommentService {
         createCommentReq.getRootCommentId().get()) + 1;
     return seq;
   }
-
-//  public Slice<CourseComment> findCourseComment(Long courseId, Pageable pageable) {
-//    Slice<CourseComment> courseComment
-//        = courseCommentRepository.findCourseComment(courseId, pageable);
-//
-//  }
 }

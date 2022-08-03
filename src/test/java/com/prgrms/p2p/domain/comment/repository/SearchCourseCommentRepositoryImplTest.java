@@ -2,6 +2,7 @@ package com.prgrms.p2p.domain.comment.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.prgrms.p2p.domain.comment.dto.CourseCommentResponse;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
 import com.prgrms.p2p.domain.comment.service.CourseCommentService;
 import com.prgrms.p2p.domain.course.entity.Course;
@@ -104,7 +105,7 @@ class SearchCourseCommentRepositoryImplTest {
     // then
     Pageable pageable = PageRequest.of(0, 100);
 
-    Slice<CourseComment> courseComments = courseCommentRepository.findCourseComment(course.getId(),
+    Slice<CourseCommentResponse> courseComments = courseCommentRepository.findCourseComment(course.getId(),
         pageable);
 
     for (int i = 0; i < 15; i++) {
@@ -181,7 +182,7 @@ class SearchCourseCommentRepositoryImplTest {
     // then
     Pageable pageable = PageRequest.of(0, 100);
 
-    Slice<CourseComment> courseComments
+    Slice<CourseCommentResponse> courseComments
         = courseCommentRepository.findCourseComment(-1L, pageable);
 
     assertThat(courseComments.getNumberOfElements()).isEqualTo(0);
