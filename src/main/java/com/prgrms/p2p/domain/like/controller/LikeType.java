@@ -42,7 +42,7 @@ public enum LikeType {
 
   @Component
   @RequiredArgsConstructor
-  public static class FruitEnumInjector {
+  public static class LikeServiceInjector {
 
     private final LikeServiceFactory likeServiceFactory;
 
