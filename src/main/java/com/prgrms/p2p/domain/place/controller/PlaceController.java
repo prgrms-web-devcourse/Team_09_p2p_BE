@@ -4,6 +4,9 @@ import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.SearchPlaceRequest;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.service.PlaceService;
+import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
+import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -24,25 +27,31 @@ public class PlaceController {
 
   @GetMapping("/{placeId}")
   public ResponseEntity<DetailPlaceResponse> getDetailPlace(
-      @PathVariable("placeId") Long placeId, Optional<Long> userId) {
-    DetailPlaceResponse response = placeService.findDetail(placeId, userId);
+      @PathVariable("placeId") Long placeId,
+      @CurrentUser CustomUserDetails user) {
+    Long userId = Objects.isNull(user) ? null : user.getId();
+    DetailPlaceResponse response = placeService.findDetail(placeId, Optional.ofNullable(userId));
     return ResponseEntity.ok(response);
   }
 
   @GetMapping("/")
   public ResponseEntity<Slice<SummaryPlaceResponse>> getSummaryPlaceList(
-      @RequestBody SearchPlaceRequest searchPlaceRequest, Pageable pageable) {
+      @RequestBody SearchPlaceRequest searchPlaceRequest,
+      Pageable pageable,
+      @CurrentUser CustomUserDetails user) {
+    Long userId = Objects.isNull(user) ? null : user.getId();
     Slice<SummaryPlaceResponse> summaryList =
-        placeService.findSummaryList(searchPlaceRequest, pageable);
+        placeService.findSummaryList(searchPlaceRequest, pageable, userId);
 
     return ResponseEntity.ok(summaryList);
   }
 
   @GetMapping("/bookmark")
   public ResponseEntity<Slice<SummaryPlaceResponse>> getBookmarkPlaceList(
-      @RequestBody Long userId, Pageable pageable) {
+      Pageable pageable,
+      @CurrentUser CustomUserDetails user) {
     Slice<SummaryPlaceResponse> bookmarkedPlaceList
-        = placeService.findBookmarkedPlaceList(userId, pageable);
+        = placeService.findBookmarkedPlaceList(user.getId(), pageable);
 
     return ResponseEntity.ok(bookmarkedPlaceList);
   }

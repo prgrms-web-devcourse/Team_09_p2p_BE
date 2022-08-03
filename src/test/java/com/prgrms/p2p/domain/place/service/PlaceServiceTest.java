@@ -305,14 +305,13 @@ class PlaceServiceTest {
 
       SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder()
           .keyword(keyword)
-          .userId(null)
           .build();
 
       Pageable pageable = PageRequest.of(0, 10);
 
       //when
       Slice<SummaryPlaceResponse> summaryList = placeService.findSummaryList(searchPlaceReq,
-          pageable);
+          pageable, null);
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
@@ -330,14 +329,13 @@ class PlaceServiceTest {
 
       SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder()
           .keyword(keyword)
-          .userId(userId)
           .build();
 
       Pageable pageable = PageRequest.of(0, 10);
 
       //when
       Slice<SummaryPlaceResponse> summaryList
-          = placeService.findSummaryList(searchPlaceReq, pageable);
+          = placeService.findSummaryList(searchPlaceReq, pageable, userId);
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
@@ -359,14 +357,13 @@ class PlaceServiceTest {
 
       SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder()
           .keyword(keyword)
-          .userId(userId)
           .build();
 
       Pageable pageable = PageRequest.of(0, 10);
 
       //when
       Slice<SummaryPlaceResponse> summaryList
-          = placeService.findSummaryList(searchPlaceReq, pageable);
+          = placeService.findSummaryList(searchPlaceReq, pageable, userId);
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
