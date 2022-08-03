@@ -3,8 +3,8 @@ package com.prgrms.p2p.domain.user.util;
 public class Validation {
 
   private static final String EMAIL_PATTERN = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$";
-  private static final String PASSWORD_PATTERN = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d~!@#$%^&*()+|=]{8,15}$";
-  private static final String NICKNAME_PATTERN = "^.{3,6}$";
+  private static final String PASSWORD_PATTERN = "^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\\-_=+]).{8,15}$";
+  private static final String NICKNAME_PATTERN = "^.{2,8}$";
 
   public static boolean validatePassword(String password) {
     // TODO: exception 다시 만들기 - InvalidPasswordException

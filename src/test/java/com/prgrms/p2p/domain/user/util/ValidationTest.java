@@ -58,13 +58,15 @@ class ValidationTest {
     void successPassword() {
 
       // Given
-      String password1= "test1234!";
-      String password2= "Test1234";
+      String password1 = "test12!!";
+      String password2 = "Test1234@";
+      String password3 = "1234!@###a";
       // When
 
       // Then
       assertThat(Validation.validatePassword(password1), is(true));
       assertThat(Validation.validatePassword(password2), is(true));
+      assertThat(Validation.validatePassword(password3), is(true));
     }
 
     @Test
@@ -85,6 +87,8 @@ class ValidationTest {
       assertThrows(IllegalArgumentException.class, () -> Validation.validatePassword(password2));
       assertThrows(IllegalArgumentException.class, () -> Validation.validatePassword(password3));
       assertThrows(IllegalArgumentException.class, () -> Validation.validatePassword(password4));
+      assertThrows(IllegalArgumentException.class, () -> Validation.validatePassword(password5));
+      assertThrows(IllegalArgumentException.class, () -> Validation.validatePassword(password6));
     }
   }
 
