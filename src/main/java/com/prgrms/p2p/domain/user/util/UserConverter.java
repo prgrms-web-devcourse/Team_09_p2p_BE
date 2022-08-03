@@ -1,6 +1,7 @@
 package com.prgrms.p2p.domain.user.util;
 
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
+import com.prgrms.p2p.domain.user.dto.OtherUserDetailResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
 import com.prgrms.p2p.domain.user.entity.Authority;
@@ -48,6 +49,22 @@ public class UserConverter {
         .sex(user.getSex())
         .createdAt(fromLocalDateTime(user.getCreatedAt()))
         .updatedAt(fromLocalDateTime(user.getUpdatedAt()))
+        .build();
+  }
+
+
+  public static OtherUserDetailResponse otherDetailFromUser(User user) {
+
+    String profileUrl = user.getProfileUrl()
+        .orElse(null);
+
+    return OtherUserDetailResponse.builder()
+        .id(user.getId())
+        .nickname(user.getNickname())
+        .profileImage(profileUrl)
+        .birth(fromLocalDate(user.getBirth()))
+        .sex(user.getSex())
+        .createdAt(fromLocalDateTime(user.getCreatedAt()))
         .build();
   }
 
