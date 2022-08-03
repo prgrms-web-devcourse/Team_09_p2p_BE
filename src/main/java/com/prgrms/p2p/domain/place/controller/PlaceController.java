@@ -52,7 +52,6 @@ public class PlaceController {
       @CurrentUser CustomUserDetails user) {
     Slice<SummaryPlaceResponse> bookmarkedPlaceList
         = placeService.findBookmarkedPlaceList(user.getId(), pageable);
-
     return ResponseEntity.ok(bookmarkedPlaceList);
   }
 }
