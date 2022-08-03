@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -51,7 +52,7 @@ public class CourseController {
 
   @GetMapping
   public ResponseEntity<Slice<SummaryCourseResponse>> getSummaryCourseList(
-      SearchCourseRequest searchCourseRequest, Pageable pageable,
+      @RequestBody SearchCourseRequest searchCourseRequest, Pageable pageable,
       @CurrentUser CustomUserDetails user) {
     Long userId = Objects.isNull(user) ? null : user.getId();
     Slice<SummaryCourseResponse> summaryList = courseQueryService.findSummaryList(

@@ -90,6 +90,7 @@ public class UserService {
         .orElseThrow(IllegalArgumentException::new);
 
     user.matchPassword(oldPassword);
+    Validation.validatePassword(newPassword);
     user.changePassword(newPassword);
 
     userRepository.save(user);
