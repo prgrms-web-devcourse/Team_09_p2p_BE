@@ -22,11 +22,9 @@ public class DetailPlaceResponse {
   private Category category;
   private PhoneNumber phoneNumber;
   private String imageUrl;
-
   private Boolean liked;
   private Boolean bookmarked;
   private Integer likeCount;
   private Integer usedCount;
 
-  // TODO: 2022/07/29 사용된 코스 추천 몇가지 들어가야 함
 }

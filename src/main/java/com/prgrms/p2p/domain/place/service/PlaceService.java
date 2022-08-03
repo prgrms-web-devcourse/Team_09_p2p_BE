@@ -37,7 +37,7 @@ public class PlaceService {
       CreateCoursePlaceRequest createCoursePlaceRequest, String imageUrl) {
     Optional<Place> place =
         placeRepository.findByKakaoMapId(createCoursePlaceRequest.getKakaoMapId());
-    place.ifPresent(p -> update(p, createCoursePlaceRequest, imageUrl));
+    place.ifPresent(p -> update(p, createCoursePlaceRequest));
     return place;
   }
 
@@ -48,9 +48,9 @@ public class PlaceService {
   }
 
   public Slice<SummaryPlaceResponse> findSummaryList(
-      SearchPlaceRequest searchPlaceReq, Pageable pageable, Optional<Long> userId) {
+      SearchPlaceRequest searchPlaceReq, Pageable pageable) {
     Slice<Place> placeList = placeRepository.searchPlace(searchPlaceReq, pageable);
-    return placeList.map(p -> toSummaryPlaceResponse(p, userId));
+    return placeList.map(p -> toSummaryPlaceResponse(p, Optional.ofNullable(searchPlaceReq.getUserId())));
   }
 
   /**
@@ -64,7 +64,7 @@ public class PlaceService {
     return bookmarkedPlace.map(p -> toSummaryPlaceResponse(p, Optional.ofNullable(userId)));
   }
 
-  private void update(Place place, CreateCoursePlaceRequest updateReq, String imageUrl) {
+  private void update(Place place, CreateCoursePlaceRequest updateReq) {
     place.changeName(place.getName());
     Address newAddress =
         new Address(updateReq.getAddressName(), updateReq.getRoadAddressName());

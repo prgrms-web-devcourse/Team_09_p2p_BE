@@ -11,6 +11,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,16 +31,16 @@ public class PlaceController {
 
   @GetMapping("/")
   public ResponseEntity<Slice<SummaryPlaceResponse>> getSummaryPlaceList(
-      SearchPlaceRequest searchPlaceRequest, Pageable pageable, Optional<Long> userId) {
+      @RequestBody SearchPlaceRequest searchPlaceRequest, Pageable pageable) {
     Slice<SummaryPlaceResponse> summaryList =
-        placeService.findSummaryList(searchPlaceRequest, pageable, userId);
+        placeService.findSummaryList(searchPlaceRequest, pageable);
 
     return ResponseEntity.ok(summaryList);
   }
 
   @GetMapping("/bookmark")
   public ResponseEntity<Slice<SummaryPlaceResponse>> getBookmarkPlaceList(
-      Long userId, Pageable pageable) {
+      @RequestBody Long userId, Pageable pageable) {
     Slice<SummaryPlaceResponse> bookmarkedPlaceList
         = placeService.findBookmarkedPlaceList(userId, pageable);
 
