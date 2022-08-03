@@ -16,9 +16,9 @@ public class LikeRestController {
 
   @GetMapping("/{type}/{id}")
   public ResponseEntity<Void> toggle(
-      @PathVariable("type") String type, @PathVariable("id") Long id) {
-    Long userId = 1L;
-    LikeType.of(type).toggle(userId, id);
+      @PathVariable("type") String type, @PathVariable("id") Long id,
+      @CurrentUser CustomUserDetails user) {
+    LikeType.of(type).toggle(user.getId(), id);
     return ResponseEntity.ok().build();
   }
 }

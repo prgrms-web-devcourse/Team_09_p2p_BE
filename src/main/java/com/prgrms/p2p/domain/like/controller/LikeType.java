@@ -7,12 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 public enum LikeType {
-  COURSE("courseLikeService") {
+  COURSES("courseLikeService") {
     @Override
     public void toggle(Long userId, Long courseId) {
       getLikeService().toggle(userId, courseId);
     }
-  }, PLACE("placeLikeService") {
+  }, PLACES("placeLikeService") {
     @Override
     public void toggle(Long userId, Long placeId) {
       getLikeService().toggle(userId, placeId);
@@ -49,10 +49,10 @@ public enum LikeType {
     @PostConstruct
     public void postConstruct() {
       try {
-        COURSE.likeService = likeServiceFactory.getLikeService(COURSE.name);
-        PLACE.likeService = likeServiceFactory.getLikeService(PLACE.name);
+        COURSES.likeService = likeServiceFactory.getLikeService(COURSES.name);
+        PLACES.likeService = likeServiceFactory.getLikeService(PLACES.name);
       } catch (Exception e) {
-        throw e;
+        throw new RuntimeException(e.getMessage());
       }
     }
   }
