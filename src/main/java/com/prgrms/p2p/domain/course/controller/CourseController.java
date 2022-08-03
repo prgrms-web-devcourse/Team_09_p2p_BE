@@ -10,6 +10,7 @@ import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -35,7 +36,7 @@ public class CourseController {
   public ResponseEntity<Long> register(
       @RequestPart("course") CreateCourseRequest createCourseRequest,
       @RequestPart("images") List<MultipartFile> images, @CurrentUser CustomUserDetails user) {
-    Long userId = user.equals(null) ? null : user.getId();
+    Long userId = Objects.isNull(user) ? null : user.getId();
     Long courseId = courseService.save(createCourseRequest, images, userId);
     return ResponseEntity.created(URI.create("/" + courseId)).body(courseId);
   }
@@ -43,7 +44,7 @@ public class CourseController {
   @GetMapping("/{courseId}")
   public ResponseEntity<DetailCourseResponse> getDetailCourse(
       @PathVariable("courseId") Long courseId, @CurrentUser CustomUserDetails user) {
-    Long userId = user.equals(null) ? null : user.getId();
+    Long userId = Objects.isNull(user) ? null : user.getId();
     DetailCourseResponse response = courseQueryService.findDetail(courseId, userId);
     return ResponseEntity.ok(null);
   }
@@ -52,7 +53,7 @@ public class CourseController {
   public ResponseEntity<Slice<SummaryCourseResponse>> getSummaryCourseList(
       SearchCourseRequest searchCourseRequest, Pageable pageable,
       @CurrentUser CustomUserDetails user) {
-    Long userId = user.equals(null) ? null : user.getId();
+    Long userId = Objects.isNull(user) ? null : user.getId();
     Slice<SummaryCourseResponse> summaryList = courseQueryService.findSummaryList(
         searchCourseRequest, pageable, userId);
 

@@ -25,5 +25,6 @@ public class CreateCourseRequest {
   private List<Theme> themes =new ArrayList<>();
   @Builder.Default
   private List<Spot> spots = new ArrayList<>();
-  private List<CreateCoursePlaceRequest> places;
+  @Builder.Default
+  private List<CreateCoursePlaceRequest> places=new ArrayList<>();
 }
