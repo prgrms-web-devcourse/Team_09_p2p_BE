@@ -52,11 +52,12 @@ public class UserConverter {
         .accessToken(token)
         .build();
 
-    LoginResponse.User data = response.new User(
+    LoginResponse.Datas data = response.new Datas(
         user.getId(),
         user.getNickname(),
         profileUrl
     );
+    response.setUser(data);
     return response;
   }
 }
