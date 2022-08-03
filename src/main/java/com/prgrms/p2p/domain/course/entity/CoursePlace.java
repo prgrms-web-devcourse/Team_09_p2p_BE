@@ -3,6 +3,7 @@ package com.prgrms.p2p.domain.course.entity;
 
 import com.prgrms.p2p.domain.common.BaseEntity;
 import com.prgrms.p2p.domain.place.entity.Place;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +15,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -30,8 +32,8 @@ public class CoursePlace extends BaseEntity {
   @Column(name = "id")
   private Long id;
 
-  @Column(name = "index")
-  private Integer index;
+  @Column(name = "seq")
+  private Integer seq;
 
   @Column(name = "description")
   private String description;
@@ -53,9 +55,9 @@ public class CoursePlace extends BaseEntity {
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
-  public CoursePlace(Integer index, String description, String imageUrl,
-      boolean recommended, Course course, Place place) {
-    setIndex(index);
+  public CoursePlace(Integer seq, String description, String imageUrl, Boolean recommended,
+      Course course, Place place) {
+    setSeq(seq);
     setDescription(description);
     setImageUrl(imageUrl);
     setRecommended(recommended);
@@ -65,6 +67,9 @@ public class CoursePlace extends BaseEntity {
 
 
   public void addCourse(Course course) {
+    if (Objects.isNull(course)) {
+      throw new IllegalArgumentException();
+    }
     if (this.course != null) {
       this.course.getCoursePlaces().remove(this);
     }
@@ -78,6 +83,9 @@ public class CoursePlace extends BaseEntity {
   }
 
   public void addPlace(Place place) {
+    if (Objects.isNull(place)) {
+      throw new IllegalArgumentException();
+    }
     if (this.place != null) {
       this.place.getCoursePlaces().remove(this);
     }
@@ -86,26 +94,44 @@ public class CoursePlace extends BaseEntity {
   }
 
   private void setDescription(String description) {
+    if (Strings.isBlank(description)) {
+      throw new IllegalArgumentException();
+    }
     this.description = description;
   }
 
   private void setImageUrl(String imageUrl) {
+    if (Strings.isBlank(imageUrl)) {
+      throw new IllegalArgumentException();
+    }
     this.imageUrl = imageUrl;
   }
 
-  private void setRecommended(boolean recommended) {
+  private void setRecommended(Boolean recommended) {
     this.recommended = recommended;
   }
 
   private void setCourse(Course course) {
+    if (Objects.isNull(course)) {
+      throw new IllegalArgumentException();
+    }
     this.course = course;
   }
 
   private void setPlace(Place place) {
+    if (Objects.isNull(course)) {
+      throw new IllegalArgumentException();
+    }
     this.place = place;
   }
 
-  private void setIndex(Integer index) {
-    this.index = index;
+  private void setSeq(Integer index) {
+    if (Objects.isNull(index)) {
+      throw new IllegalArgumentException();
+    }
+    if (index < 0) {
+      throw new IllegalArgumentException();
+    }
+    this.seq = index;
   }
 }

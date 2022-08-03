@@ -17,8 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -28,16 +26,6 @@ public class JwtTokenProvider {
 
   @Value("${jwt.secretKey}")
   private String secretKey; // yaml에서 부르기
-
-  private long tokenValidTime = 60 * 60 * 1000L;
-
-  private final UserDetailsService userDetailsService;
-  private static final String HEADER_PREFIX = "Bearer ";
-
-  public JwtTokenProvider(
-      UserDetailsService userDetailsService) {
-    this.userDetailsService = userDetailsService;
-  }
 
   @PostConstruct
   protected void init() {
@@ -66,7 +54,7 @@ public class JwtTokenProvider {
   // Request의 Header에서 token 값을 가져옵니다. "Authorization" : "TOKEN값'
   public String resolveToken(HttpServletRequest request) {
     String header = request.getHeader("Authorization");
-    if(StringUtils.hasText(header) && header.startsWith(HEADER_PREFIX)) return header.substring(7);
+    if(StringUtils.hasText(header)) return header;
     return null;
   }
 

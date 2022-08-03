@@ -8,8 +8,11 @@ import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.user.util.PasswordEncrypter;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +23,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -30,6 +34,7 @@ import org.hibernate.annotations.Where;
 @Where(clause = "is_deleted = false")
 @SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id = ?")
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 
@@ -63,6 +68,10 @@ public class User extends BaseEntity {
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
+  private Set<Authority> authorities = new HashSet<>();
+
   public void addCourse(Course course) {
     this.courses.add(course);
   }
@@ -73,12 +82,37 @@ public class User extends BaseEntity {
     setNickname(nickname);
     setBirth(birth);
     setSex(sex);
+    authorities = new HashSet<>();
+  }
+
+  public User(Long id, String email, String password, String nickname, LocalDate birth,
+      Sex sex, String profileUrl, List<Course> courses, Boolean isDeleted,
+      Set<Authority> authorities) {
+    this.id = id;
+    this.email = email;
+    this.password = password;
+    this.nickname = nickname;
+    this.birth = birth;
+    this.sex = sex;
+    this.profileUrl = profileUrl;
+    this.courses = courses;
+    this.isDeleted = isDeleted;
+    this.authorities = authorities;
+  }
+
+  public List<String> getAuthorities() {
+    return authorities.stream()
+        .map(Authority::getRole)
+        .collect(Collectors.toList());
+  }
+
+  public void addAuthority(Authority authority) {
+    authorities.add(authority);
   }
 
   public void matchPassword(String password) {
     //TODO: 예외 바꿔주기
-    String encrypted = PasswordEncrypter.encrypt(password);
-    if(!PasswordEncrypter.isMatch(encrypted, this.password)) {
+    if(!PasswordEncrypter.isMatch(password, this.password)) {
       throw new IllegalArgumentException();
     }
   }
@@ -95,6 +129,10 @@ public class User extends BaseEntity {
 
   public void changeSex(Sex Sex) {
     setSex(sex);
+  }
+
+  public void changeProfileUrl(String profileUrl) {
+    setProfileUrl(profileUrl);
   }
 
   public Optional<String> getProfileUrl() {

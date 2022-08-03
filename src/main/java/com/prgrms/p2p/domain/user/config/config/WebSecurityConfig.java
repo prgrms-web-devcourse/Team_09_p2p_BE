@@ -1,5 +1,7 @@
-package com.prgrms.p2p.domain.user.config.security;
+package com.prgrms.p2p.domain.user.config.config;
 
+import com.prgrms.p2p.domain.user.config.security.JwtAuthenticationFilter;
+import com.prgrms.p2p.domain.user.config.security.JwtEntryPoint;
 import com.prgrms.p2p.domain.user.service.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

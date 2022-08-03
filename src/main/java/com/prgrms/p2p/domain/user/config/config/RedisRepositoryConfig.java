@@ -1,4 +1,4 @@
-package com.prgrms.p2p.domain.user.config.security;
+package com.prgrms.p2p.domain.user.config.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
@@ -25,8 +25,8 @@ public class RedisRepositoryConfig {
 
   //setKeySerializer 와 setValueSerializer로 redis-cli을 통해 확인 가능
   @Bean
-  public RedisTemplate<String, Object> redisTemplate(){
-    RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+  public RedisTemplate<String, String> redisTemplate(){
+    RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
     redisTemplate.setConnectionFactory(redisConnectionFactory());
     redisTemplate.setKeySerializer(new StringRedisSerializer());
     redisTemplate.setValueSerializer(new StringRedisSerializer());

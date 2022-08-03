@@ -4,8 +4,10 @@ import static com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum.BAN_E
 
 import com.prgrms.p2p.domain.user.config.security.JwtTokenProvider;
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
+import com.prgrms.p2p.domain.user.dto.OtherUserDetailResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
+import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import com.prgrms.p2p.domain.user.util.UserConverter;
@@ -49,7 +51,7 @@ public class UserService {
     //래디스 체크
     redisTemplate.opsForValue().increment(email);
 
-    if((int)redisTemplate.opsForValue().get(email) >= 5){
+    if(Integer.parseInt(String.valueOf(redisTemplate.opsForValue().get(email))) >= 5){
       redisTemplate.opsForValue().set(email, 5, BAN_EXPIRATION_TIME.getValue(), TimeUnit.MILLISECONDS);
     }
 
@@ -70,6 +72,36 @@ public class UserService {
         UserConverter.fromUserAndToken(u, jwtTokenProvider.generateAccessToken(user.getId(), user.getEmail())));
   }
 
+  public void modify(Long userId, String nickname, String birth, Sex sex){
+    User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+
+    user.changeNickname(nickname);
+    user.changeBirth(birth);
+    user.changeSex(sex);
+
+    userRepository.save(user);
+  }
+
+  public void changePassword(Long userId, String oldPassword, String newPassword){
+    User user = userRepository.findById(userId)
+        .orElseThrow(IllegalArgumentException::new);
+
+    if(!user.getPassword().equals(oldPassword)){
+      throw new IllegalArgumentException();
+    }
+    user.changePassword(newPassword);
+
+    userRepository.save(user);
+  }
+
+  public void delete(Long userId){
+
+    User user = userRepository.findById(userId)
+        .orElseThrow(IllegalArgumentException::new);
+
+    userRepository.delete(user);
+  }
+
   public UserDetailResponse getUserInfo(Long userId) {
 
     // TODO: NotFoundException 만들어주기
@@ -77,6 +109,13 @@ public class UserService {
         .orElseThrow(IllegalArgumentException::new);
 
     return UserConverter.detailFromUser(user);
+  }
+
+  public OtherUserDetailResponse getOtherInfo(Long userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(IllegalArgumentException::new);
+
+    return UserConverter.otherDetailFromUser(user);
   }
 
   //TODO: Exception 만들기
@@ -99,5 +138,14 @@ public class UserService {
   private void validatePassword(String password, String passwordCheck) {
     Validation.validatePassword(password);
     if(!password.equals(passwordCheck)) throw new IllegalArgumentException("비밀번호가 서로 다릅니다.");
+  }
+
+  @Transactional
+  public void changeProfileUrl(Long userId, String profileUrl) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(IllegalArgumentException::new);
+
+    user.changeProfileUrl(profileUrl);
+    userRepository.save(user);
   }
 }

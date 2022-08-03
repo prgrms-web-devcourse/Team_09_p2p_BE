@@ -5,42 +5,20 @@ import static org.apache.logging.log4j.util.Strings.isBlank;
 
 import com.prgrms.p2p.domain.user.entity.Sex;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
-public class SignUpRequest {
-
-  private String email;
-  private String password;
-  private String passwordCheck;
+public class ModifyRequest {
+  private Long id;
   private String nickname;
   private String birth;
   private Sex sex;
 
-  public SignUpRequest(String email, String password, String passwordCheck, String nickname,
-      String birth, Sex sex) {
-    setEmail(email);
-    setPassword(password);
-    setPasswordCheck(passwordCheck);
+
+  public ModifyRequest(Long id, String nickname, String birth, Sex sex) {
+    this.id = id;
     setNickname(nickname);
     setBirth(birth);
     setSex(sex);
-  }
-
-  public void setEmail(String email) {
-    checkBlank(email);
-    this.email = email;
-  }
-
-  public void setPassword(String password) {
-    checkBlank(password);
-    this.password = password;
-  }
-
-  public void setPasswordCheck(String passwordCheck) {
-    checkBlank(passwordCheck);
-    this.passwordCheck = passwordCheck;
   }
 
   public void setNickname(String nickname) {
@@ -64,5 +42,4 @@ public class SignUpRequest {
       throw new RuntimeException();
     }
   }
-
 }

@@ -4,7 +4,6 @@ import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
