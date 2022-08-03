@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.like.controller;
 
+import com.prgrms.p2p.domain.user.aop.annotation.Auth;
 import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LikeRestController {
 
+  @Auth
   @GetMapping("/{type}/{id}")
   public ResponseEntity<Void> toggle(
       @PathVariable("type") String type, @PathVariable("id") Long id,
