@@ -1,0 +1,15 @@
+{
+  "LABEL": {
+    "name": "title needs formatting",
+    "color": "EEEEEE"
+  },
+  "CHECKS": {
+    "prefixes": ["fix: ", "feat: ", "docs: "],
+    "regexp": "\\[P2P-([0-9]{1,3})\\]",
+    "ignoreLabels" : ["dont-check-PR"]
+  },
+  "MESSAGES": {
+    "success": "All OK",
+    "failure": "Failing CI test"
+  }
+}

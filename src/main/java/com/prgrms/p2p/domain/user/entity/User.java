@@ -1,13 +1,18 @@
 package com.prgrms.p2p.domain.user.entity;
 
-import com.prgrms.p2p.domain.comment.entity.Comment;
+import static java.util.Objects.isNull;
+import static org.apache.logging.log4j.util.Strings.isBlank;
+
 import com.prgrms.p2p.domain.common.BaseEntity;
 import com.prgrms.p2p.domain.course.entity.Course;
-import com.prgrms.p2p.domain.place.entity.Place;
+import com.prgrms.p2p.domain.user.util.PasswordEncrypter;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,16 +23,18 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Where(clause = "is_deleted = false")
-@SQLDelete(sql = "UPDATE room SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id = ?")
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 
@@ -36,24 +43,139 @@ public class User extends BaseEntity {
   @Column(name = "id")
   private Long id;
 
+  @Column(name = "email")
   private String email;
 
+  @Column(name = "password")
   private String password;
 
+  @Column(name = "nickname")
   private String nickname;
 
+  @Column(name = "birth")
   private LocalDate birth;
 
   @Enumerated(EnumType.STRING)
+  @Column(name = "sex")
   private Sex sex;
 
+  @Column(name = "profile_url")
   private String profileUrl;
-
-  private LocalDateTime deletedAt;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL ,orphanRemoval = true)
   private List<Course> courses = new ArrayList<>();
 
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
+  private Set<Authority> authorities = new HashSet<>();
+
+  public void addCourse(Course course) {
+    this.courses.add(course);
+  }
+
+  public User(String email, String password, String nickname, String birth, Sex sex) {
+    setEmail(email);
+    setPassword(password);
+    setNickname(nickname);
+    setBirth(birth);
+    setSex(sex);
+    authorities = new HashSet<>();
+  }
+
+  public User(Long id, String email, String password, String nickname, LocalDate birth,
+      Sex sex, String profileUrl, List<Course> courses, Boolean isDeleted,
+      Set<Authority> authorities) {
+    this.id = id;
+    this.email = email;
+    this.password = password;
+    this.nickname = nickname;
+    this.birth = birth;
+    this.sex = sex;
+    this.profileUrl = profileUrl;
+    this.courses = courses;
+    this.isDeleted = isDeleted;
+    this.authorities = authorities;
+  }
+
+  public List<String> getAuthorities() {
+    return authorities.stream()
+        .map(Authority::getRole)
+        .collect(Collectors.toList());
+  }
+
+  public void addAuthority(Authority authority) {
+    authorities.add(authority);
+  }
+
+  public void matchPassword(String password) {
+    //TODO: 예외 바꿔주기
+    if(!PasswordEncrypter.isMatch(password, this.password)) {
+      throw new IllegalArgumentException();
+    }
+  }
+
+  public void changePassword(String newPassword) {
+    setPassword(newPassword);
+  }
+
+  public void changeNickname(String nickname) {
+    setNickname(nickname);
+  }
+
+  public void changeBirth(String birth) { setBirth(birth); }
+
+  public void changeSex(Sex Sex) {
+    setSex(sex);
+  }
+
+  public void changeProfileUrl(String profileUrl) {
+    setProfileUrl(profileUrl);
+  }
+
+  public Optional<String> getProfileUrl() {
+    if(this.profileUrl == null) {
+      return Optional.empty();
+    } else {
+      return Optional.of(this.profileUrl);
+    }
+  }
+
+  private void checkBlank(String target) {
+    //TODO: InvalidParamException
+    if(isBlank(target)) {
+      throw new RuntimeException();
+    }
+  }
+
+  private void setEmail(String email) {
+    checkBlank(email);
+    this.email = email;
+  }
+
+  private void setPassword(String password) {
+    checkBlank(password);
+    this.password = password;
+  }
+
+  private void setNickname(String nickname) {
+    checkBlank(nickname);
+    this.nickname = nickname;
+  }
+
+  private void setBirth(String birth) {
+    checkBlank(birth);
+    this.birth = LocalDate.parse(birth);
+  }
+  private void setSex(Sex sex) {
+    if(isNull(sex)) throw new RuntimeException();
+    this.sex = sex;
+  }
+
+  private void setProfileUrl(String profileUrl) {
+    checkBlank(profileUrl);
+    this.profileUrl = profileUrl;
+  }
 }
