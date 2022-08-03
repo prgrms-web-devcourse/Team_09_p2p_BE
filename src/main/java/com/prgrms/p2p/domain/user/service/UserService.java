@@ -72,8 +72,10 @@ public class UserService {
         UserConverter.fromUserAndToken(u, jwtTokenProvider.generateAccessToken(user.getId(), user.getEmail())));
   }
 
+  @Transactional
   public void modify(Long userId, String nickname, String birth, Sex sex){
-    User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+    User user = userRepository.findById(userId)
+        .orElseThrow(IllegalArgumentException::new);
 
     user.changeNickname(nickname);
     user.changeBirth(birth);
@@ -82,18 +84,27 @@ public class UserService {
     userRepository.save(user);
   }
 
+  @Transactional
   public void changePassword(Long userId, String oldPassword, String newPassword){
     User user = userRepository.findById(userId)
         .orElseThrow(IllegalArgumentException::new);
 
-    if(!user.getPassword().equals(oldPassword)){
-      throw new IllegalArgumentException();
-    }
+    user.matchPassword(oldPassword);
     user.changePassword(newPassword);
 
     userRepository.save(user);
   }
 
+  @Transactional
+  public void changeProfileUrl(Long userId, String profileUrl) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(IllegalArgumentException::new);
+
+    user.changeProfileUrl(profileUrl);
+    userRepository.save(user);
+  }
+
+  @Transactional
   public void delete(Long userId){
 
     User user = userRepository.findById(userId)
@@ -138,14 +149,5 @@ public class UserService {
   private void validatePassword(String password, String passwordCheck) {
     Validation.validatePassword(password);
     if(!password.equals(passwordCheck)) throw new IllegalArgumentException("비밀번호가 서로 다릅니다.");
-  }
-
-  @Transactional
-  public void changeProfileUrl(Long userId, String profileUrl) {
-    User user = userRepository.findById(userId)
-        .orElseThrow(IllegalArgumentException::new);
-
-    user.changeProfileUrl(profileUrl);
-    userRepository.save(user);
   }
 }
