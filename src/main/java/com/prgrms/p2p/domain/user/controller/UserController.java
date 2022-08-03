@@ -10,6 +10,7 @@ import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import com.prgrms.p2p.domain.user.service.UserService;
 import java.net.URI;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,8 +73,8 @@ public class UserController {
   }
 
   @PostMapping("/email")
-  public void validateEmail(@RequestBody String email) {
-    userService.validateEmail(email);
+  public void validateEmail(@RequestBody Map<String,String> emailMap) {
+    userService.validateEmail(emailMap.get("email"));
   }
 
   @PostMapping("/nickname")
