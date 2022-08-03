@@ -7,8 +7,8 @@ public class Validation {
   private static final String NICKNAME_PATTERN = "^.{3,6}$";
 
   public static boolean validatePassword(String password) {
-     // TODO: exception 다시 만들기 - InvalidPasswordException
-    if(!password.matches(PASSWORD_PATTERN)) {
+    // TODO: exception 다시 만들기 - InvalidPasswordException
+    if (!password.matches(PASSWORD_PATTERN)) {
       throw new IllegalArgumentException();
     }
     return true;
@@ -16,7 +16,7 @@ public class Validation {
 
   public static boolean validateEmail(String email) {
     // TODO: exception 다시 만들기 - InvalidEmailException
-    if(!email.matches(EMAIL_PATTERN)) {
+    if (!email.matches(EMAIL_PATTERN)) {
       throw new IllegalArgumentException();
     }
     return true;
@@ -24,7 +24,7 @@ public class Validation {
 
   public static boolean validateNickname(String nickname) {
     // TODO: exception 다시 만들기 - InvalidNicknameException
-    if(!nickname.matches(NICKNAME_PATTERN)) {
+    if (!nickname.matches(NICKNAME_PATTERN)) {
       throw new IllegalArgumentException();
     }
     return true;

@@ -21,8 +21,8 @@ class ValidationTest {
     void successEmail() {
 
       // Given
-      String email1= "qjatjr@gmail.com";
-      String email2= "qjatjr29@gmail.com";
+      String email1 = "qjatjr@gmail.com";
+      String email2 = "qjatjr29@gmail.com";
       // When
 
       // Then
@@ -35,10 +35,10 @@ class ValidationTest {
     void failEmail() {
 
       // Given
-      String email1= "qjatjr@gmailcom";
-      String email2= "qjatjrgmail.com";
-      String email3= "@gmail.com";
-      String email4= "qjatjrgmail.com";
+      String email1 = "qjatjr@gmailcom";
+      String email2 = "qjatjrgmail.com";
+      String email3 = "@gmail.com";
+      String email4 = "qjatjrgmail.com";
       // When
 
       // Then
@@ -72,10 +72,12 @@ class ValidationTest {
     void failPassword() {
 
       // Given
-      String password1= "test123";
-      String password2= "test12345678910!";
-      String password3= "testtest";
-      String password4= "123456789";
+      String password1 = "test123";
+      String password2 = "test12345678910!";
+      String password3 = "testtest";
+      String password4 = "123456789";
+      String password5 = "123456789!";
+      String password6 = "testtest!";
       // When
 
       // Then
@@ -95,10 +97,10 @@ class ValidationTest {
     void successNickname() {
 
       // Given
-      String nickname1= "test";
-      String nickname2= "Test12";
-      String nickname3= "12345";
-      String nickname4= "!!!@@#";
+      String nickname1 = "test";
+      String nickname2 = "Test12";
+      String nickname3 = "12345";
+      String nickname4 = "!!!@@#";
       // When
 
       // Then
@@ -113,9 +115,9 @@ class ValidationTest {
     void failNickname() {
 
       // Given
-      String nickname1= "test123";
-      String nickname2= "te";
-      String nickname3= "test123!";
+      String nickname1 = "test123";
+      String nickname2 = "te";
+      String nickname3 = "test123!";
       // When
 
       // Then
