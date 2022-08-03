@@ -5,8 +5,10 @@ import static org.apache.logging.log4j.util.Strings.isBlank;
 
 import com.prgrms.p2p.domain.user.entity.Sex;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class SignUpRequest {
 
   private String email;
