@@ -43,8 +43,8 @@ class UserServiceTest {
   @BeforeEach
   void setup() {
     signUpRequest = new SignUpRequest("test@gmail.com",
-        "test1234",
-        "test1234",
+        "test1234!",
+        "test1234!",
         "beom",
         "1997-11-29",
         Sex.MALE);
@@ -75,7 +75,7 @@ class UserServiceTest {
     void failNotMatchPassword() {
       // Given
       // When
-      signUpRequest.setPasswordCheck("test1235");
+      signUpRequest.setPasswordCheck("test1235!");
       // Then
       assertThrows(IllegalArgumentException.class, () -> userService.signUp(signUpRequest));
     }
@@ -85,7 +85,7 @@ class UserServiceTest {
     void failValidatePassword() {
       // Given
       // When
-      signUpRequest.setPasswordCheck("test1235!!!");
+      signUpRequest.setPasswordCheck("test1235!!!!!!!!!!!!!");
       // Then
       assertThrows(IllegalArgumentException.class, () -> userService.signUp(signUpRequest));
     }
@@ -115,8 +115,8 @@ class UserServiceTest {
     void failAlreadyExistNickname() {
       // Given
       SignUpRequest newRequest = new SignUpRequest("beomsic@gmail.com",
-          "test1245",
-          "test1245",
+          "test1245!",
+          "test1245!",
           "beom",
           "1997-11-29",
           Sex.MALE);
@@ -131,8 +131,8 @@ class UserServiceTest {
     void failAlreadyExistEmail() {
       // Given
       SignUpRequest newRequest = new SignUpRequest("test@gmail.com",
-          "test1245",
-          "test1245",
+          "test1245!",
+          "test1245!",
           "beom12",
           "1997-11-29",
           Sex.MALE);
@@ -235,9 +235,9 @@ class UserServiceTest {
     void success() {
       String nickname = userService.signUp(signUpRequest);
       User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
-      userService.changePassword(user.getId(),user.getPassword(), "change1234");
+      userService.changePassword(user.getId(),user.getPassword(), "change1234!");
 
-      assertThat(user.getPassword()).isEqualTo("change1234");
+      assertThat(user.getPassword()).isEqualTo("change1234!");
     }
 
     @Test
@@ -246,7 +246,7 @@ class UserServiceTest {
       String nickname = userService.signUp(signUpRequest);
       User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
 
-      assertThatThrownBy(() -> userService.changePassword(user.getId(),"wrong1234", "change1234"))
+      assertThatThrownBy(() -> userService.changePassword(user.getId(),"wrong1234", "change1234!"))
           .isInstanceOf(IllegalArgumentException.class);
     }
 
