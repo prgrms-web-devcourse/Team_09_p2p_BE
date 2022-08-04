@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.like.service;
 
+import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.like.entity.PlaceLike;
 import com.prgrms.p2p.domain.like.repository.PlaceLikeRepository;
 import com.prgrms.p2p.domain.place.entity.Place;
@@ -20,7 +21,7 @@ public class PlaceLikeService implements LikeService {
   @Transactional
   public void toggle(Long userId, Long placeId) {
     Place place = placeRepository.findById(placeId)
-        .orElseThrow(() -> new RuntimeException("존재하지 않는 장소에 좋아요를 시도했습니다."));
+        .orElseThrow(() -> new NotFoundException("존재하지 않는 장소에 좋아요를 시도했습니다."));
     placeLikeRepository.findByUserIdAndPlace(userId, place)
         .ifPresentOrElse(this::dislike, () -> like(userId, place));
   }

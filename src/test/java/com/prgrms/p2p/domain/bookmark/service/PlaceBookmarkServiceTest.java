@@ -11,6 +11,8 @@ import static org.mockito.Mockito.when;
 
 import com.prgrms.p2p.domain.bookmark.entity.PlaceBookmark;
 import com.prgrms.p2p.domain.bookmark.repository.PlaceBookmarkRepository;
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
+import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.like.entity.PlaceLike;
 import com.prgrms.p2p.domain.place.entity.Address;
 import com.prgrms.p2p.domain.place.entity.Category;
@@ -101,7 +103,7 @@ class PlaceBookmarkServiceTest {
       Throwable response = catchThrowable(() -> bookmarkService.toggle(1L, 1L));
       // Then
       verify(placeRepository, times(1)).findById(any(Long.class));
-      assertThat(response).isInstanceOf(RuntimeException.class);
+      assertThat(response).isInstanceOf(NotFoundException.class);
     }
   }
 }

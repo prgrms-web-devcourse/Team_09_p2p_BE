@@ -10,6 +10,8 @@ import static org.mockito.Mockito.when;
 
 import com.prgrms.p2p.domain.bookmark.entity.CourseBookmark;
 import com.prgrms.p2p.domain.bookmark.repository.CourseBookmarkRepository;
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
+import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.Period;
 import com.prgrms.p2p.domain.course.entity.Region;
@@ -112,7 +114,7 @@ class CourseBookmarkServiceTest {
       Throwable response = catchThrowable(() -> courseBookmarkService.toggle(1L, 1L));
       // Then
       verify(courseRepository, times(1)).findById(any(Long.class));
-      assertThat(response).isInstanceOf(RuntimeException.class);
+      assertThat(response).isInstanceOf(NotFoundException.class);
     }
   }
 }
