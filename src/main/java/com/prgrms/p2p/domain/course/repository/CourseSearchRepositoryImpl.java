@@ -72,7 +72,7 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
   }
 
   private BooleanExpression regionEq(Region region) {
-    return ObjectUtils.isEmpty(region) ? null : course.region.eq(region);
+    return (region.equals(Region.전체보기) || ObjectUtils.isEmpty(region)) ? null : course.region.eq(region);
   }
 
   private BooleanBuilder spotEq(List<Spot> spots) {
