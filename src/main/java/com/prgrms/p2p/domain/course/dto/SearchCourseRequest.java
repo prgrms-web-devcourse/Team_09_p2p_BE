@@ -19,6 +19,7 @@ public class SearchCourseRequest {
   private String keyword;
   private Region region;
   private Period period;
+  private Long placeId;
   @Builder.Default
   private List<Spot> spots = new ArrayList<>();
   @Builder.Default
