@@ -32,11 +32,11 @@ public class CourseConverter {
   public static SummaryCourseResponse ofSummary(Course course, Boolean isBookmarked) {
     return SummaryCourseResponse.builder().id(course.getId()).title(course.getTitle())
         .thumbnail(null).region(course.getRegion()).period(course.getPeriod())
-        .themes(List.copyOf(course.getThemes()))
-        .places(course.getCoursePlaces().stream().map(CoursePlaceConverter::of).collect(
-            Collectors.toList()))
-        .likeCount(course.getCourseLikes().size()).isBookmarked(isBookmarked)
-        .nickname(course.getUser().getNickname()).build();
+        .themes(List.copyOf(course.getThemes())).places(
+            course.getCoursePlaces().stream().map(CoursePlaceConverter::of)
+                .collect(Collectors.toList())).likeCount(course.getCourseLikes().size())
+        .isBookmarked(isBookmarked).nickname(course.getUser().getNickname())
+        .profileUrl(course.getUser().getProfileUrl().orElse(null)).build();
   }
 
 }
