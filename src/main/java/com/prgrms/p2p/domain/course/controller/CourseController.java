@@ -4,8 +4,14 @@ import com.prgrms.p2p.domain.course.dto.CreateCourseRequest;
 import com.prgrms.p2p.domain.course.dto.DetailCourseResponse;
 import com.prgrms.p2p.domain.course.dto.SearchCourseRequest;
 import com.prgrms.p2p.domain.course.dto.SummaryCourseResponse;
+import com.prgrms.p2p.domain.course.entity.CoursePlace;
+import com.prgrms.p2p.domain.course.entity.Period;
+import com.prgrms.p2p.domain.course.entity.Region;
+import com.prgrms.p2p.domain.course.entity.Spot;
+import com.prgrms.p2p.domain.course.entity.Theme;
 import com.prgrms.p2p.domain.course.service.CourseQueryService;
 import com.prgrms.p2p.domain.course.service.CourseService;
+import com.prgrms.p2p.domain.course.util.CourseConverter;
 import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import java.net.URI;
@@ -52,12 +58,26 @@ public class CourseController {
 
   @GetMapping
   public ResponseEntity<Slice<SummaryCourseResponse>> getSummaryCourseList(
-      @RequestBody SearchCourseRequest searchCourseRequest, Pageable pageable,
+      @RequestParam(required = false) String keyword,
+      @RequestParam(required = false) Region region,
+      @RequestParam(required = false) Period period,
+      @RequestParam(required = false) List<Spot> spots,
+      @RequestParam(required = false) List<Theme> themes,
+      Pageable pageable,
       @CurrentUser CustomUserDetails user) {
+
     Long userId = Objects.isNull(user) ? null : user.getId();
+
+    SearchCourseRequest searchCourseRequest = SearchCourseRequest.builder()
+        .keyword(keyword)
+        .region(region)
+        .period(period)
+        .spots(spots)
+        .themes(themes)
+        .build();
+
     Slice<SummaryCourseResponse> summaryList = courseQueryService.findSummaryList(
         searchCourseRequest, pageable, userId);
-
     return ResponseEntity.ok(summaryList);
   }
 

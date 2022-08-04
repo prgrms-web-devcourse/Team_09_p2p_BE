@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.course.dto;
 
+import com.prgrms.p2p.domain.course.entity.Period;
 import com.prgrms.p2p.domain.course.entity.Region;
 import com.prgrms.p2p.domain.course.entity.Spot;
 import com.prgrms.p2p.domain.course.entity.Theme;
@@ -17,6 +18,7 @@ import lombok.NoArgsConstructor;
 public class SearchCourseRequest {
   private String keyword;
   private Region region;
+  private Period period;
   @Builder.Default
   private List<Spot> spots = new ArrayList<>();
   @Builder.Default
