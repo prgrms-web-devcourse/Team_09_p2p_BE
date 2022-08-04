@@ -4,16 +4,19 @@ import com.prgrms.p2p.domain.common.service.UploadServiceImpl;
 import com.prgrms.p2p.domain.user.aop.annotation.Auth;
 import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
 import com.prgrms.p2p.domain.user.dto.ChangePasswordRequest;
+import com.prgrms.p2p.domain.user.dto.ChangeProfileResponse;
 import com.prgrms.p2p.domain.user.dto.LoginRequest;
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
 import com.prgrms.p2p.domain.user.dto.ModifyRequest;
 import com.prgrms.p2p.domain.user.dto.OtherUserDetailResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
+import com.prgrms.p2p.domain.user.dto.SignUpResponse;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import com.prgrms.p2p.domain.user.service.UserService;
 import java.net.URI;
 import java.util.Map;
+import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,10 +42,10 @@ public class UserController {
     this.uploadService = uploadService;
   }
 
-  @PostMapping("/")
-  public ResponseEntity<String> signUp(@RequestBody SignUpRequest signUpRequest) {
+  @PostMapping("")
+  public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
     String nickname = userService.signUp(signUpRequest);
-    return ResponseEntity.created(URI.create("/")).body(nickname);
+    return ResponseEntity.created(URI.create("/")).body(new SignUpResponse(nickname));
   }
 
   @PostMapping("/login")
@@ -79,7 +82,7 @@ public class UserController {
   }
 
   @Auth
-  @PutMapping("/")
+  @PutMapping("")
   public ResponseEntity modify(@RequestBody ModifyRequest modifyRequest, @CurrentUser CustomUserDetails user) {
     userService.modify(user.getId(),
         modifyRequest.getNickname(),
@@ -100,14 +103,14 @@ public class UserController {
 
   @Auth
   @PutMapping("/profile")
-  public String changeProfileImage(@CurrentUser CustomUserDetails user, @RequestParam() MultipartFile file) {
+  public ResponseEntity<ChangeProfileResponse> changeProfileImage(@CurrentUser CustomUserDetails user, @RequestParam() MultipartFile file) {
     String profileUrl = uploadService.uploadImg(file);
-    userService.changeProfileUrl(user.getId(), profileUrl);
-    return profileUrl;
+    ChangeProfileResponse changeProfileResponse = userService.changeProfileUrl(user.getId(), profileUrl);
+    return ResponseEntity.ok(changeProfileResponse);
   }
 
   @Auth
-  @DeleteMapping("/")
+  @DeleteMapping("")
   public ResponseEntity delete(@CurrentUser CustomUserDetails user){
     //TODO: 유저 아이디를 나중에 어노테이션으로 가져올 예정
     userService.delete(user.getId());
