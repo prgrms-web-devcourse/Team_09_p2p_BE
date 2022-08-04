@@ -11,6 +11,4 @@ public interface CourseBookmarkRepository extends JpaRepository<CourseBookmark, 
   Optional<CourseBookmark> findByUserIdAndCourse(Long userId, Course course);
 
   Boolean existsByUserIdAndCourse(Long userId, Course course);
-
-  List<Boolean> existsAllByUserIdAndCourse(Long userId, Course course);
 }

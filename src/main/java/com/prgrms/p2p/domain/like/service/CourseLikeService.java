@@ -1,5 +1,7 @@
 package com.prgrms.p2p.domain.like.service;
 
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
+import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.repository.CourseRepository;
 import com.prgrms.p2p.domain.like.entity.CourseLike;
@@ -20,7 +22,7 @@ public class CourseLikeService implements LikeService {
   @Transactional
   public void toggle(Long userId, Long courseId) {
     Course course = courseRepository.findById(courseId)
-        .orElseThrow(() -> new RuntimeException("존재하지 않는 코스에 좋아요를 시도했습니다."));
+        .orElseThrow(() -> new NotFoundException("존재하지 않는 코스에 좋아요를 시도했습니다."));
     courseLikeRepository.findByUserIdAndCourse(userId, course)
         .ifPresentOrElse(this::dislike, () -> like(userId, course));
   }

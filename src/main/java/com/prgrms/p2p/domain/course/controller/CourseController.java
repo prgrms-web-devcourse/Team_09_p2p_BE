@@ -61,6 +61,7 @@ public class CourseController {
       @RequestParam(required = false) String keyword,
       @RequestParam(required = false) Region region,
       @RequestParam(required = false) Period period,
+      @RequestParam(required = false) Long placeId,
       @RequestParam(required = false) List<Spot> spots,
       @RequestParam(required = false) List<Theme> themes,
       Pageable pageable,
@@ -72,6 +73,7 @@ public class CourseController {
         .keyword(keyword)
         .region(region)
         .period(period)
+        .placeId(placeId)
         .spots(spots)
         .themes(themes)
         .build();

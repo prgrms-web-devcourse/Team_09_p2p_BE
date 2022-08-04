@@ -1,4 +1,4 @@
-package com.prgrms.p2p.domain.like.entity;
+package com.prgrms.p2p.domain.bookmark.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 @TestMethodOrder(MethodOrderer.DisplayName.class)
-class CourseLikeTest {
+class CourseBookmarkTest {
 
   private User user;
   private Set<Theme> themes;
@@ -37,15 +37,15 @@ class CourseLikeTest {
   }
 
   @Test
-  @DisplayName("성공 : 코스 좋아요 객체를 생성합니다.")
+  @DisplayName("성공 : 코스 북마크 객체를 생성합니다.")
   void success() {
     // Given
     Course course = new Course("title", Period.ONE_DAY, Region.서울, "description", themes, spots,
         user);
     // When
-    CourseLike courseLike = new CourseLike(1L, course);
+    CourseBookmark courseBookmark = new CourseBookmark(1L, course);
     // Then
-    assertThat(course.getCourseLikes()).contains(courseLike);
+    assertThat(course.getCourseBookmarks()).contains(courseBookmark);
   }
 
   @Test
@@ -55,7 +55,7 @@ class CourseLikeTest {
     Course course = new Course("title", Period.ONE_DAY, Region.서울, "description", themes, spots,
         user);
     // When
-    Throwable response = catchThrowable(() -> new CourseLike(null, course));
+    Throwable response = catchThrowable(() -> new CourseBookmark(null, course));
     // Then
     assertThat(response).isInstanceOf(BadRequestException.class);
   }
@@ -67,7 +67,7 @@ class CourseLikeTest {
     Course course = new Course("title", Period.ONE_DAY, Region.서울, "description", themes, spots,
         user);
     // When
-    Throwable response = catchThrowable(() -> new CourseLike(0L, course));
+    Throwable response = catchThrowable(() -> new CourseBookmark(0L, course));
     // Then
     assertThat(response).isInstanceOf(BadRequestException.class);
   }
@@ -76,7 +76,7 @@ class CourseLikeTest {
   @DisplayName("실패 : 코스가 빈값인 경우 예외를 반환합니다.")
   void failByCourse() {
     // When
-    Throwable response = catchThrowable(() -> new CourseLike(1L, null));
+    Throwable response = catchThrowable(() -> new CourseBookmark(1L, null));
     // Then
     assertThat(response).isInstanceOf(BadRequestException.class);
   }

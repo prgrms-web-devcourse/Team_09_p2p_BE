@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.bookmark.entity;
 
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.course.entity.Course;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -36,7 +37,7 @@ public class CourseBookmark extends Bookmark {
 
   private void setCourse(Course course) {
     if (Objects.isNull(course)) {
-      throw new IllegalArgumentException("코스로 빈 값을 받을 수 없습니다.");
+      throw new BadRequestException("코스로 빈 값을 받을 수 없습니다.");
     }
     if (Objects.nonNull(this.course)) {
       this.course.getCourseBookmarks().remove(this);

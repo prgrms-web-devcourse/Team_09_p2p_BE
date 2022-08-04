@@ -28,4 +28,5 @@ public class SummaryCourseResponse {
   private Integer likeCount;
   private Boolean isBookmarked;
   private String nickname;
+  private String profileUrl;
 }

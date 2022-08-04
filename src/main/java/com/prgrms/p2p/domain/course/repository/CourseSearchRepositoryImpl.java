@@ -1,6 +1,5 @@
 package com.prgrms.p2p.domain.course.repository;
 
-import static com.prgrms.p2p.domain.bookmark.entity.QCourseBookmark.courseBookmark;
 import static com.prgrms.p2p.domain.course.entity.QCourse.course;
 import static com.prgrms.p2p.domain.course.entity.QCoursePlace.coursePlace;
 
@@ -10,7 +9,6 @@ import com.prgrms.p2p.domain.course.entity.Period;
 import com.prgrms.p2p.domain.course.entity.Region;
 import com.prgrms.p2p.domain.course.entity.Spot;
 import com.prgrms.p2p.domain.course.entity.Theme;
-import com.prgrms.p2p.domain.user.entity.QUser;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -38,8 +36,15 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
   public Slice<Course> searchCourse(SearchCourseRequest request, Pageable pageable) {
     JPAQuery<Course> courseJPAQuery = jpaQueryFactory.select(course)
         .from(course)
-        .where(keywordListContains(request.getKeyword()), regionEq(request.getRegion()),
-            themeEq(request.getThemes()), spotEq(request.getSpots()), periodEq(request.getPeriod())).offset(pageable.getOffset())
+        .leftJoin(course.coursePlaces, coursePlace).fetchJoin()
+        .where(keywordListContains(request.getKeyword()),
+            regionEq(request.getRegion()),
+            themeEq(request.getThemes()),
+            spotEq(request.getSpots()),
+            periodEq(request.getPeriod()),
+            coursePlace.place.id.eq(request.getPlaceId())
+        )
+        .offset(pageable.getOffset())
         .limit(pageable.getPageSize() + 1);
 
     for (Sort.Order o : pageable.getSort()) {
