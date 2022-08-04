@@ -91,7 +91,6 @@ public class UserService {
     Validation.validatePassword(newPassword);
 
     user.matchPassword(oldPassword);
-    Validation.validatePassword(newPassword);
     user.changePassword(newPassword);
 
     userRepository.save(user);
