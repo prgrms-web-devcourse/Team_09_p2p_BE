@@ -397,7 +397,7 @@ class PlaceServiceTest {
     }
 
     @Test
-    @DisplayName("성공: 북마크 하나도 없어서 조회 개수 1")
+    @DisplayName("성공: 북마크 1개 했으므로 조회 개수 1")
     public void findBookmarkedPlaceListResult1() throws Exception {
 
       //given
