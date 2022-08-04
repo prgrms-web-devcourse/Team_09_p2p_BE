@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
 @Where(clause = "is_deleted = false")
 @SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id = ?")
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 
@@ -73,7 +72,6 @@ public class User extends BaseEntity {
   private Boolean isDeleted = Boolean.FALSE;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  @Builder.Default
   private Set<Authority> authorities = new HashSet<>();
 
   public void addCourse(Course course) {
