@@ -1,6 +1,7 @@
 package com.prgrms.p2p.domain.bookmark.entity;
 
 import com.prgrms.p2p.domain.common.BaseEntity;
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -22,7 +23,7 @@ public abstract class Bookmark extends BaseEntity {
 
   private void setUserId(Long userId) {
     if (Objects.isNull(userId) || userId <= 0) {
-      throw new IllegalArgumentException("잘못된 사용자 아이디가 입력되었습니다.");
+      throw new BadRequestException("잘못된 사용자 아이디가 입력되었습니다.");
     }
     this.userId = userId;
   }
