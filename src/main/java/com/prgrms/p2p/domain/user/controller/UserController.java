@@ -18,6 +18,7 @@ import java.net.URI;
 import java.util.Map;
 import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
@@ -42,7 +44,7 @@ public class UserController {
     this.uploadService = uploadService;
   }
 
-  @PostMapping("")
+  @PostMapping()
   public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
     String nickname = userService.signUp(signUpRequest);
     return ResponseEntity.created(URI.create("/")).body(new SignUpResponse(nickname));
@@ -69,7 +71,7 @@ public class UserController {
   }
 
   @Auth
-  @GetMapping("/")
+  @GetMapping()
   public ResponseEntity<UserDetailResponse> getUserInfo(@CurrentUser CustomUserDetails user) {
     UserDetailResponse userInfo = userService.getUserInfo(user.getId());
     return ResponseEntity.ok(userInfo);
@@ -82,7 +84,7 @@ public class UserController {
   }
 
   @Auth
-  @PutMapping("")
+  @PutMapping()
   public ResponseEntity modify(@RequestBody ModifyRequest modifyRequest, @CurrentUser CustomUserDetails user) {
     userService.modify(user.getId(),
         modifyRequest.getNickname(),
@@ -110,7 +112,7 @@ public class UserController {
   }
 
   @Auth
-  @DeleteMapping("")
+  @DeleteMapping()
   public ResponseEntity delete(@CurrentUser CustomUserDetails user){
     //TODO: 유저 아이디를 나중에 어노테이션으로 가져올 예정
     userService.delete(user.getId());
