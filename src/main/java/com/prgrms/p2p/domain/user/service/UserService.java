@@ -3,6 +3,7 @@ package com.prgrms.p2p.domain.user.service;
 import static com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum.BAN_EXPIRATION_TIME;
 
 import com.prgrms.p2p.domain.user.config.security.JwtTokenProvider;
+import com.prgrms.p2p.domain.user.dto.ChangeProfileResponse;
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
 import com.prgrms.p2p.domain.user.dto.OtherUserDetailResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
@@ -97,12 +98,13 @@ public class UserService {
   }
 
   @Transactional
-  public void changeProfileUrl(Long userId, String profileUrl) {
+  public ChangeProfileResponse changeProfileUrl(Long userId, String profileUrl) {
     User user = userRepository.findById(userId)
         .orElseThrow(IllegalArgumentException::new);
 
     user.changeProfileUrl(profileUrl);
     userRepository.save(user);
+    return new ChangeProfileResponse(profileUrl);
   }
 
   @Transactional
