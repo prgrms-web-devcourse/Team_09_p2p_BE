@@ -14,7 +14,6 @@ import lombok.ToString;
 @ToString
 public class PhoneNumber {
 
-  private final String PHONE_REGX = "^\\d{2,3}-\\d{3,4}-\\d{4}$";
   private String number;
 
   public PhoneNumber(String number) {
@@ -31,7 +30,7 @@ public class PhoneNumber {
   }
 
   public void validationPhone(String number) {
-    if (Objects.isNull(number) || !number.matches(PHONE_REGX)) {
+    if (Objects.isNull(number) || !number.matches("^\\d{2,3}-\\d{3,4}-\\d{4}$")) {
       throw new IllegalArgumentException();
     }
   }
