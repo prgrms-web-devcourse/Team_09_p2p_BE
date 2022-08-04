@@ -12,6 +12,7 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -29,7 +30,7 @@ public class RedisInterceptor implements HandlerInterceptor {
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
       throws Exception {
-
+    if(HttpMethod.OPTIONS.matches(request.getMethod())) return true;
     this.readyRequestBody(request, response);
     return HandlerInterceptor.super.preHandle(request, response, handler);
   }
