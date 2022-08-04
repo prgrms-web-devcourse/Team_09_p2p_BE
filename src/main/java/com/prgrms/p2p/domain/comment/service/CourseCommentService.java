@@ -8,7 +8,7 @@ import com.prgrms.p2p.domain.comment.util.CommentConverter;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.repository.CourseRepository;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
-import java.util.Optional;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -52,18 +52,16 @@ public class CourseCommentService {
     }
   }
 
-  private void validateRootComment(Optional<Long> rootCommentId) {
-    rootCommentId.ifPresent(id->{
-      if (!courseCommentRepository.existsById(id)) {
+  private void validateRootComment(Long rootCommentId) {
+    if (!Objects.isNull(rootCommentId) &&!courseCommentRepository.existsById(rootCommentId)) {
         throw new RuntimeException("존재하지 않는 댓글에 하위 댓글을 작성할 수 없습니다.");
-      }
-    });
+    }
   }
 
   private Long getSeq(CreateCourseCommentRequest createCommentReq) {
-    Long seq = createCommentReq.getRootCommentId().isEmpty() ?
+    Long seq = Objects.isNull(createCommentReq.getRootCommentId()) ?
         0L : courseCommentRepository.findSequence(
-        createCommentReq.getRootCommentId().get()) + 1;
+        createCommentReq.getRootCommentId()) + 1;
     return seq;
   }
 }
