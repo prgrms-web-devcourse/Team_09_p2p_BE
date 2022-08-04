@@ -3,6 +3,7 @@ package com.prgrms.p2p.domain.like.entity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.Period;
 import com.prgrms.p2p.domain.course.entity.Region;
@@ -56,7 +57,7 @@ class CourseLikeTest {
     // When
     Throwable response = catchThrowable(() -> new CourseLike(null, course));
     // Then
-    assertThat(response).isInstanceOf(RuntimeException.class);
+    assertThat(response).isInstanceOf(BadRequestException.class);
   }
 
   @Test
@@ -68,7 +69,7 @@ class CourseLikeTest {
     // When
     Throwable response = catchThrowable(() -> new CourseLike(0L, course));
     // Then
-    assertThat(response).isInstanceOf(RuntimeException.class);
+    assertThat(response).isInstanceOf(BadRequestException.class);
   }
 
   @Test
@@ -77,6 +78,6 @@ class CourseLikeTest {
     // When
     Throwable response = catchThrowable(() -> new CourseLike(1L, null));
     // Then
-    assertThat(response).isInstanceOf(RuntimeException.class);
+    assertThat(response).isInstanceOf(BadRequestException.class);
   }
 }

@@ -3,6 +3,7 @@ package com.prgrms.p2p.domain.like.entity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.place.entity.Address;
 import com.prgrms.p2p.domain.place.entity.Category;
 import com.prgrms.p2p.domain.place.entity.Place;
@@ -33,7 +34,7 @@ class PlaceLikeTest {
     // When
     Throwable response = catchThrowable(() -> new PlaceLike(null, place));
     // Then
-    assertThat(response).isInstanceOf(RuntimeException.class);
+    assertThat(response).isInstanceOf(BadRequestException.class);
   }
 
   @Test
@@ -44,7 +45,7 @@ class PlaceLikeTest {
     // When
     Throwable response = catchThrowable(() -> new PlaceLike(0L, place));
     // Then
-    assertThat(response).isInstanceOf(RuntimeException.class);
+    assertThat(response).isInstanceOf(BadRequestException.class);
   }
 
   @Test
@@ -53,6 +54,6 @@ class PlaceLikeTest {
     // When
     Throwable response = catchThrowable(() -> new PlaceLike(1L, null));
     // Then
-    assertThat(response).isInstanceOf(RuntimeException.class);
+    assertThat(response).isInstanceOf(BadRequestException.class);
   }
 }

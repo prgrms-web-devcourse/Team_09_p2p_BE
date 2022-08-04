@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.like.entity;
 
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.place.entity.Place;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -36,7 +37,7 @@ public class PlaceLike extends Like {
 
   private void setPlace(Place place) {
     if (Objects.isNull(place)) {
-      throw new RuntimeException("장소로 빈 값을 받을 수 없습니다.");
+      throw new BadRequestException("장소로 빈 값을 받을 수 없습니다.");
     }
     if (Objects.nonNull(this.place)) {
       this.place.getPlaceLikes().remove(this);

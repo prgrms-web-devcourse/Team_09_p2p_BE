@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.like.entity.PlaceLike;
 import com.prgrms.p2p.domain.like.repository.PlaceLikeRepository;
 import com.prgrms.p2p.domain.place.entity.Address;
@@ -99,7 +100,7 @@ class PlaceLikeServiceTest {
       Throwable response = catchThrowable(() -> placeLikeService.toggle(1L, 1L));
       // Then
       verify(placeRepository, times(1)).findById(any(Long.class));
-      assertThat(response).isInstanceOf(RuntimeException.class);
+      assertThat(response).isInstanceOf(NotFoundException.class);
     }
   }
 }
