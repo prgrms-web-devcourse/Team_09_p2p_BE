@@ -73,6 +73,7 @@ public class CourseController {
         .keyword(keyword)
         .region(region)
         .period(period)
+        .placeId(placeId)
         .spots(spots)
         .themes(themes)
         .build();
