@@ -21,7 +21,7 @@ public class PlaceBookmarkService implements BookmarkService {
   @Transactional
   public void toggle(Long userId, Long placeId) {
     Place place = placeRepository.findById(placeId)
-        .orElseThrow(() -> new NotFoundException("존재하지 않는 장소에 좋아요를 시도했습니다."));
+        .orElseThrow(() -> new NotFoundException("존재하지 않는 장소에 북마크를 시도했습니다."));
     placeBookmarkRepository.findByUserIdAndPlace(userId, place)
         .ifPresentOrElse(this::unbookmark, () -> bookmark(userId, place));
   }

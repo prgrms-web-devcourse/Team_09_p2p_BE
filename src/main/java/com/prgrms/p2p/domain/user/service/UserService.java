@@ -88,9 +88,9 @@ public class UserService {
   public void changePassword(Long userId, String oldPassword, String newPassword){
     User user = userRepository.findById(userId)
         .orElseThrow(IllegalArgumentException::new);
+    Validation.validatePassword(newPassword);
 
     user.matchPassword(oldPassword);
-    Validation.validatePassword(newPassword);
     user.changePassword(newPassword);
 
     userRepository.save(user);

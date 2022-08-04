@@ -21,7 +21,7 @@ public class CourseBookmarkService implements BookmarkService {
   @Transactional
   public void toggle(Long userId, Long courseId) {
     Course course = courseRepository.findById(courseId)
-        .orElseThrow(() -> new NotFoundException("존재하지 않는 코스에 좋아요를 시도했습니다."));
+        .orElseThrow(() -> new NotFoundException("존재하지 않는 코스에 북마크를 시도했습니다."));
     courseBookmarkRepository.findByUserIdAndCourse(userId, course)
         .ifPresentOrElse(this::unbookmark, () -> bookmark(userId, course));
   }
