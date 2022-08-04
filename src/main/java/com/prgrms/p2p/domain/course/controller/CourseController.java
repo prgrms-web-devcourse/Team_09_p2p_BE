@@ -4,12 +4,19 @@ import com.prgrms.p2p.domain.course.dto.CreateCourseRequest;
 import com.prgrms.p2p.domain.course.dto.DetailCourseResponse;
 import com.prgrms.p2p.domain.course.dto.SearchCourseRequest;
 import com.prgrms.p2p.domain.course.dto.SummaryCourseResponse;
+import com.prgrms.p2p.domain.course.entity.CoursePlace;
+import com.prgrms.p2p.domain.course.entity.Period;
+import com.prgrms.p2p.domain.course.entity.Region;
+import com.prgrms.p2p.domain.course.entity.Spot;
+import com.prgrms.p2p.domain.course.entity.Theme;
 import com.prgrms.p2p.domain.course.service.CourseQueryService;
 import com.prgrms.p2p.domain.course.service.CourseService;
+import com.prgrms.p2p.domain.course.util.CourseConverter;
 import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -17,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -35,7 +43,7 @@ public class CourseController {
   public ResponseEntity<Long> register(
       @RequestPart("course") CreateCourseRequest createCourseRequest,
       @RequestPart("images") List<MultipartFile> images, @CurrentUser CustomUserDetails user) {
-    Long userId = user.equals(null) ? null : user.getId();
+    Long userId = Objects.isNull(user) ? null : user.getId();
     Long courseId = courseService.save(createCourseRequest, images, userId);
     return ResponseEntity.created(URI.create("/" + courseId)).body(courseId);
   }
@@ -43,19 +51,33 @@ public class CourseController {
   @GetMapping("/{courseId}")
   public ResponseEntity<DetailCourseResponse> getDetailCourse(
       @PathVariable("courseId") Long courseId, @CurrentUser CustomUserDetails user) {
-    Long userId = user.equals(null) ? null : user.getId();
+    Long userId = Objects.isNull(user) ? null : user.getId();
     DetailCourseResponse response = courseQueryService.findDetail(courseId, userId);
     return ResponseEntity.ok(null);
   }
 
   @GetMapping
   public ResponseEntity<Slice<SummaryCourseResponse>> getSummaryCourseList(
-      SearchCourseRequest searchCourseRequest, Pageable pageable,
+      @RequestParam(required = false) String keyword,
+      @RequestParam(required = false) Region region,
+      @RequestParam(required = false) Period period,
+      @RequestParam(required = false) List<Spot> spots,
+      @RequestParam(required = false) List<Theme> themes,
+      Pageable pageable,
       @CurrentUser CustomUserDetails user) {
-    Long userId = user.equals(null) ? null : user.getId();
+
+    Long userId = Objects.isNull(user) ? null : user.getId();
+
+    SearchCourseRequest searchCourseRequest = SearchCourseRequest.builder()
+        .keyword(keyword)
+        .region(region)
+        .period(period)
+        .spots(spots)
+        .themes(themes)
+        .build();
+
     Slice<SummaryCourseResponse> summaryList = courseQueryService.findSummaryList(
         searchCourseRequest, pageable, userId);
-
     return ResponseEntity.ok(summaryList);
   }
 

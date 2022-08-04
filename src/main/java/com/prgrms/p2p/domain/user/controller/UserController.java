@@ -61,25 +61,8 @@ public class UserController {
   }
 
   @PostMapping("/nickname")
-  public void validateNickname(Map<String,String> nicknameMap) {
+  public void validateNickname(@RequestBody Map<String,String> nicknameMap) {
     userService.validateNickname(nicknameMap.get("nickname"));
-  }
-
-  @Auth
-  @PostMapping("/password")
-  public ResponseEntity changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, @CurrentUser CustomUserDetails user){
-    //TODO: 유저 아이디를 나중에 어노테이션으로 가져올 예정
-    userService.changePassword(user.getId(), changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
-
-    return ResponseEntity.ok().build();
-  }
-
-  @Auth
-  @PostMapping("/profile")
-  public String changeProfileImage(@CurrentUser CustomUserDetails user, @RequestParam() MultipartFile file) {
-    String profileUrl = uploadService.uploadImg(file);
-    userService.changeProfileUrl(user.getId(), profileUrl);
-    return profileUrl;
   }
 
   @Auth
@@ -97,11 +80,30 @@ public class UserController {
 
   @Auth
   @PutMapping("/")
-  public ResponseEntity modify(@RequestBody ModifyRequest modifyRequest) {
-    userService.modify(modifyRequest.getId(), modifyRequest.getNickname(), modifyRequest.getBirth(),
+  public ResponseEntity modify(@RequestBody ModifyRequest modifyRequest, @CurrentUser CustomUserDetails user) {
+    userService.modify(user.getId(),
+        modifyRequest.getNickname(),
+        modifyRequest.getBirth(),
         modifyRequest.getSex());
 
     return ResponseEntity.ok().build();
+  }
+
+  @Auth
+  @PutMapping("/password")
+  public ResponseEntity changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, @CurrentUser CustomUserDetails user){
+    //TODO: 유저 아이디를 나중에 어노테이션으로 가져올 예정
+    userService.changePassword(user.getId(), changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
+
+    return ResponseEntity.ok().build();
+  }
+
+  @Auth
+  @PutMapping("/profile")
+  public String changeProfileImage(@CurrentUser CustomUserDetails user, @RequestParam() MultipartFile file) {
+    String profileUrl = uploadService.uploadImg(file);
+    userService.changeProfileUrl(user.getId(), profileUrl);
+    return profileUrl;
   }
 
   @Auth

@@ -6,9 +6,11 @@ import static com.prgrms.p2p.domain.course.entity.QCoursePlace.coursePlace;
 
 import com.prgrms.p2p.domain.course.dto.SearchCourseRequest;
 import com.prgrms.p2p.domain.course.entity.Course;
+import com.prgrms.p2p.domain.course.entity.Period;
 import com.prgrms.p2p.domain.course.entity.Region;
 import com.prgrms.p2p.domain.course.entity.Spot;
 import com.prgrms.p2p.domain.course.entity.Theme;
+import com.prgrms.p2p.domain.user.entity.QUser;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -34,10 +36,10 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
 
   @Override
   public Slice<Course> searchCourse(SearchCourseRequest request, Pageable pageable) {
-    JPAQuery<Course> courseJPAQuery = jpaQueryFactory.select(course).from(course)
-        .leftJoin(course.courseBookmarks, courseBookmark).leftJoin(course.coursePlaces, coursePlace)
-        .fetchJoin().where(keywordListContains(request.getKeyword()), regionEq(request.getRegion()),
-            themeEq(request.getThemes()), spotEq(request.getSpots())).offset(pageable.getOffset())
+    JPAQuery<Course> courseJPAQuery = jpaQueryFactory.select(course)
+        .from(course)
+        .where(keywordListContains(request.getKeyword()), regionEq(request.getRegion()),
+            themeEq(request.getThemes()), spotEq(request.getSpots()), periodEq(request.getPeriod())).offset(pageable.getOffset())
         .limit(pageable.getPageSize() + 1);
 
     for (Sort.Order o : pageable.getSort()) {
@@ -70,7 +72,7 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
   }
 
   private BooleanExpression regionEq(Region region) {
-    return ObjectUtils.isEmpty(region) ? null : course.region.eq(region);
+    return (region.equals(Region.전체보기) || ObjectUtils.isEmpty(region)) ? null : course.region.eq(region);
   }
 
   private BooleanBuilder spotEq(List<Spot> spots) {
@@ -94,5 +96,9 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
       builder.or(course.themes.any().eq(theme));
     }
     return builder;
+  }
+
+  private BooleanExpression periodEq(Period period) {
+    return ObjectUtils.isEmpty(period) ? null : course.period.eq(period);
   }
 }

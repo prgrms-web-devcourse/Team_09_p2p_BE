@@ -23,7 +23,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -34,7 +33,6 @@ import org.hibernate.annotations.Where;
 @Where(clause = "is_deleted = false")
 @SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id = ?")
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 
@@ -69,7 +67,6 @@ public class User extends BaseEntity {
   private Boolean isDeleted = Boolean.FALSE;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  @Builder.Default
   private Set<Authority> authorities = new HashSet<>();
 
   public void addCourse(Course course) {
@@ -127,7 +124,7 @@ public class User extends BaseEntity {
 
   public void changeBirth(String birth) { setBirth(birth); }
 
-  public void changeSex(Sex Sex) {
+  public void changeSex(Sex sex) {
     setSex(sex);
   }
 

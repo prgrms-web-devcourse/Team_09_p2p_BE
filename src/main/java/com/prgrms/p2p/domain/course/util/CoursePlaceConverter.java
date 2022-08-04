@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.course.util;
 
+import com.prgrms.p2p.domain.course.dto.CoursePlaceResponse;
 import com.prgrms.p2p.domain.course.dto.CreateCoursePlaceRequest;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.CoursePlace;
@@ -20,5 +21,15 @@ public class CoursePlaceConverter {
             createCoursePlaceRequest.getRoadAddressName()), createCoursePlaceRequest.getLatitude(),
         createCoursePlaceRequest.getLongitude(), createCoursePlaceRequest.getCategory(),
         createCoursePlaceRequest.getPhoneNumber());
+  }
+
+  public static CoursePlaceResponse of(CoursePlace coursePlace) {
+    return CoursePlaceResponse.builder()
+        .id(coursePlace.getId())
+        .seq(coursePlace.getSeq())
+        .description(coursePlace.getDescription())
+        .recommended(coursePlace.getRecommended())
+        .imageUrl(coursePlace.getImageUrl())
+        .build();
   }
 }

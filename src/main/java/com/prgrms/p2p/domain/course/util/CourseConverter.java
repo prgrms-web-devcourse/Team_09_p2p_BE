@@ -7,6 +7,7 @@ import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.user.entity.User;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CourseConverter {
 
@@ -31,7 +32,9 @@ public class CourseConverter {
   public static SummaryCourseResponse ofSummary(Course course, Boolean isBookmarked) {
     return SummaryCourseResponse.builder().id(course.getId()).title(course.getTitle())
         .thumbnail(null).region(course.getRegion()).period(course.getPeriod())
-        .themes(List.copyOf(course.getThemes())).places(course.getCoursePlaces())
+        .themes(List.copyOf(course.getThemes()))
+        .places(course.getCoursePlaces().stream().map(CoursePlaceConverter::of).collect(
+            Collectors.toList()))
         .likeCount(course.getCourseLikes().size()).isBookmarked(isBookmarked)
         .nickname(course.getUser().getNickname()).build();
   }

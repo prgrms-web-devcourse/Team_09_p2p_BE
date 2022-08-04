@@ -1,6 +1,5 @@
 package com.prgrms.p2p.domain.course.dto;
 
-import com.prgrms.p2p.domain.course.entity.CoursePlace;
 import com.prgrms.p2p.domain.course.entity.Period;
 import com.prgrms.p2p.domain.course.entity.Region;
 import com.prgrms.p2p.domain.course.entity.Theme;
@@ -25,7 +24,7 @@ public class SummaryCourseResponse {
   @Builder.Default
   private List<Theme> themes = new ArrayList<>();
   @Builder.Default
-  private List<CoursePlace> places = new ArrayList<>();
+  private List<CoursePlaceResponse> places = new ArrayList<>();
   private Integer likeCount;
   private Boolean isBookmarked;
   private String nickname;
