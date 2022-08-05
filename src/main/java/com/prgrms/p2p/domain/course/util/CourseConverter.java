@@ -38,7 +38,7 @@ public class CourseConverter {
             course.getCoursePlaces().stream().map(coursePlace -> coursePlace.getPlace().getName())
                 .collect(Collectors.toList())).likeCount(course.getCourseLikes().size())
         .isBookmarked(isBookmarked).nickname(course.getUser().getNickname())
-        .profileUrl(course.getUser().getProfileUrl().orElse(null)).build();
+        .profileImage(course.getUser().getProfileUrl().orElse(null)).build();
   }
 
 }
