@@ -385,7 +385,7 @@ class PlaceServiceTest {
 
       //when
       Slice<SummaryPlaceResponse> bookmarkedPlaceList
-          = placeService.findBookmarkedPlaceList(userId, pageable);
+          = placeService.findBookmarkedPlaceList(null, userId, pageable);
 
       //then
       assertThat(bookmarkedPlaceList.getNumberOfElements()).isEqualTo(0);
@@ -402,7 +402,7 @@ class PlaceServiceTest {
 
       //when
       Slice<SummaryPlaceResponse> bookmarkedPlaceList
-          = placeService.findBookmarkedPlaceList(userId, pageable);
+          = placeService.findBookmarkedPlaceList(null, userId, pageable);
 
       //then
       assertThat(bookmarkedPlaceList.getNumberOfElements()).isEqualTo(1);
