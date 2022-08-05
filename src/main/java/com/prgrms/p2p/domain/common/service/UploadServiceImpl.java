@@ -39,9 +39,6 @@ public class UploadServiceImpl implements UploadService {
   public String uploadImg(MultipartFile multipartFile) {
     String origName = multipartFile.getOriginalFilename();
     final String ext = origName.substring(origName.lastIndexOf('.'));
-    if (!(ext.equals(".jpg") || ext.equals(".png") || ext.equals(".jpeg"))) {
-      throw new IllegalArgumentException();
-    }
     String saveFileName = getUuid() + ext;
     BufferedImage image = null;
     try {
