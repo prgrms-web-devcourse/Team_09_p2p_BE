@@ -42,7 +42,7 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
             themeEq(request.getThemes()),
             spotEq(request.getSpots()),
             periodEq(request.getPeriod()),
-            coursePlace.place.id.eq(request.getPlaceId())
+            placeIdEq(request.getPlaceId())
         )
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize() + 1);
@@ -105,5 +105,9 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
 
   private BooleanExpression periodEq(Period period) {
     return ObjectUtils.isEmpty(period) ? null : course.period.eq(period);
+  }
+
+  private BooleanExpression placeIdEq(Long placeId) {
+    return ObjectUtils.isEmpty(placeId) ? null : coursePlace.place.id.eq(placeId);
   }
 }
