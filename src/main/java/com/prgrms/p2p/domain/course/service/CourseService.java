@@ -29,8 +29,9 @@ public class CourseService {
   public Long save(CreateCourseRequest createCourseRequest, List<MultipartFile> images,
       Long userId) {
     User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+    System.out.println(createCourseRequest.getPeriod());
     Course course = courseRepository.save(toCourse(createCourseRequest, user));
-
+    System.out.println(course.getPeriod());
     saveCoursePlaces(createCourseRequest, images, course);
     return course.getId();
   }

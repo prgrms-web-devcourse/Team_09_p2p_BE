@@ -21,18 +21,19 @@ public class CourseConverter {
   public static DetailCourseResponse ofDetail(Course course, Boolean isLiked,
       Boolean isBookmarked) {
     return DetailCourseResponse.builder().id(course.getId()).title(course.getTitle())
-        .thumbnail(null).region(course.getRegion()).period(course.getPeriod())
-        .themes(List.copyOf(course.getThemes())).spots(List.copyOf(course.getSpots()))
-        .places(course.getCoursePlaces()).likes(course.getCourseLikes().size()).isLiked(isLiked)
-        .isBookmarked(isBookmarked).userId(course.getUser().getId())
-        .nickname(course.getUser().getNickname())
+        .thumbnail(course.getCoursePlaces().get(0).getImageUrl()).region(course.getRegion())
+        .period(course.getPeriod()).themes(List.copyOf(course.getThemes()))
+        .spots(List.copyOf(course.getSpots())).places(course.getCoursePlaces().stream().map(CoursePlaceConverter::of)
+            .collect(Collectors.toList()))
+        .likes(course.getCourseLikes().size()).isLiked(isLiked).isBookmarked(isBookmarked)
+        .userId(course.getUser().getId()).nickname(course.getUser().getNickname())
         .profileImage(course.getUser().getProfileUrl().orElse(null))
         .createdAt(course.getCreatedAt()).updatedAt(course.getUpdatedAt()).build();
   }
 
   public static SummaryCourseResponse ofSummary(Course course, Boolean isBookmarked) {
     return SummaryCourseResponse.builder().id(course.getId()).title(course.getTitle())
-        .thumbnail(null).region(course.getRegion()).period(course.getPeriod())
+        .thumbnail(course.getCoursePlaces().get(0).getImageUrl()).region(course.getRegion()).period(course.getPeriod())
         .themes(List.copyOf(course.getThemes())).places(
             course.getCoursePlaces().stream().map(CoursePlaceConverter::of)
                 .collect(Collectors.toList())).likeCount(course.getCourseLikes().size())
