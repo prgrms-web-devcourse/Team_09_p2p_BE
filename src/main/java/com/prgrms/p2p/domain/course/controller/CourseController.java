@@ -57,16 +57,15 @@ public class CourseController {
   @GetMapping
   public ResponseEntity<Slice<SummaryCourseResponse>> getSummaryCourseList(
       @RequestParam(required = false) String keyword, @RequestParam(required = false) Region region,
-      @RequestParam(required = false) Period period, @RequestParam(required = false) Long placeId,
+      @RequestParam(required = false) String period, @RequestParam(required = false) Long placeId,
       @RequestParam(required = false) List<Spot> spots,
       @RequestParam(required = false) List<Theme> themes,
       @RequestParam(required = false) Sorting sorting, Pageable pageable,
       @CurrentUser CustomUserDetails user) {
 
     Long userId = Objects.isNull(user) ? null : user.getId();
-
     SearchCourseRequest searchCourseRequest = SearchCourseRequest.builder().keyword(keyword)
-        .region(region).period(period).placeId(placeId).spots(spots).themes(themes).sorting(sorting)
+        .region(region).period(Period.from(period)).placeId(placeId).spots(spots).themes(themes).sorting(sorting)
         .build();
 
     Slice<SummaryCourseResponse> summaryList = courseQueryService.findSummaryList(

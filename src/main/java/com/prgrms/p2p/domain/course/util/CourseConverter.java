@@ -42,7 +42,7 @@ public class CourseConverter {
   }
 
   public static String pickThumbnail(Course course) {
-    return course.getCoursePlaces().stream().filter(CoursePlace::getThumbnailed).findFirst()
+    return course.getCoursePlaces().stream().filter(CoursePlace::getThumbnailed). findFirst()
         .map(coursePlace -> coursePlace.getImageUrl())
         .orElseGet(() -> course.getCoursePlaces().get(0).getImageUrl());
   }
