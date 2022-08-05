@@ -36,13 +36,13 @@ public class CourseConverter {
         .thumbnail(pickThumbnail(course)).region(course.getRegion()).period(course.getPeriod())
         .themes(List.copyOf(course.getThemes())).places(
             course.getCoursePlaces().stream().map(coursePlace -> coursePlace.getPlace().getName())
-                .collect(Collectors.toList())).likeCount(course.getCourseLikes().size())
+                .collect(Collectors.toList())).likes(course.getCourseLikes().size())
         .isBookmarked(isBookmarked).nickname(course.getUser().getNickname())
         .profileImage(course.getUser().getProfileUrl().orElse(null)).build();
   }
 
   public static String pickThumbnail(Course course) {
-    return course.getCoursePlaces().stream().filter(CoursePlace::getThumbnail).findFirst()
+    return course.getCoursePlaces().stream().filter(CoursePlace::getThumbnailed).findFirst()
         .map(coursePlace -> coursePlace.getImageUrl())
         .orElseGet(() -> course.getCoursePlaces().get(0).getImageUrl());
   }

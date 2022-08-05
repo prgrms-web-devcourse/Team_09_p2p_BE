@@ -25,8 +25,13 @@ public class CoursePlaceConverter {
   }
 
   public static CoursePlaceResponse of(CoursePlace coursePlace) {
-    return CoursePlaceResponse.builder().id(coursePlace.getId()).seq(coursePlace.getSeq())
-        .description(coursePlace.getDescription()).recommended(coursePlace.getRecommended())
-        .imageUrl(coursePlace.getImageUrl()).build();
+    return CoursePlaceResponse.builder().id(coursePlace.getId())
+        .name(coursePlace.getPlace().getName()).description(coursePlace.getDescription())
+        .address(coursePlace.getPlace().getAddress().getAddressName())
+        .latitude(coursePlace.getPlace().getLatitude())
+        .longitude(coursePlace.getPlace().getLongitude())
+        .phoneNumber(coursePlace.getPlace().getPhoneNumber().getNumber())
+        .imageUrl(coursePlace.getImageUrl()).isRecommended(coursePlace.getRecommended())
+        .isThumbnail(coursePlace.getThumbnailed()).build();
   }
 }
