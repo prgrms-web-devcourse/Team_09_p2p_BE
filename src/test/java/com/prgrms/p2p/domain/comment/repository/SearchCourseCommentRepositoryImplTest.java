@@ -2,7 +2,7 @@ package com.prgrms.p2p.domain.comment.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.prgrms.p2p.domain.comment.dto.CourseCommentResponse;
+import com.prgrms.p2p.domain.comment.dto.CourseCommentForQueryDsl;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
 import com.prgrms.p2p.domain.comment.service.CourseCommentService;
 import com.prgrms.p2p.domain.course.entity.Course;
@@ -14,16 +14,16 @@ import com.prgrms.p2p.domain.course.repository.CourseRepository;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Transactional
 class SearchCourseCommentRepositoryImplTest {
 
   @Autowired
@@ -77,6 +77,7 @@ class SearchCourseCommentRepositoryImplTest {
     // 2번에 다는 대댓글
     courseCommentRepository.save(
         new CourseComment("    comment9", commentId2, userId, course, 1L));
+
     courseCommentRepository.save(
         new CourseComment("    comment10", commentId2, userId, course, 2L));
     courseCommentRepository.save(
@@ -103,15 +104,13 @@ class SearchCourseCommentRepositoryImplTest {
         new CourseComment("    comment15", commentId2, userId, course, 7L));
 
     // then
-    Pageable pageable = PageRequest.of(0, 100);
-
-    Slice<CourseCommentResponse> courseComments = courseCommentRepository.findCourseComment(course.getId(),
-        pageable);
+    List<CourseCommentForQueryDsl> courseComments = courseCommentRepository.findCourseComment(course.getId());
 
     for (int i = 0; i < 15; i++) {
-      assertThat(courseComments.getContent().get(i).getComment())
+      assertThat(courseComments.get(i).getComment())
           .contains(String.valueOf(i + 1));
-      System.out.println("comment = " + courseComments.getContent().get(i).getComment());
+      System.out.println("comment = " + courseComments.get(i).getComment());
+      System.out.println("comment = " + courseComments.get(i).getVisibility());
     }
   }
 
@@ -180,11 +179,9 @@ class SearchCourseCommentRepositoryImplTest {
         new CourseComment("    comment15", commentId2, userId, course, 7L));
 
     // then
-    Pageable pageable = PageRequest.of(0, 100);
+    List<CourseCommentForQueryDsl> courseComments
+        = courseCommentRepository.findCourseComment(-1L);
 
-    Slice<CourseCommentResponse> courseComments
-        = courseCommentRepository.findCourseComment(-1L, pageable);
-
-    assertThat(courseComments.getNumberOfElements()).isEqualTo(0);
+    assertThat(courseComments.size()).isEqualTo(0);
   }
 }

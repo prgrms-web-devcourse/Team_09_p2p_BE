@@ -4,7 +4,7 @@ import static com.prgrms.p2p.domain.comment.entity.QCourseComment.courseComment;
 import static com.prgrms.p2p.domain.course.entity.QCourse.course;
 import static com.prgrms.p2p.domain.user.entity.QUser.*;
 
-import com.prgrms.p2p.domain.comment.dto.CourseCommentDto;
+import com.prgrms.p2p.domain.comment.dto.CourseCommentForQueryDsl;
 import com.prgrms.p2p.domain.comment.entity.Visibility;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
@@ -23,13 +23,13 @@ public class SearchCourseCommentRepositoryImpl implements SearchCourseCommentRep
   }
 
   @Override
-  public List<CourseCommentDto> findCourseComment(Long courseId) {
+  public List<CourseCommentForQueryDsl> findCourseComment(Long courseId) {
     NumberExpression<Long> otherwise = new CaseBuilder().when(courseComment.rootCommentId.isNull())
         .then(courseComment.id)
         .otherwise(courseComment.rootCommentId);
 
-    List<CourseCommentDto> courseCommentList = jpaQueryFactory.select(
-            Projections.constructor(CourseCommentDto.class,
+    return jpaQueryFactory.select(
+            Projections.constructor(CourseCommentForQueryDsl.class,
                 courseComment.id,
                 courseComment.comment,
                 courseComment.rootCommentId,
@@ -51,12 +51,10 @@ public class SearchCourseCommentRepositoryImpl implements SearchCourseCommentRep
         .orderBy(otherwise.asc())
         .orderBy(courseComment.seq.asc())
         .fetch();
-
-    return courseCommentList;
   }
 
   @Override
-  public Long checkSubComment(Long commentId) {
+  public Long findSubCommentCount(Long commentId) {
     return jpaQueryFactory.select(Wildcard.count)
         .from(courseComment)
         .where(courseComment.rootCommentId.eq(commentId),
