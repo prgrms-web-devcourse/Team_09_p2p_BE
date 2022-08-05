@@ -13,9 +13,8 @@ public class CourseConverter {
 
   public static Course toCourse(CreateCourseRequest createCourseRequest, User user) {
     return new Course(createCourseRequest.getTitle(), createCourseRequest.getPeriod(),
-        createCourseRequest.getRegion(), createCourseRequest.getDescription(),
-        Set.copyOf(createCourseRequest.getThemes()), Set.copyOf(createCourseRequest.getSpots()),
-        user);
+        createCourseRequest.getRegion(), Set.copyOf(createCourseRequest.getThemes()),
+        Set.copyOf(createCourseRequest.getSpots()), user);
   }
 
   public static DetailCourseResponse ofDetail(Course course, Boolean isLiked,
