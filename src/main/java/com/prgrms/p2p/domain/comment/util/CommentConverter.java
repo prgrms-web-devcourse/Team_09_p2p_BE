@@ -8,11 +8,9 @@ public class CommentConverter {
 
   public static CourseComment toCourseComment(
       CreateCourseCommentRequest createCourseCommentReq, Course course, Long seq) {
-    Long rootCommentId
-        = createCourseCommentReq.getRootCommentId().isEmpty() ?
-        null : createCourseCommentReq.getRootCommentId().get();
+
     return new CourseComment(createCourseCommentReq.getComment(),
-        rootCommentId,
+        createCourseCommentReq.getRootCommentId(),
         createCourseCommentReq.getUserId(),
         course,
         seq

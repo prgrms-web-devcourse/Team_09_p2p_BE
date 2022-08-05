@@ -385,10 +385,10 @@ class PlaceServiceTest {
       //given
       Pageable pageable = PageRequest.of(0, 10);
 
-      //when
       RecordRequest recordRequest = RecordRequest.builder()
           .userId(userId)
           .build();
+      //when
       Slice<SummaryPlaceResponse> bookmarkedPlaceList
           = placeService.findBookmarkedPlaceList(recordRequest, pageable);
 
@@ -397,7 +397,7 @@ class PlaceServiceTest {
     }
 
     @Test
-    @DisplayName("성공: 북마크 조회 개수 1")
+    @DisplayName("성공: 북마크 1개 했으므로 조회 개수 1")
     public void findBookmarkedPlaceListResult1() throws Exception {
 
       //given
@@ -405,11 +405,10 @@ class PlaceServiceTest {
       PlaceBookmark placeBookmark = new PlaceBookmark(userId, place);
       placeBookmarkRepository.save(placeBookmark);
 
-      Pageable pageable = PageRequest.of(0, 10);
-
       RecordRequest recordRequest = RecordRequest.builder()
           .userId(userId)
           .build();
+      Pageable pageable = PageRequest.of(0, 10);
 
       //when
       Slice<SummaryPlaceResponse> bookmarkedPlaceList
