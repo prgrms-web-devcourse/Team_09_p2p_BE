@@ -6,6 +6,7 @@ import com.prgrms.p2p.domain.course.dto.SearchCourseRequest;
 import com.prgrms.p2p.domain.course.dto.SummaryCourseResponse;
 import com.prgrms.p2p.domain.course.entity.Period;
 import com.prgrms.p2p.domain.course.entity.Region;
+import com.prgrms.p2p.domain.course.entity.Sorting;
 import com.prgrms.p2p.domain.course.entity.Spot;
 import com.prgrms.p2p.domain.course.entity.Theme;
 import com.prgrms.p2p.domain.course.service.CourseQueryService;
@@ -55,24 +56,17 @@ public class CourseController {
 
   @GetMapping
   public ResponseEntity<Slice<SummaryCourseResponse>> getSummaryCourseList(
-      @RequestParam(required = false) String keyword,
-      @RequestParam(required = false) Region region,
-      @RequestParam(required = false) Period period,
-      @RequestParam(required = false) Long placeId,
+      @RequestParam(required = false) String keyword, @RequestParam(required = false) Region region,
+      @RequestParam(required = false) Period period, @RequestParam(required = false) Long placeId,
       @RequestParam(required = false) List<Spot> spots,
       @RequestParam(required = false) List<Theme> themes,
-      Pageable pageable,
+      @RequestParam(required = false) Sorting sorting, Pageable pageable,
       @CurrentUser CustomUserDetails user) {
 
     Long userId = Objects.isNull(user) ? null : user.getId();
 
-    SearchCourseRequest searchCourseRequest = SearchCourseRequest.builder()
-        .keyword(keyword)
-        .region(region)
-        .period(period)
-        .placeId(placeId)
-        .spots(spots)
-        .themes(themes)
+    SearchCourseRequest searchCourseRequest = SearchCourseRequest.builder().keyword(keyword)
+        .region(region).period(period).placeId(placeId).spots(spots).themes(themes).sorting(sorting)
         .build();
 
     Slice<SummaryCourseResponse> summaryList = courseQueryService.findSummaryList(

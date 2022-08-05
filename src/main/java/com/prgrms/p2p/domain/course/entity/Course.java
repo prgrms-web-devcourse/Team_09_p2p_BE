@@ -83,8 +83,8 @@ public class Course extends BaseEntity {
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
-  public Course(String title, Period period, Region region, Set<Theme> themes,
-      Set<Spot> spots, User user) {
+  public Course(String title, Period period, Region region, Set<Theme> themes, Set<Spot> spots,
+      User user) {
     setTitle(title);
     setPeriod(period);
     setRegion(region);
