@@ -24,7 +24,7 @@ public class SummaryCourseResponse {
   @Builder.Default
   private List<Theme> themes = new ArrayList<>();
   @Builder.Default
-  private List<CoursePlaceResponse> places = new ArrayList<>();
+  private List<String> places = new ArrayList<>();
   private Integer likeCount;
   private Boolean isBookmarked;
   private String nickname;
