@@ -3,10 +3,10 @@ package com.prgrms.p2p.domain.place.service;
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toDetailPlaceResponse;
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSummaryPlaceResponse;
 
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.course.dto.CreateCoursePlaceRequest;
 import com.prgrms.p2p.domain.course.util.CoursePlaceConverter;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
-import com.prgrms.p2p.domain.place.dto.RecordRequest;
 import com.prgrms.p2p.domain.place.dto.SearchPlaceRequest;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
@@ -55,15 +55,12 @@ public class PlaceService {
     return placeList.map(p -> toSummaryPlaceResponse(p, Optional.ofNullable(userId)));
   }
 
-  public Slice<SummaryPlaceResponse> findBookmarkedPlaceList(RecordRequest recordRequest,
-      Pageable pageable) {
-
-    Long userId = recordRequest.getUserId();
+  public Slice<SummaryPlaceResponse> findBookmarkedPlaceList(Long userId, Pageable pageable) {
     if (Objects.isNull(userId)) {
-      throw new RuntimeException();
+      throw new BadRequestException("입력값을 확인해주세요.");
     }
     Slice<Place> bookmarkedPlace = placeRepository.findBookmarkedPlace(userId, pageable);
-    return bookmarkedPlace.map(p -> toSummaryPlaceResponse(p, Optional.ofNullable(userId)));
+    return bookmarkedPlace.map(place -> toSummaryPlaceResponse(place, Optional.of(userId)));
   }
 
   private void update(Place place, CreateCoursePlaceRequest updateReq) {
