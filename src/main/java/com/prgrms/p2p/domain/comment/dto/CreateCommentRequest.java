@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateCourseCommentRequest {
+public class CreateCommentRequest {
 
   private String comment;
   private Long rootCommentId;

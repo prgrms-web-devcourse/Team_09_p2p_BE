@@ -28,25 +28,29 @@ public abstract class Comment extends BaseEntity {
   private Long seq;
 
   public Comment(String comment, Long rootCommentId, Long userId, Long seq) {
-    this.comment = comment;
-    this.rootCommentId = rootCommentId;
-    this.userId = userId;
-    this.seq = seq;
+    setComment(comment);
+    setRootCommentId(rootCommentId);
+    setUserId(userId);
+    setSeq(seq);
   }
 
   public void changeComment(String newComment) {
-    this.comment = newComment;
+    setComment(newComment);
   }
 
   private void setComment(String comment) {
     this.comment = comment;
   }
 
+  private void setRootCommentId(Long rootCommentId) {
+    this.rootCommentId = rootCommentId;
+  }
+
   private void setUserId(Long userId) {
     this.userId = userId;
   }
 
-  private Comment(Long seq) {
+  private void setSeq(Long seq) {
     this.seq = seq;
   }
 }

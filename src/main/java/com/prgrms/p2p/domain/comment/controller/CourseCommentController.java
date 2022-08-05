@@ -1,10 +1,9 @@
 package com.prgrms.p2p.domain.comment.controller;
 
-import com.prgrms.p2p.domain.comment.dto.CreateCourseCommentRequest;
+import com.prgrms.p2p.domain.comment.dto.CreateCommentRequest;
 import com.prgrms.p2p.domain.comment.service.CourseCommentService;
 import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
-import java.net.URI;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,7 @@ public class CourseCommentController {
   @PostMapping("/{course_id}/comments")
   public ResponseEntity<Long> createComment(
       @CurrentUser CustomUserDetails user,
-      @RequestBody CreateCourseCommentRequest createCommentReq,
+      @RequestBody CreateCommentRequest createCommentReq,
       @PathVariable("course_id") Long courseId) {
 
     if (Objects.isNull(user)) {
