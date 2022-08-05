@@ -28,7 +28,7 @@ public class CourseComment extends Comment {
   @JoinColumn(name = "course_id")
   private Course course;
 
-  @Column(name = "deleteChecker")
+  @Column(name = "visibility")
   private Visibility visibility = Visibility.TRUE;
 
   public CourseComment(String comment, Long rootCommentId, Long userId,

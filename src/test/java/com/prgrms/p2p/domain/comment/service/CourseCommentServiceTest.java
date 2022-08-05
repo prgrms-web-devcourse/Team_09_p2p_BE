@@ -3,7 +3,7 @@ package com.prgrms.p2p.domain.comment.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.prgrms.p2p.domain.comment.dto.CreateCourseCommentRequest;
+import com.prgrms.p2p.domain.comment.dto.CreateCommentRequest;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
 import com.prgrms.p2p.domain.comment.repository.CourseCommentRepository;
 import com.prgrms.p2p.domain.course.entity.Course;
@@ -90,7 +90,7 @@ class CourseCommentServiceTest {
       Long userId = user.getId();
       Long courseId = course.getId();
 
-      CreateCourseCommentRequest createCommentReq = CreateCourseCommentRequest.builder()
+      CreateCommentRequest createCommentReq = CreateCommentRequest.builder()
           .comment(comment)
           .rootCommentId(rootCommentId)
           .build();
@@ -118,7 +118,7 @@ class CourseCommentServiceTest {
       Long userId = -1L;
       Long courseId = course.getId();
 
-      CreateCourseCommentRequest createCommentReq = CreateCourseCommentRequest.builder()
+      CreateCommentRequest createCommentReq = CreateCommentRequest.builder()
           .comment(comment)
           .rootCommentId(rootCommentId)
           .build();
@@ -138,7 +138,7 @@ class CourseCommentServiceTest {
       Long userId = user.getId();
       Long courseId = -1L;
 
-      CreateCourseCommentRequest createCommentReq = CreateCourseCommentRequest.builder()
+      CreateCommentRequest createCommentReq = CreateCommentRequest.builder()
           .comment(comment)
           .rootCommentId(rootCommentId)
           .build();
@@ -157,7 +157,7 @@ class CourseCommentServiceTest {
       Long rootCommentId = rootCommentId1;
       Long userId = user.getId();
       Long courseId = course.getId();
-      CreateCourseCommentRequest createCommentReq = CreateCourseCommentRequest.builder()
+      CreateCommentRequest createCommentReq = CreateCommentRequest.builder()
           .comment(comment)
           .rootCommentId(rootCommentId)
           .build();
@@ -185,7 +185,7 @@ class CourseCommentServiceTest {
       Long userId = user.getId();
       Long courseId = course.getId();
 
-      CreateCourseCommentRequest createCommentReq = CreateCourseCommentRequest.builder()
+      CreateCommentRequest createCommentReq = CreateCommentRequest.builder()
           .comment(comment)
           .rootCommentId(rootCommentId)
           .build();
@@ -206,13 +206,40 @@ class CourseCommentServiceTest {
         Long userId = user.getId();
         Long courseId = course.getId();
 
-        CreateCourseCommentRequest createCommentReq = CreateCourseCommentRequest.builder()
+        CreateCommentRequest createCommentReq = CreateCommentRequest.builder()
             .comment(comment)
             .rootCommentId(rootCommentId)
             .build();
 
         //when
         Long courseCommentId = courseCommentService.save(createCommentReq, courseId, userId);
+        CourseComment courseComment = courseCommentRepository.findById(courseCommentId)
+            .orElseThrow(RuntimeException::new);
+
+        //then
+        assertThat(courseComment.getSeq()).isEqualTo(i);
+      }
+    }
+
+    @Test
+    @DisplayName("성공: 코스에 대댓글을 여러개 작성해도 seq가 정확합니다.")
+    public void fixSeqWhenCreateCourseSubCommentsAndDelete() throws Exception {
+
+      for (long i = 1; i < 10; i++) {
+        //given
+        String comment = "이것은 대댓글" + i + " 입니다.";
+        Long rootCommentId = rootCommentId1;
+        Long userId = user.getId();
+        Long courseId = course.getId();
+
+        CreateCommentRequest createCommentReq = CreateCommentRequest.builder()
+            .comment(comment)
+            .rootCommentId(rootCommentId)
+            .build();
+
+        //when
+        Long courseCommentId = courseCommentService.save(createCommentReq, courseId, userId);
+        courseCommentService.deleteCourseComment(courseCommentId,courseId,userId);
         CourseComment courseComment = courseCommentRepository.findById(courseCommentId)
             .orElseThrow(RuntimeException::new);
 
