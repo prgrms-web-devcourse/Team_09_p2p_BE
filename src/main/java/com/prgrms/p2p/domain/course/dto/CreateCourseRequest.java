@@ -20,7 +20,6 @@ public class CreateCourseRequest {
   private String title;
   private Region region;
   private Period period;
-  private String description;
   @Builder.Default
   private List<Theme> themes =new ArrayList<>();
   @Builder.Default

@@ -54,9 +54,6 @@ public class Course extends BaseEntity {
   @Column(name = "region")
   private Region region;
 
-  @Column(name = "description")
-  private String description;
-
   @Enumerated(EnumType.STRING)
   @ElementCollection(fetch = FetchType.EAGER)
   @Column(name = "themes")
@@ -86,12 +83,11 @@ public class Course extends BaseEntity {
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
-  public Course(String title, Period period, Region region, String description, Set<Theme> themes,
-      Set<Spot> spots, User user) {
+  public Course(String title, Period period, Region region, Set<Theme> themes, Set<Spot> spots,
+      User user) {
     setTitle(title);
     setPeriod(period);
     setRegion(region);
-    setDescription(description);
     setThemes(themes);
     setSpots(spots);
     addUser(user);
@@ -103,10 +99,6 @@ public class Course extends BaseEntity {
 
   public void changePeriod(Period newPeriod) {
     this.period = newPeriod;
-  }
-
-  public void changeDescription(String newDescription) {
-    this.description = newDescription;
   }
 
   public void addUser(User user) {
@@ -169,13 +161,6 @@ public class Course extends BaseEntity {
 
   private void setRegion(Region region) {
     this.region = region;
-  }
-
-  private void setDescription(String description) {
-    if (Strings.isBlank(description)) {
-      throw new IllegalArgumentException();
-    }
-    this.description = description;
   }
 
   private void setThemes(Set<Theme> themes) {
