@@ -3,6 +3,7 @@ package com.prgrms.p2p.domain.user.pojo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prgrms.p2p.domain.user.entity.User;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -15,14 +16,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+@Schema(name = "토큰으로 얻은 유저 정보")
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CustomUserDetails implements UserDetails {
 
-  @ApiModelProperty(value = "로그인한 유저 아이디")
+  @Schema(description = "로그인한 유저의 아이디", example = "1")
   private Long id;
-  @ApiModelProperty(value = "로그인한 유저 이메일")
+
+  @Schema(description = "로그인한 유저의 이메일", example = "test@gmail.com")
   private String email;
 
   @Builder.Default
