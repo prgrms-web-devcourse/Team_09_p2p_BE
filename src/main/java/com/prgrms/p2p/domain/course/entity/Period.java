@@ -14,8 +14,8 @@ public enum Period {
 
   @JsonCreator
   public static Period from(String value) {
-    return Arrays.stream(Period.values()).filter(period -> period.name().equalsIgnoreCase(value))
-        .findFirst().orElse(null);
+    return Arrays.stream(Period.values())
+        .filter(period -> period.getValue().equalsIgnoreCase(value)).findFirst().orElse(null);
   }
 
   @JsonValue

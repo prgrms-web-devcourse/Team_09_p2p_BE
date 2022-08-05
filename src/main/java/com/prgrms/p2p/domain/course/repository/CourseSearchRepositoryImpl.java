@@ -34,17 +34,11 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
 
   @Override
   public Slice<Course> searchCourse(SearchCourseRequest request, Pageable pageable) {
-    JPAQuery<Course> courseJPAQuery = jpaQueryFactory.select(course)
-        .from(course)
+    JPAQuery<Course> courseJPAQuery = jpaQueryFactory.select(course).from(course)
         .leftJoin(course.coursePlaces, coursePlace).fetchJoin()
-        .where(keywordListContains(request.getKeyword()),
-            regionEq(request.getRegion()),
-            themeEq(request.getThemes()),
-            spotEq(request.getSpots()),
-            periodEq(request.getPeriod()),
-            coursePlace.place.id.eq(request.getPlaceId())
-        )
-        .offset(pageable.getOffset())
+        .where(keywordListContains(request.getKeyword()), regionEq(request.getRegion()),
+            themeEq(request.getThemes()), spotEq(request.getSpots()), periodEq(request.getPeriod()),
+            placeIdEq(request.getPlaceId())).offset(pageable.getOffset())
         .limit(pageable.getPageSize() + 1);
 
     for (Sort.Order o : pageable.getSort()) {
@@ -77,7 +71,8 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
   }
 
   private BooleanExpression regionEq(Region region) {
-    return (region.equals(Region.전체보기) || ObjectUtils.isEmpty(region)) ? null : course.region.eq(region);
+    return (ObjectUtils.isEmpty(region) || Region.전체보기.equals(region)) ? null
+        : course.region.eq(region);
   }
 
   private BooleanBuilder spotEq(List<Spot> spots) {
@@ -105,5 +100,9 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
 
   private BooleanExpression periodEq(Period period) {
     return ObjectUtils.isEmpty(period) ? null : course.period.eq(period);
+  }
+
+  private BooleanExpression placeIdEq(Long placeId) {
+    return ObjectUtils.isEmpty(placeId) ? null : coursePlace.place.id.eq(placeId);
   }
 }

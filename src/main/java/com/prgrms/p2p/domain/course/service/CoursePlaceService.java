@@ -32,5 +32,4 @@ public class CoursePlaceService {
 
     coursePlaceRepository.save(coursePlace);
   }
-
 }
