@@ -42,7 +42,10 @@ public class CoursePlace extends BaseEntity {
   private String imageUrl;
 
   @Column(name = "recommended")
-  private Boolean recommended;
+  private Boolean recommended = Boolean.FALSE;
+
+  @Column(name = "thumbnailed")
+  private Boolean thumbnail = Boolean.FALSE;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "course_id")
@@ -56,11 +59,12 @@ public class CoursePlace extends BaseEntity {
   private Boolean isDeleted = Boolean.FALSE;
 
   public CoursePlace(Integer seq, String description, String imageUrl, Boolean recommended,
-      Course course, Place place) {
+      Boolean thumbnail, Course course, Place place) {
     setSeq(seq);
     setDescription(description);
     setImageUrl(imageUrl);
     setRecommended(recommended);
+    setThumbnail(thumbnail);
     addCourse(course);
     addPlace(place);
   }
@@ -109,6 +113,10 @@ public class CoursePlace extends BaseEntity {
 
   private void setRecommended(Boolean recommended) {
     this.recommended = recommended;
+  }
+
+  private void setThumbnail(Boolean thumbnailed) {
+    this.thumbnail = thumbnailed;
   }
 
   private void setCourse(Course course) {
