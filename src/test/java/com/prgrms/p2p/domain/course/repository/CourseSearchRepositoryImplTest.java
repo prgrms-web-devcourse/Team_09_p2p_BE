@@ -86,15 +86,14 @@ class CourseSearchRepositoryImplTest {
     for (int i = 0; i < 10; i++) {
       Course course;
       if (i % 2 == 0) {
-        course = new Course(title, period, region, description, Set.of(Theme.가족여행, Theme.맛집),
+        course = new Course(title, period, region , Set.of(Theme.가족여행, Theme.맛집),
             Set.of(Spot.바다, Spot.카페), user);
       } else {
-        course = new Course(title2, period, region, description, Set.of(Theme.데이트코스, Theme.이쁜카페),
+        course = new Course(title2, period, region , Set.of(Theme.데이트코스, Theme.이쁜카페),
             Set.of(Spot.숙소, Spot.테마파크), user);
-      }
-      courseRepository.save(course);
-      coursePlace = new CoursePlace(0, description, imageUrl, true, course, place);
-      coursePlace2 = new CoursePlace(1, description, imageUrl, false, course, place);
+      } courseRepository.save(course);
+      coursePlace = new CoursePlace(0, description, imageUrl, true, true, course, place);
+      coursePlace2 = new CoursePlace(1, description, imageUrl, false, false, course, place);
       coursePlaceRepository.save(coursePlace);
       coursePlaceRepository.save(coursePlace2);
     }
@@ -113,7 +112,7 @@ class CourseSearchRepositoryImplTest {
     @Test
     @DisplayName("성공: 키워드 검색")
     public void successKeywordSearch() {
-      SearchCourseRequest 제주 = new SearchCourseRequest("제주", null, null, null);
+      SearchCourseRequest 제주 = new SearchCourseRequest("제주", null, null, null, null, null);
       PageRequest pageable = PageRequest.of(0, 10);
       Slice<Course> courses = courseRepository.searchCourse(제주, pageable);
       assertThat(courses.getNumberOfElements()).isEqualTo(5);
@@ -123,7 +122,8 @@ class CourseSearchRepositoryImplTest {
     @Test
     @DisplayName("성공: 전체 검색")
     public void successWholeSearch() {
-      SearchCourseRequest wholeKeyword = new SearchCourseRequest(null, null, null, null);
+      SearchCourseRequest wholeKeyword = new SearchCourseRequest(null, null, null, null, null,
+          null);
       PageRequest pageable = PageRequest.of(0, 10);
       Slice<Course> courses = courseRepository.searchCourse(wholeKeyword, pageable);
       assertThat(courses.getNumberOfElements()).isEqualTo(10);
@@ -132,7 +132,8 @@ class CourseSearchRepositoryImplTest {
     @Test
     @DisplayName("성공: 존재하지 않는 키워드 검색")
     public void successEmptyKeywordSearch() {
-      SearchCourseRequest nullKeyword = new SearchCourseRequest("null", null, null, null);
+      SearchCourseRequest nullKeyword = new SearchCourseRequest("null", null, null, null, null,
+          null);
       PageRequest pageable = PageRequest.of(0, 10);
       Slice<Course> courses = courseRepository.searchCourse(nullKeyword, pageable);
       assertThat(courses.getNumberOfElements()).isEqualTo(0);
@@ -145,7 +146,7 @@ class CourseSearchRepositoryImplTest {
     @Test
     @DisplayName("성공: 지역 검색")
     public void successExistRegionSearch() {
-      SearchCourseRequest 서울 = new SearchCourseRequest(null, Region.서울, null, null);
+      SearchCourseRequest 서울 = new SearchCourseRequest(null, Region.서울, null, null, null, null);
       PageRequest pageable = PageRequest.of(0, 10);
       Slice<Course> courses = courseRepository.searchCourse(서울, pageable);
       assertThat(courses.getNumberOfElements()).isEqualTo(10);
@@ -154,7 +155,7 @@ class CourseSearchRepositoryImplTest {
     @Test
     @DisplayName("성공: 없는 지역 검색")
     public void successNotExistRegionSearch() {
-      SearchCourseRequest 경기 = new SearchCourseRequest(null, Region.경기, null, null);
+      SearchCourseRequest 경기 = new SearchCourseRequest(null, Region.경기, null, null, null, null);
       PageRequest pageable = PageRequest.of(0, 10);
       Slice<Course> courses = courseRepository.searchCourse(경기, pageable);
       assertThat(courses.getNumberOfElements()).isEqualTo(0);
@@ -168,7 +169,7 @@ class CourseSearchRepositoryImplTest {
     @Test
     @DisplayName("성공: 포함장소 검색")
     public void successSportsSearch() {
-      SearchCourseRequest 바다와숙소 = new SearchCourseRequest(null, Region.서울,
+      SearchCourseRequest 바다와숙소 = new SearchCourseRequest(null, Region.서울, Period.ONE_DAY, null,
           List.of(Spot.바다, Spot.숙소), null);
       PageRequest pageable = PageRequest.of(0, 10);
       Slice<Course> courses = courseRepository.searchCourse(바다와숙소, pageable);
@@ -178,7 +179,8 @@ class CourseSearchRepositoryImplTest {
     @Test
     @DisplayName("성공: 전체 지역 검색")
     public void successNotExistRegionSearch() {
-      SearchCourseRequest 전체지역 = new SearchCourseRequest(null, null, null, null);
+      SearchCourseRequest 전체지역 = new SearchCourseRequest(null, Region.전체보기, null, null,
+          List.of(Spot.바다, Spot.숙소), null);
       PageRequest pageable = PageRequest.of(0, 10);
       Slice<Course> courses = courseRepository.searchCourse(전체지역, pageable);
       assertThat(courses.getNumberOfElements()).isEqualTo(10);
@@ -192,8 +194,8 @@ class CourseSearchRepositoryImplTest {
     @Test
     @DisplayName("성공: 테마 검색")
     public void successSportsSearch() {
-      SearchCourseRequest 테마검색 = new SearchCourseRequest(null, Region.서울, null,
-          List.of(Theme.가족여행, Theme.데이트코스,Theme.이쁜카페));
+      SearchCourseRequest 테마검색 = new SearchCourseRequest(null, Region.서울, null, null, null,
+          List.of(Theme.가족여행, Theme.데이트코스, Theme.이쁜카페));
       PageRequest pageable = PageRequest.of(0, 20);
       Slice<Course> courses = courseRepository.searchCourse(테마검색, pageable);
       assertThat(courses.getNumberOfElements()).isEqualTo(10);
@@ -202,7 +204,7 @@ class CourseSearchRepositoryImplTest {
     @Test
     @DisplayName("성공: 전체 테마 검색")
     public void successNotExistRegionSearch() {
-      SearchCourseRequest 전체테마 = new SearchCourseRequest(null, null, null, null);
+      SearchCourseRequest 전체테마 = new SearchCourseRequest(null, Region.서울, null, null, null, null);
       PageRequest pageable = PageRequest.of(0, 20);
       Slice<Course> courses = courseRepository.searchCourse(전체테마, pageable);
       assertThat(courses.getNumberOfElements()).isEqualTo(10);

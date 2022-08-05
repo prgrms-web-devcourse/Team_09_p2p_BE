@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class ChangeProfileResponse {
 
   @Schema(description = "프로필 이미지 S3 url", example = "http://test.com")
-  private String url;
+  private String profileImage;
 
 }

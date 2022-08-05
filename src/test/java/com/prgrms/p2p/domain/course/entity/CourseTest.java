@@ -31,7 +31,7 @@ class CourseTest {
     themes = Set.of(Theme.가족여행);
     spots = Set.of(Spot.바다);
     user = new User("dhkstnaos@gmail.com", "1234", "asdf", "1997-11-29", Sex.FEMALE);
-    course = new Course(title, period, region, description, themes, spots, user);
+    course = new Course(title, period, region, themes, spots, user);
   }
 
   @Nested
@@ -44,7 +44,6 @@ class CourseTest {
       //when
       //then
       assertThat(course.getTitle()).isEqualTo(title);
-      assertThat(course.getDescription()).isEqualTo(description);
       assertThat(course.getThemes()).isNotEmpty();
     }
 
@@ -52,7 +51,7 @@ class CourseTest {
     @DisplayName("성공: 테마나 포함장소가 비어있어도 생성")
     public void successAsThemesOrSpotsIsEmpty() {
       //when
-      Course emptyCourse = new Course(title, period, region, description, new HashSet<>(),
+      Course emptyCourse = new Course(title, period, region, new HashSet<>(),
           new HashSet<>(), user);
       //then
       assertThat(emptyCourse.getTitle()).isEqualTo(title);
@@ -60,12 +59,12 @@ class CourseTest {
     }
 
     @Test
-    @DisplayName("실패: 타이틀이나 설명이 비었을때.")
+    @DisplayName("실패: 타이틀이 비었을때.")
     public void failAsTitleOrDescriptionIsNull() {
       //when
       //then
       assertThatThrownBy(
-          () -> new Course(null, period, region, null, new HashSet<>(), new HashSet<>(),
+          () -> new Course(null, period, region, new HashSet<>(), new HashSet<>(),
               user)).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -75,7 +74,7 @@ class CourseTest {
       //when
       //then
       assertThatThrownBy(
-          () -> new Course(title, period, region, description, new HashSet<>(), new HashSet<>(),
+          () -> new Course(title, period, region, new HashSet<>(), new HashSet<>(),
               null)).isInstanceOf(IllegalArgumentException.class);
     }
   }
