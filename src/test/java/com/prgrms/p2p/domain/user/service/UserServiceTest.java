@@ -105,7 +105,7 @@ class UserServiceTest {
     void failValidateNickname() {
       // Given
       // When
-      signUpRequest.setNickname("beomsic");
+      signUpRequest.setNickname("beomsicgoodis");
       // Then
       assertThrows(IllegalArgumentException.class, () -> userService.signUp(signUpRequest));
     }
