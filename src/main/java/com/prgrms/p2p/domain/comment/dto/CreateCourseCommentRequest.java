@@ -13,6 +13,4 @@ public class CreateCourseCommentRequest {
 
   private String comment;
   private Long rootCommentId;
-  private Long userId;
-  private Long courseId;
 }

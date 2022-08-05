@@ -1,17 +1,22 @@
 package com.prgrms.p2p.domain.comment.service;
 
+import static com.prgrms.p2p.domain.comment.util.CommentConverter.toCourseComment;
+import static com.prgrms.p2p.domain.comment.util.CommentConverter.toCourseCommentResponse;
+
+import com.prgrms.p2p.domain.comment.dto.CourseCommentDto;
 import com.prgrms.p2p.domain.comment.dto.CourseCommentResponse;
 import com.prgrms.p2p.domain.comment.dto.CreateCourseCommentRequest;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
+import com.prgrms.p2p.domain.comment.entity.Visibility;
 import com.prgrms.p2p.domain.comment.repository.CourseCommentRepository;
 import com.prgrms.p2p.domain.comment.util.CommentConverter;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.repository.CourseRepository;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,25 +30,54 @@ public class CourseCommentService {
   private final UserRepository userRepository;
 
   @Transactional
-  public Long save(CreateCourseCommentRequest createCommentReq) {
+  public Long save(CreateCourseCommentRequest createCommentReq, Long courseId, Long userId) {
 
-    validateUser(createCommentReq.getUserId());
+    validateUser(userId);
 
-    Course course = courseRepository.findById(createCommentReq.getCourseId())
+    Course course = courseRepository.findById(courseId)
         .orElseThrow(() -> new RuntimeException("게시물이 존재하지 않습니다."));
 
     validateRootComment(createCommentReq.getRootCommentId());
 
     Long seq = getSeq(createCommentReq);
 
-    CourseComment courseComment = CommentConverter.toCourseComment(createCommentReq, course, seq);
+    CourseComment courseComment = toCourseComment(createCommentReq, course, seq, userId);
 
     return courseCommentRepository.save(courseComment).getId();
   }
 
-  public Slice<CourseCommentResponse> findCourseComment(Long courseId, Pageable pageable) {
+  public List<CourseCommentResponse> findCourseComment(Long courseId) {
 
-    return courseCommentRepository.findCourseComment(courseId, pageable);
+    List<CourseCommentDto> courseCommentDto = courseCommentRepository.findCourseComment(courseId);
+    return courseCommentDto.stream()
+        .map(CommentConverter::toCourseCommentResponse)
+        .collect(Collectors.toList());
+  }
+
+  @Transactional
+  public void deleteCourseComment(Long courseCommentId, Long courseId, Long userId) {
+
+    CourseComment courseComment = courseCommentRepository.findById(courseCommentId)
+        .orElseThrow(RuntimeException::new);
+
+    if (!Objects.isNull(courseComment.getRootCommentId())) {
+      if (courseCommentRepository.checkSubComment(courseComment.getRootCommentId()) == 1) {
+        CourseComment parentComment = courseCommentRepository.findById(
+                courseComment.getRootCommentId())
+            .orElseThrow(RuntimeException::new);
+
+        parentComment.changeVisibility(Visibility.FALSE);
+      }
+      courseComment.changeVisibility(Visibility.FALSE);
+    }
+
+    if (Objects.isNull(courseComment.getRootCommentId())) {
+      if (courseCommentRepository.checkSubComment(courseComment.getId()) == 0) {
+        courseComment.changeVisibility(Visibility.FALSE);
+      } else {
+        courseComment.changeVisibility(Visibility.DELETED_INFORMATION);
+      }
+    }
   }
 
   private void validateUser(Long userId) {

@@ -28,6 +28,9 @@ public class CourseComment extends Comment {
   @JoinColumn(name = "course_id")
   private Course course;
 
+  @Column(name = "deleteChecker")
+  private Visibility visibility = Visibility.TRUE;
+
   public CourseComment(String comment, Long rootCommentId, Long userId,
       Course course, Long seq) {
     super(comment, rootCommentId, userId, seq);
@@ -42,7 +45,14 @@ public class CourseComment extends Comment {
     this.course = course;
   }
 
+  public void changeVisibility(Visibility visibility) {
+    setVisibility(visibility);
+  }
   private void setCourse(Course course) {
     this.course = course;
+  }
+
+  private void setVisibility(Visibility visibility) {
+    this.visibility = visibility;
   }
 }

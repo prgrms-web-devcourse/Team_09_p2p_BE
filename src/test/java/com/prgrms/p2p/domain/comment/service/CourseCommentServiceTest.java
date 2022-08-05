@@ -93,12 +93,10 @@ class CourseCommentServiceTest {
       CreateCourseCommentRequest createCommentReq = CreateCourseCommentRequest.builder()
           .comment(comment)
           .rootCommentId(rootCommentId)
-          .userId(userId)
-          .courseId(courseId)
           .build();
 
       //when
-      Long courseCommentId = courseCommentService.save(createCommentReq);
+      Long courseCommentId = courseCommentService.save(createCommentReq, courseId, userId);
       CourseComment courseComment = courseCommentRepository.findById(courseCommentId)
           .orElseThrow(RuntimeException::new);
 
@@ -123,12 +121,11 @@ class CourseCommentServiceTest {
       CreateCourseCommentRequest createCommentReq = CreateCourseCommentRequest.builder()
           .comment(comment)
           .rootCommentId(rootCommentId)
-          .userId(userId)
-          .courseId(courseId)
           .build();
 
       //then
-      assertThrows(RuntimeException.class, () -> courseCommentService.save(createCommentReq));
+      assertThrows(RuntimeException.class,
+          () -> courseCommentService.save(createCommentReq, courseId, userId));
     }
 
     @Test
@@ -144,12 +141,11 @@ class CourseCommentServiceTest {
       CreateCourseCommentRequest createCommentReq = CreateCourseCommentRequest.builder()
           .comment(comment)
           .rootCommentId(rootCommentId)
-          .userId(userId)
-          .courseId(courseId)
           .build();
 
       //then
-      assertThrows(RuntimeException.class, () -> courseCommentService.save(createCommentReq));
+      assertThrows(RuntimeException.class,
+          () -> courseCommentService.save(createCommentReq, courseId, userId));
     }
 
     @Test
@@ -164,12 +160,10 @@ class CourseCommentServiceTest {
       CreateCourseCommentRequest createCommentReq = CreateCourseCommentRequest.builder()
           .comment(comment)
           .rootCommentId(rootCommentId)
-          .userId(userId)
-          .courseId(courseId)
           .build();
 
       //when
-      Long courseCommentId = courseCommentService.save(createCommentReq);
+      Long courseCommentId = courseCommentService.save(createCommentReq, courseId, userId);
       CourseComment courseComment = courseCommentRepository.findById(courseCommentId)
           .orElseThrow(RuntimeException::new);
 
@@ -194,12 +188,11 @@ class CourseCommentServiceTest {
       CreateCourseCommentRequest createCommentReq = CreateCourseCommentRequest.builder()
           .comment(comment)
           .rootCommentId(rootCommentId)
-          .userId(userId)
-          .courseId(courseId)
           .build();
 
       //then
-      assertThrows(RuntimeException.class, () -> courseCommentService.save(createCommentReq));
+      assertThrows(RuntimeException.class,
+          () -> courseCommentService.save(createCommentReq, courseId, userId));
     }
 
     @Test
@@ -216,12 +209,10 @@ class CourseCommentServiceTest {
         CreateCourseCommentRequest createCommentReq = CreateCourseCommentRequest.builder()
             .comment(comment)
             .rootCommentId(rootCommentId)
-            .userId(userId)
-            .courseId(courseId)
             .build();
 
         //when
-        Long courseCommentId = courseCommentService.save(createCommentReq);
+        Long courseCommentId = courseCommentService.save(createCommentReq, courseId, userId);
         CourseComment courseComment = courseCommentRepository.findById(courseCommentId)
             .orElseThrow(RuntimeException::new);
 
