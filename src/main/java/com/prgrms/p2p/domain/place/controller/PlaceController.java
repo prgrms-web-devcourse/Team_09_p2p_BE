@@ -37,8 +37,7 @@ public class PlaceController {
 
   @GetMapping("/")
   public ResponseEntity<Slice<SummaryPlaceResponse>> getSummaryPlaceList(
-      @RequestBody SearchPlaceRequest searchPlaceRequest,
-      Pageable pageable,
+      @RequestBody SearchPlaceRequest searchPlaceRequest, Pageable pageable,
       @CurrentUser CustomUserDetails user) {
     Long userId = Objects.isNull(user) ? null : user.getId();
     Slice<SummaryPlaceResponse> summaryList =
@@ -49,9 +48,11 @@ public class PlaceController {
 
   @GetMapping("/bookmark")
   public ResponseEntity<Slice<SummaryPlaceResponse>> getBookmarkPlaceList(
-      @RequestParam("userId") Long userId, Pageable pageable) {
+      @RequestParam("userId") Long targetUserId, Pageable pageable,
+      @CurrentUser CustomUserDetails user) {
+    Long userId = Objects.isNull(user) ? null : user.getId();
     Slice<SummaryPlaceResponse> bookmarkedPlaceList
-        = placeService.findBookmarkedPlaceList(userId, pageable);
+        = placeService.findBookmarkedPlaceList(userId, targetUserId, pageable);
     return ResponseEntity.ok(bookmarkedPlaceList);
   }
 }

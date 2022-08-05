@@ -55,12 +55,12 @@ public class PlaceService {
     return placeList.map(p -> toSummaryPlaceResponse(p, Optional.ofNullable(userId)));
   }
 
-  public Slice<SummaryPlaceResponse> findBookmarkedPlaceList(Long userId, Pageable pageable) {
-    if (Objects.isNull(userId)) {
+  public Slice<SummaryPlaceResponse> findBookmarkedPlaceList(Long userId, Long targetUserId, Pageable pageable) {
+    if (Objects.isNull(targetUserId)) {
       throw new BadRequestException("입력값을 확인해주세요.");
     }
-    Slice<Place> bookmarkedPlace = placeRepository.findBookmarkedPlace(userId, pageable);
-    return bookmarkedPlace.map(place -> toSummaryPlaceResponse(place, Optional.of(userId)));
+    Slice<Place> bookmarkedPlace = placeRepository.findBookmarkedPlace(targetUserId, pageable);
+    return bookmarkedPlace.map(place -> toSummaryPlaceResponse(place, Optional.ofNullable(userId)));
   }
 
   private void update(Place place, CreateCoursePlaceRequest updateReq) {
