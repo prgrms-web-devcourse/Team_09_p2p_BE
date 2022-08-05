@@ -15,4 +15,8 @@ public class LoginFailResponse {
   @Schema(description = "제한 시간", example = "2022-08-04T09:51:24")
   private String expiredAt;
 
+  public LoginFailResponse(Integer count, String expiredAt) {
+    this.count = count;
+    this.expiredAt = expiredAt;
+  }
 }
