@@ -2,6 +2,7 @@ package com.prgrms.p2p.domain.user.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prgrms.p2p.domain.user.entity.User;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +20,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CustomUserDetails implements UserDetails {
 
+  @ApiModelProperty(value = "로그인한 유저 아이디")
   private Long id;
+  @ApiModelProperty(value = "로그인한 유저 이메일")
   private String email;
 
   @Builder.Default
