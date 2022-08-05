@@ -4,6 +4,7 @@ import com.prgrms.p2p.domain.course.dto.CreateCourseRequest;
 import com.prgrms.p2p.domain.course.dto.DetailCourseResponse;
 import com.prgrms.p2p.domain.course.dto.SummaryCourseResponse;
 import com.prgrms.p2p.domain.course.entity.Course;
+import com.prgrms.p2p.domain.course.entity.CoursePlace;
 import com.prgrms.p2p.domain.user.entity.User;
 import java.util.List;
 import java.util.Set;
@@ -20,9 +21,8 @@ public class CourseConverter {
   public static DetailCourseResponse ofDetail(Course course, Boolean isLiked,
       Boolean isBookmarked) {
     return DetailCourseResponse.builder().id(course.getId()).title(course.getTitle())
-        .thumbnail(course.getCoursePlaces().get(0).getImageUrl()).region(course.getRegion())
-        .period(course.getPeriod()).themes(List.copyOf(course.getThemes()))
-        .spots(List.copyOf(course.getSpots())).places(
+        .thumbnail(pickThumbnail(course)).region(course.getRegion()).period(course.getPeriod())
+        .themes(List.copyOf(course.getThemes())).spots(List.copyOf(course.getSpots())).places(
             course.getCoursePlaces().stream().map(CoursePlaceConverter::of)
                 .collect(Collectors.toList())).likes(course.getCourseLikes().size())
         .isLiked(isLiked).isBookmarked(isBookmarked).userId(course.getUser().getId())
@@ -33,12 +33,18 @@ public class CourseConverter {
 
   public static SummaryCourseResponse ofSummary(Course course, Boolean isBookmarked) {
     return SummaryCourseResponse.builder().id(course.getId()).title(course.getTitle())
-        .thumbnail(course.getCoursePlaces().get(0).getImageUrl()).region(course.getRegion())
-        .period(course.getPeriod()).themes(List.copyOf(course.getThemes())).places(
+        .thumbnail(pickThumbnail(course)).region(course.getRegion()).period(course.getPeriod())
+        .themes(List.copyOf(course.getThemes())).places(
             course.getCoursePlaces().stream().map(coursePlace -> coursePlace.getPlace().getName())
-                .collect(Collectors.toList())).likeCount(course.getCourseLikes().size())
+                .collect(Collectors.toList())).likes(course.getCourseLikes().size())
         .isBookmarked(isBookmarked).nickname(course.getUser().getNickname())
-        .profileUrl(course.getUser().getProfileUrl().orElse(null)).build();
+        .profileImage(course.getUser().getProfileUrl().orElse(null)).build();
+  }
+
+  public static String pickThumbnail(Course course) {
+    return course.getCoursePlaces().stream().filter(CoursePlace::getThumbnailed).findFirst()
+        .map(coursePlace -> coursePlace.getImageUrl())
+        .orElseGet(() -> course.getCoursePlaces().get(0).getImageUrl());
   }
 
 }

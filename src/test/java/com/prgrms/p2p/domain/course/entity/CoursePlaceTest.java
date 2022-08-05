@@ -59,12 +59,12 @@ class CoursePlaceTest {
     phoneNumber = new PhoneNumber(number);
     imageUrl = "s3....";
     user = new User("dhkstnaos@gmail.com", "1234", "asdf", "1997-11-29", Sex.FEMALE);
-    course = new Course(title, period, region, description, themes, spots, user);
+    course = new Course(title, period, region, themes, spots, user);
 
     //when
     place = new Place(kakaoMapId, name, address, latitude, logitude, category, phoneNumber);
-    coursePlace = new CoursePlace(0, description, imageUrl, true, course, place);
-    coursePlace2 = new CoursePlace(1, description, imageUrl, false, course, place);
+    coursePlace = new CoursePlace(0, description, imageUrl, true,true, course, place);
+    coursePlace2 = new CoursePlace(1, description, imageUrl, false,true, course, place);
   }
 
   @Nested
@@ -86,7 +86,7 @@ class CoursePlaceTest {
       //when
       //then
       assertThatThrownBy(
-          () -> new CoursePlace(0, null, imageUrl, true, course, place)).isInstanceOf(
+          () -> new CoursePlace(0, null, imageUrl, true,true, course, place)).isInstanceOf(
           IllegalArgumentException.class);
     }
 
@@ -96,7 +96,7 @@ class CoursePlaceTest {
       //when
       //then
       assertThatThrownBy(
-          () -> new CoursePlace(0, description, null, true, course, place)).isInstanceOf(
+          () -> new CoursePlace(0, description, null, true,true, course, place)).isInstanceOf(
           IllegalArgumentException.class);
     }
 

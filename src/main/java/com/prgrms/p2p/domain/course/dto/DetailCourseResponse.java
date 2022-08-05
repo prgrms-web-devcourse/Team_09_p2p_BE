@@ -23,7 +23,6 @@ public class DetailCourseResponse {
   private String thumbnail;
   private Period period;
   private Region region;
-  private String description;
   @Builder.Default
   private List<Theme> themes = new ArrayList<>();
   @Builder.Default
