@@ -65,8 +65,7 @@ class CourseLikeServiceTest {
       themesStub.add(Theme.데이트코스);
       Set<Spot> spots = new HashSet<>();
       spots.add(Spot.바다);
-      courseStub = new Course("title", Period.ONE_DAY, Region.서울, "description",
-          themesStub, spots, userStub);
+      courseStub = new Course("title", Period.ONE_DAY, Region.서울, themesStub, spots, userStub);
       courseLikeStub = new CourseLike(1L, courseStub);
     }
 

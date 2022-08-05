@@ -40,7 +40,7 @@ class CourseBookmarkTest {
   @DisplayName("성공 : 코스 북마크 객체를 생성합니다.")
   void success() {
     // Given
-    Course course = new Course("title", Period.ONE_DAY, Region.서울, "description", themes, spots,
+    Course course = new Course("title", Period.ONE_DAY, Region.서울, themes, spots,
         user);
     // When
     CourseBookmark courseBookmark = new CourseBookmark(1L, course);
@@ -52,7 +52,7 @@ class CourseBookmarkTest {
   @DisplayName("실패 : 유저 아이디가 빈값인 경우 예외를 반환합니다.")
   void failByUserId1() {
     // Given
-    Course course = new Course("title", Period.ONE_DAY, Region.서울, "description", themes, spots,
+    Course course = new Course("title", Period.ONE_DAY, Region.서울, themes, spots,
         user);
     // When
     Throwable response = catchThrowable(() -> new CourseBookmark(null, course));
@@ -64,7 +64,7 @@ class CourseBookmarkTest {
   @DisplayName("실패 : 유저 아이디가 0 이하인 경우 예외를 반환합니다.")
   void failByUserId2() {
     // Given
-    Course course = new Course("title", Period.ONE_DAY, Region.서울, "description", themes, spots,
+    Course course = new Course("title", Period.ONE_DAY, Region.서울, themes, spots,
         user);
     // When
     Throwable response = catchThrowable(() -> new CourseBookmark(0L, course));
