@@ -241,6 +241,7 @@ class CourseCommentServiceTest {
         //when
         Long courseCommentId = courseCommentService.save(createCommentReq, courseId, userId);
         courseCommentService.deleteCourseComment(courseCommentId, courseId, userId);
+
         CourseComment courseComment = courseCommentRepository.findById(courseCommentId)
             .orElseThrow(RuntimeException::new);
 
@@ -265,7 +266,8 @@ class CourseCommentServiceTest {
           .build();
 
       //when
-      Long changedCommentId = courseCommentService.updateCourseComment(
+      Long changedCommentId
+          = courseCommentService.updateCourseComment(
           updateReq, rootCommentId1, course.getId(), user.getId());
 
       //then
@@ -289,7 +291,8 @@ class CourseCommentServiceTest {
       Long userId = -1L;
 
       //then
-      assertThrows(RuntimeException.class, () -> courseCommentService.updateCourseComment(
+      assertThrows(RuntimeException.class,
+          () -> courseCommentService.updateCourseComment(
           updateReq, rootCommentId1, course.getId(), userId));
     }
 
@@ -307,7 +310,8 @@ class CourseCommentServiceTest {
       Long courseId = -1L;
 
       //then
-      assertThrows(RuntimeException.class, () -> courseCommentService.updateCourseComment(
+      assertThrows(RuntimeException.class,
+          () -> courseCommentService.updateCourseComment(
           updateReq, rootCommentId1, courseId, user.getId()));
     }
 
