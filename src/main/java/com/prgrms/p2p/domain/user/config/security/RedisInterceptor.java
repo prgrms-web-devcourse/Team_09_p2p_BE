@@ -3,14 +3,18 @@ package com.prgrms.p2p.domain.user.config.security;
 import static com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum.LOGIN_EXPIRATION_TIME;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.prgrms.p2p.domain.user.exception.LoginFailException;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.joda.time.LocalDateTime;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -45,17 +49,28 @@ public class RedisInterceptor implements HandlerInterceptor {
 
     String email = (String) reqBody.get("email");
 
-    if(!redisTemplate.hasKey(email)) {
-      redisTemplate.opsForValue()
-          .set(email, String.valueOf(0) ,LOGIN_EXPIRATION_TIME.getValue(), TimeUnit.MILLISECONDS);
+    Boolean count1 = redisTemplate.opsForHash().hasKey(email, "count");
+    if(!count1) {
+      HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
+      hash.put(email, "count", "0");
+
+      String expiredAt = String.valueOf(
+          LocalDateTime.fromDateFields(
+              new Date(new Date().getTime() + LOGIN_EXPIRATION_TIME.getValue())));
+
+      hash.put(email, "expiredAt", expiredAt);
+      redisTemplate.expire(email, LOGIN_EXPIRATION_TIME.getValue(), TimeUnit.MILLISECONDS);
       return;
     }
     else {
-      Object o = redisTemplate.opsForValue().get(email);
+      Object o = redisTemplate.opsForHash().get(email, "count");
       int count = Integer.parseInt(String.valueOf(o));
-      System.out.println(count);
-      //TODO : 이미 5번 이상 틀린 유저 예외처리 해주기
-      if(count >= 5) throw new RuntimeException();
+
+      if(count >= 5) {
+        Object ex = redisTemplate.opsForHash().get(email, "expiredAt");
+        String expiredAt = String.valueOf(ex);
+        throw new LoginFailException(5, expiredAt);
+      }
     }
   }
 

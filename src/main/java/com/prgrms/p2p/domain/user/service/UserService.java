@@ -10,12 +10,18 @@ import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
+import com.prgrms.p2p.domain.user.exception.EmailConflictException;
+import com.prgrms.p2p.domain.user.exception.LoginFailException;
+import com.prgrms.p2p.domain.user.exception.NicknameConflictException;
+import com.prgrms.p2p.domain.user.exception.PwdConflictException;
+import com.prgrms.p2p.domain.user.exception.UserNotFoundException;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
-import com.prgrms.p2p.domain.user.util.PasswordEncrypter;
 import com.prgrms.p2p.domain.user.util.UserConverter;
 import com.prgrms.p2p.domain.user.util.Validation;
+import java.util.Date;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
+import org.joda.time.LocalDateTime;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,25 +56,31 @@ public class UserService {
   @Transactional
   public Optional<LoginResponse> login(String email, String password) {
 
-    //TODO : 알맞는 예외 설정해주기 - NotFoundException
-    //이메일 존재유무 확인
     User user = userRepository.findByEmail(email)
-        .orElseThrow(RuntimeException::new);
+        .orElseThrow(UserNotFoundException::new);
 
-    //래디스 체크
-    redisTemplate.opsForValue().increment(email);
+    Object expiredAt = redisTemplate.opsForHash().get(email, "expiredAt");
+    Long count = redisTemplate.opsForHash().increment(email, "count", 1);
 
-    if(Integer.parseInt(String.valueOf(redisTemplate.opsForValue().get(email))) >= 5){
-      redisTemplate.opsForValue().set(email, 5, BAN_EXPIRATION_TIME.getValue(), TimeUnit.MILLISECONDS);
+    if(count >= 5){
+      redisTemplate.delete(email);
+      HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
+
+      String banExpiredAt = String.valueOf(
+          LocalDateTime.fromDateFields(
+              new Date(new Date().getTime() + BAN_EXPIRATION_TIME.getValue())));
+
+      hash.put(email, "count", "5");
+      hash.put(email, "expiredAt", banExpiredAt);
+
+      throw new LoginFailException(5, banExpiredAt);
     }
 
-    //비밀번호 확인
-    user.matchPassword(password);
-
-    //성공적인 로그인시 생성했던 레디스 삭제
+    if(!user.matchPassword(password)) {
+      throw new LoginFailException(Math.toIntExact(count), String.valueOf(expiredAt));
+    }
     redisTemplate.delete(email);
 
-    //토큰 생성및 LoginResponse 변환
     return Optional.of(user).map((u) ->
         UserConverter.fromUserAndToken(u, jwtTokenProvider.generateAccessToken(user.getId(), user.getEmail())));
   }
@@ -76,8 +88,9 @@ public class UserService {
   @Transactional
   public void modify(Long userId, String nickname, String birth, Sex sex){
     User user = userRepository.findById(userId)
-        .orElseThrow(IllegalArgumentException::new);
+        .orElseThrow(UserNotFoundException::new);
 
+    validateNickname(nickname);
     user.changeNickname(nickname);
     user.changeBirth(birth);
     user.changeSex(sex);
@@ -88,11 +101,11 @@ public class UserService {
   @Transactional
   public void changePassword(Long userId, String oldPassword, String newPassword){
     User user = userRepository.findById(userId)
-        .orElseThrow(IllegalArgumentException::new);
-    Validation.validatePassword(newPassword);
+        .orElseThrow(UserNotFoundException::new);
 
-    user.matchPassword(oldPassword);
-    user.changePassword(PasswordEncrypter.encrypt(newPassword));
+    Validation.validatePassword(newPassword);
+    if(!user.matchPassword(oldPassword)) throw new PwdConflictException();
+    user.changePassword(newPassword);
 
     userRepository.save(user);
   }
@@ -100,7 +113,7 @@ public class UserService {
   @Transactional
   public ChangeProfileResponse changeProfileUrl(Long userId, String profileUrl) {
     User user = userRepository.findById(userId)
-        .orElseThrow(IllegalArgumentException::new);
+        .orElseThrow(UserNotFoundException::new);
 
     user.changeProfileUrl(profileUrl);
     userRepository.save(user);
@@ -111,33 +124,31 @@ public class UserService {
   public void delete(Long userId){
 
     User user = userRepository.findById(userId)
-        .orElseThrow(IllegalArgumentException::new);
+        .orElseThrow(UserNotFoundException::new);
 
     userRepository.delete(user);
   }
 
   public UserDetailResponse getUserInfo(Long userId) {
 
-    // TODO: NotFoundException 만들어주기
     User user = userRepository.findById(userId)
-        .orElseThrow(IllegalArgumentException::new);
+        .orElseThrow(UserNotFoundException::new);
 
     return UserConverter.detailFromUser(user);
   }
 
   public OtherUserDetailResponse getOtherInfo(Long userId) {
     User user = userRepository.findById(userId)
-        .orElseThrow(IllegalArgumentException::new);
+        .orElseThrow(UserNotFoundException::new);
 
     return UserConverter.otherDetailFromUser(user);
   }
 
-  //TODO: Exception 만들기
   public void validateEmail(String email) {
     Validation.validateEmail(email);
     userRepository.findByEmail(email)
         .ifPresent((s) -> {
-          throw new IllegalArgumentException();
+          throw new EmailConflictException();
         });
   }
 
@@ -145,12 +156,12 @@ public class UserService {
     Validation.validateNickname(nickname);
     userRepository.findByNickname(nickname)
         .ifPresent((s) -> {
-          throw new IllegalArgumentException();
+          throw new NicknameConflictException();
         });
   }
 
   private void validatePassword(String password, String passwordCheck) {
     Validation.validatePassword(password);
-    if(!password.equals(passwordCheck)) throw new IllegalArgumentException("비밀번호가 서로 다릅니다.");
+    if(!password.equals(passwordCheck)) throw new PwdConflictException();
   }
 }
