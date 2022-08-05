@@ -24,7 +24,8 @@ public class CourseConverter {
         .thumbnail(null).region(course.getRegion()).period(course.getPeriod())
         .themes(List.copyOf(course.getThemes())).spots(List.copyOf(course.getSpots()))
         .places(course.getCoursePlaces()).likes(course.getCourseLikes().size()).isLiked(isLiked)
-        .isBookmarked(isBookmarked).nickname(course.getUser().getNickname())
+        .isBookmarked(isBookmarked).userId(course.getUser().getId())
+        .nickname(course.getUser().getNickname())
         .profileImage(course.getUser().getProfileUrl().orElse(null))
         .createdAt(course.getCreatedAt()).updatedAt(course.getUpdatedAt()).build();
   }

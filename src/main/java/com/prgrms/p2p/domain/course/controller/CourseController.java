@@ -4,14 +4,12 @@ import com.prgrms.p2p.domain.course.dto.CreateCourseRequest;
 import com.prgrms.p2p.domain.course.dto.DetailCourseResponse;
 import com.prgrms.p2p.domain.course.dto.SearchCourseRequest;
 import com.prgrms.p2p.domain.course.dto.SummaryCourseResponse;
-import com.prgrms.p2p.domain.course.entity.CoursePlace;
 import com.prgrms.p2p.domain.course.entity.Period;
 import com.prgrms.p2p.domain.course.entity.Region;
 import com.prgrms.p2p.domain.course.entity.Spot;
 import com.prgrms.p2p.domain.course.entity.Theme;
 import com.prgrms.p2p.domain.course.service.CourseQueryService;
 import com.prgrms.p2p.domain.course.service.CourseService;
-import com.prgrms.p2p.domain.course.util.CourseConverter;
 import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import java.net.URI;
@@ -24,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -53,7 +50,7 @@ public class CourseController {
       @PathVariable("courseId") Long courseId, @CurrentUser CustomUserDetails user) {
     Long userId = Objects.isNull(user) ? null : user.getId();
     DetailCourseResponse response = courseQueryService.findDetail(courseId, userId);
-    return ResponseEntity.ok(null);
+    return ResponseEntity.ok(response);
   }
 
   @GetMapping
