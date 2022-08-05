@@ -23,19 +23,20 @@ public class CourseConverter {
     return DetailCourseResponse.builder().id(course.getId()).title(course.getTitle())
         .thumbnail(course.getCoursePlaces().get(0).getImageUrl()).region(course.getRegion())
         .period(course.getPeriod()).themes(List.copyOf(course.getThemes()))
-        .spots(List.copyOf(course.getSpots())).places(course.getCoursePlaces().stream().map(CoursePlaceConverter::of)
-            .collect(Collectors.toList()))
-        .likes(course.getCourseLikes().size()).isLiked(isLiked).isBookmarked(isBookmarked)
-        .userId(course.getUser().getId()).nickname(course.getUser().getNickname())
+        .spots(List.copyOf(course.getSpots())).places(
+            course.getCoursePlaces().stream().map(CoursePlaceConverter::of)
+                .collect(Collectors.toList())).likes(course.getCourseLikes().size())
+        .isLiked(isLiked).isBookmarked(isBookmarked).userId(course.getUser().getId())
+        .nickname(course.getUser().getNickname())
         .profileImage(course.getUser().getProfileUrl().orElse(null))
         .createdAt(course.getCreatedAt()).updatedAt(course.getUpdatedAt()).build();
   }
 
   public static SummaryCourseResponse ofSummary(Course course, Boolean isBookmarked) {
     return SummaryCourseResponse.builder().id(course.getId()).title(course.getTitle())
-        .thumbnail(course.getCoursePlaces().get(0).getImageUrl()).region(course.getRegion()).period(course.getPeriod())
-        .themes(List.copyOf(course.getThemes())).places(
-            course.getCoursePlaces().stream().map(CoursePlaceConverter::of)
+        .thumbnail(course.getCoursePlaces().get(0).getImageUrl()).region(course.getRegion())
+        .period(course.getPeriod()).themes(List.copyOf(course.getThemes())).places(
+            course.getCoursePlaces().stream().map(coursePlace -> coursePlace.getPlace().getName())
                 .collect(Collectors.toList())).likeCount(course.getCourseLikes().size())
         .isBookmarked(isBookmarked).nickname(course.getUser().getNickname())
         .profileUrl(course.getUser().getProfileUrl().orElse(null)).build();
