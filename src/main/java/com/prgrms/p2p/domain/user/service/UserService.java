@@ -55,11 +55,10 @@ public class UserService {
 
   @Transactional
   public Optional<LoginResponse> login(String email, String password) {
-    //이메일 존재유무 확인
+
     User user = userRepository.findByEmail(email)
         .orElseThrow(UserNotFoundException::new);
 
-    //래디스 체크
     Object expiredAt = redisTemplate.opsForHash().get(email, "expiredAt");
     Long count = redisTemplate.opsForHash().increment(email, "count", 1);
 
@@ -76,15 +75,12 @@ public class UserService {
 
       throw new LoginFailException(5, banExpiredAt);
     }
-    //비밀번호 확인
+
     if(!user.matchPassword(password)) {
       throw new LoginFailException(Math.toIntExact(count), String.valueOf(expiredAt));
     }
-
-    //성공적인 로그인시 생성했던 레디스 삭제
     redisTemplate.delete(email);
 
-    //토큰 생성및 LoginResponse 변환
     return Optional.of(user).map((u) ->
         UserConverter.fromUserAndToken(u, jwtTokenProvider.generateAccessToken(user.getId(), user.getEmail())));
   }
