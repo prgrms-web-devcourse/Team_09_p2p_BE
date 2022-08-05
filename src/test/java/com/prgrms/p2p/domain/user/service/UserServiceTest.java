@@ -13,6 +13,7 @@ import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
 @DisplayName("유저 서비스 테스트")
+@Slf4j
 class UserServiceTest {
 
   @Autowired
@@ -235,7 +237,7 @@ class UserServiceTest {
     void success() {
       String nickname = userService.signUp(signUpRequest);
       User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
-      userService.changePassword(user.getId(),user.getPassword(), "change1234!");
+      userService.changePassword(user.getId(),"test1234!", "change1234!");
 
       assertThat(user.getPassword()).isEqualTo("change1234!");
     }
