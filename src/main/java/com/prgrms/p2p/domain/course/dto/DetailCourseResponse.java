@@ -34,6 +34,7 @@ public class DetailCourseResponse {
   private Integer likes;
   private Boolean isLiked;
   private Boolean isBookmarked;
+  private Long userId;
   private String nickname;
   private String profileImage;
   private LocalDateTime createdAt;
