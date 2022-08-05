@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
 @DisplayName("유저 서비스 테스트")
-@Slf4j
 class UserServiceTest {
 
   @Autowired
