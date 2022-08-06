@@ -36,7 +36,11 @@ public class CourseCommentForQueryDsl {
     this.userProfileImage = userProfileImage;
   }
 
-  public void changeNoneComment() {
+  public void isDeletedComment() {
     this.comment = "삭제된 댓글입니다.";
+    this.userNickName = null;
+    this.userProfileImage = null;
+    this.createdAt = null;
+    this.updatedAt = null;
   }
 }

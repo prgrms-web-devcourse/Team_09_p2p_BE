@@ -44,7 +44,7 @@ public class CommentConverter {
       CourseCommentForQueryDsl courseCommentForQueryDsl) {
 
     if (courseCommentForQueryDsl.getVisibility().equals(Visibility.DELETED_INFORMATION)) {
-      courseCommentForQueryDsl.changeNoneComment();
+      courseCommentForQueryDsl.isDeletedComment();
     }
 
     return CourseCommentDto.builder()

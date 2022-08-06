@@ -169,7 +169,7 @@ public class SearchCourseCommentServiceTest {
 
   @Test
   @DisplayName("대댓글이 없는 댓글을 삭제하면 표기되지 않습니다.")
-  public void deleteParentCommentThatDontHaveSubComment() throws Exception {
+  public void deleteParentCommentThatDontHasSubComment() throws Exception {
 
     // given
     CourseCommentResponse responseBefore
@@ -201,8 +201,8 @@ public class SearchCourseCommentServiceTest {
   }
 
   @Test
-  @DisplayName("대댓글이 있는 댓글을 삭제하면 내용만 표기표기되지 않습니다.")
-  public void deleteParentCommentThatHaveSubComment() throws Exception {
+  @DisplayName("대댓글이 있는 댓글을 삭제하면 내용, 유저 닉네임, 프로필사진, 생성 및 수정일자가 표기되지 않습니다.")
+  public void deleteParentCommentThatHasSubComment() throws Exception {
 
     // given
     CourseCommentResponse responseBefore
@@ -225,6 +225,10 @@ public class SearchCourseCommentServiceTest {
         .collect(Collectors.toList());
     assertThat(afterList.size()).isEqualTo(1);
     assertThat(afterList.get(0).getComment()).isEqualTo("삭제된 댓글입니다.");
+    assertThat(afterList.get(0).getUser().getNickName()).isNull();
+    assertThat(afterList.get(0).getUser().getProfileImage()).isNull();
+    assertThat(afterList.get(0).getCreatedAt()).isNull();
+    assertThat(afterList.get(0).getUpdatedAt()).isNull();
 
     // 결과 확인용
     for (CourseCommentDto courseCommentResponse : responseAfter.getCourseComments()) {

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.prgrms.p2p.domain.comment.dto.CreateCommentRequest;
 import com.prgrms.p2p.domain.comment.dto.UpdateCommentRequest;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
+import com.prgrms.p2p.domain.comment.entity.Visibility;
 import com.prgrms.p2p.domain.comment.repository.CourseCommentRepository;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.Period;
@@ -16,8 +17,10 @@ import com.prgrms.p2p.domain.course.repository.CourseRepository;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -69,10 +72,15 @@ class CourseCommentServiceTest {
 
     rootCommentId2 = courseCommentRepository.save(
         new CourseComment("이것은 댓글2 입니다.", null, userId, course, 0L)).getId();
+
+    lastSubComment = courseCommentRepository.save(
+        new CourseComment("------> 4번의 첫번째 sub 댓글이에요. 작성시간 : " + LocalTime.now(),
+            rootCommentId2, user.getId(), course, 1L));
   }
 
   Long rootCommentId1;
   Long rootCommentId2;
+  CourseComment lastSubComment;
   Course course;
   User user;
 
@@ -293,7 +301,7 @@ class CourseCommentServiceTest {
       //then
       assertThrows(RuntimeException.class,
           () -> courseCommentService.updateCourseComment(
-          updateReq, rootCommentId1, course.getId(), userId));
+              updateReq, rootCommentId1, course.getId(), userId));
     }
 
     @Test
@@ -312,7 +320,7 @@ class CourseCommentServiceTest {
       //then
       assertThrows(RuntimeException.class,
           () -> courseCommentService.updateCourseComment(
-          updateReq, rootCommentId1, courseId, user.getId()));
+              updateReq, rootCommentId1, courseId, user.getId()));
     }
 
     @Test
@@ -330,7 +338,97 @@ class CourseCommentServiceTest {
 
       //then
       assertThrows(RuntimeException.class, () -> courseCommentService.updateCourseComment(
-          updateReq, commentId,  course.getId(), user.getId()));
+          updateReq, commentId, course.getId(), user.getId()));
+    }
+  }
+
+  @Nested
+  @DisplayName("댓글 삭제 테스트")
+  class deleteComment {
+
+    @Test
+    @DisplayName("대댓글이 없는 댓글을 삭제하면 visibility = false 입니다.")
+    public void deleteParentCommentThatDontHasSubComment() throws Exception {
+
+      //when
+      courseCommentService.deleteCourseComment(rootCommentId1, course.getId(), user.getId());
+
+      CourseComment courseComment = courseCommentRepository.findById(rootCommentId1)
+          .orElseThrow(RuntimeException::new);
+
+      //then
+      assertThat(courseComment.getVisibility()).isEqualTo(Visibility.FALSE);
+    }
+
+    @Test
+    @DisplayName("대댓글을 삭제하면 visibility = false 입니다.")
+    public void deleteSubComment() throws Exception {
+
+      //when
+      courseCommentService.deleteCourseComment(lastSubComment.getId(), course.getId(), user.getId());
+
+      CourseComment courseComment = courseCommentRepository.findById(lastSubComment.getId())
+          .orElseThrow(RuntimeException::new);
+
+      //then
+      assertThat(courseComment.getVisibility()).isEqualTo(Visibility.FALSE);
+    }
+
+    @Test
+    @DisplayName("대댓글이 있는 댓글을 삭제하면 visibility = deleted_information 입니다.")
+    public void deleteParentCommentThatHasSubComment() throws Exception {
+
+      //when
+      courseCommentService.deleteCourseComment(rootCommentId2, course.getId(), user.getId());
+
+      CourseComment courseComment = courseCommentRepository.findById(rootCommentId2)
+          .orElseThrow(RuntimeException::new);
+
+      //then
+      assertThat(courseComment.getVisibility()).isEqualTo(Visibility.DELETED_INFORMATION);
+    }
+
+    @Test
+    @DisplayName("삭제된 댓글의 마지막 대댓글을 삭제하면(대댓글이 더이상 존재하지 않는다면), 댓글의 visibility = false 입니다")
+    public void commentVisibilityIsFalseWhenDeleteLastSubComment() throws Exception {
+
+      //when
+      courseCommentService.deleteCourseComment(rootCommentId2, course.getId(), user.getId());
+      courseCommentService.deleteCourseComment(lastSubComment.getId(), course.getId(), user.getId());
+
+
+      CourseComment courseComment = courseCommentRepository.findById(rootCommentId2)
+          .orElseThrow(RuntimeException::new);
+
+      //then
+      assertThat(courseComment.getVisibility()).isEqualTo(Visibility.FALSE);
+    }
+
+    @Test
+    @DisplayName("실패: 댓글 삭제 권한이 없다면(댓글의 userId와 입력 userId가 다르다면) 예외 발생")
+    public void failAsWrongUserId() throws Exception {
+
+      //then
+      assertThrows(RuntimeException.class,
+          () -> courseCommentService.deleteCourseComment(rootCommentId1, course.getId(), -1L));
+    }
+
+    @Test
+    @DisplayName("실패: 입력 courseId를 가진 course 가 존재하지 않는다면 예외 발생")
+    public void failAsWrongCourseId() throws Exception {
+
+      //then
+      assertThrows(RuntimeException.class,
+          () -> courseCommentService.deleteCourseComment(rootCommentId1, -1L, user.getId()));
+    }
+
+    @Test
+    @DisplayName("실패: 입력 commentId를 가진 comment 가 존재하지 않는다면 예외 발생")
+    public void failAsWrongCommentId() throws Exception {
+
+      //then
+      assertThrows(RuntimeException.class,
+          () -> courseCommentService.deleteCourseComment(-1L, course.getId(), user.getId()));
     }
   }
 }
