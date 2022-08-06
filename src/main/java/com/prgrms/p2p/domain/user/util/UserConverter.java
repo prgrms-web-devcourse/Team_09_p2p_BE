@@ -3,7 +3,11 @@ package com.prgrms.p2p.domain.user.util;
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
 import com.prgrms.p2p.domain.user.dto.OtherUserDetailResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
+import com.prgrms.p2p.domain.user.dto.UserBookmarkResponse;
+import com.prgrms.p2p.domain.user.dto.UserCommentResponse;
+import com.prgrms.p2p.domain.user.dto.UserCounts;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
+import com.prgrms.p2p.domain.user.dto.UserLikeResponse;
 import com.prgrms.p2p.domain.user.entity.Authority;
 import com.prgrms.p2p.domain.user.entity.User;
 import java.time.LocalDate;
@@ -35,12 +39,17 @@ public class UserConverter {
     return user;
   }
 
-  public static UserDetailResponse detailFromUser(User user) {
+  public static UserDetailResponse detailFromUser(
+      User user,
+      UserLikeResponse userLikeResponse,
+      UserBookmarkResponse userBookmarkResponse,
+      UserCommentResponse userCommentResponse,
+      Long userCourse) {
 
     String profileUrl = user.getProfileUrl()
         .orElse(null);
 
-    return UserDetailResponse.builder()
+    UserDetailResponse userDetail = UserDetailResponse.builder()
         .id(user.getId())
         .email(user.getEmail())
         .nickname(user.getNickname())
@@ -50,15 +59,31 @@ public class UserConverter {
         .createdAt(fromLocalDateTime(user.getCreatedAt()))
         .updatedAt(fromLocalDateTime(user.getUpdatedAt()))
         .build();
+
+    UserCounts counts = UserCounts.builder()
+        .courses(userCourse)
+        .comments(userCommentResponse)
+        .likes(userLikeResponse)
+        .bookmarks(userBookmarkResponse)
+        .build();
+
+    userDetail.setCounts(counts);
+
+    return userDetail;
   }
 
 
-  public static OtherUserDetailResponse otherDetailFromUser(User user) {
+  public static OtherUserDetailResponse otherDetailFromUser(
+      User user,
+      UserLikeResponse userLikeResponse,
+      UserBookmarkResponse userBookmarkResponse,
+      UserCommentResponse userCommentResponse,
+      Long userCourse) {
 
     String profileUrl = user.getProfileUrl()
         .orElse(null);
 
-    return OtherUserDetailResponse.builder()
+    OtherUserDetailResponse otherUserDetail = OtherUserDetailResponse.builder()
         .id(user.getId())
         .nickname(user.getNickname())
         .profileImage(profileUrl)
@@ -66,14 +91,17 @@ public class UserConverter {
         .sex(user.getSex())
         .createdAt(fromLocalDateTime(user.getCreatedAt()))
         .build();
-  }
 
-  private static String fromLocalDate(LocalDate date) {
-    return String.valueOf(date);
-  }
+    UserCounts counts = UserCounts.builder()
+        .courses(userCourse)
+        .comments(userCommentResponse)
+        .likes(userLikeResponse)
+        .bookmarks(userBookmarkResponse)
+        .build();
 
-  private static String fromLocalDateTime(LocalDateTime date) {
-    return String.valueOf(date);
+    otherUserDetail.setCounts(counts);
+
+    return otherUserDetail;
   }
 
   public static LoginResponse fromUserAndToken(User user, String token) {
@@ -91,5 +119,36 @@ public class UserConverter {
     );
     response.setUser(data);
     return response;
+  }
+
+  public static UserLikeResponse toUserLike(Long placeLike, Long courseLike) {
+    return UserLikeResponse.builder()
+        .total(placeLike + courseLike)
+        .placeLike(placeLike)
+        .courseLike(courseLike).build();
+  }
+
+  public static UserCommentResponse toUserComment(Long placeComment, Long courseComment) {
+    return UserCommentResponse.builder()
+        .total(placeComment + courseComment)
+        .placeComment(placeComment)
+        .courseComment(courseComment)
+        .build();
+  }
+
+  public static UserBookmarkResponse toUserBookmark(Long placeBookmark, Long courseBookmark) {
+    return UserBookmarkResponse.builder()
+        .total(placeBookmark + courseBookmark)
+        .placeBookmark(placeBookmark)
+        .courseBookmark(courseBookmark)
+        .build();
+  }
+
+  private static String fromLocalDate(LocalDate date) {
+    return String.valueOf(date);
+  }
+
+  private static String fromLocalDateTime(LocalDateTime date) {
+    return String.valueOf(date);
   }
 }
