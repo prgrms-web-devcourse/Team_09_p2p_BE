@@ -1,13 +1,13 @@
 package com.prgrms.p2p.domain.comment.entity;
 
 import com.prgrms.p2p.domain.common.BaseEntity;
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 
 @Getter
@@ -39,6 +39,7 @@ public abstract class Comment extends BaseEntity {
   }
 
   private void setComment(String comment) {
+    validateNull(comment, "댓글 내용이 null 일 수 없습니다.");
     this.comment = comment;
   }
 
@@ -47,10 +48,18 @@ public abstract class Comment extends BaseEntity {
   }
 
   private void setUserId(Long userId) {
+    validateNull(userId,"댓글 작성자(userId)는 null 일 수 없습니다.");
     this.userId = userId;
   }
 
   private void setSeq(Long seq) {
+    validateNull(seq, "댓글 순서(sequence)는 null 일 수 없습니다.");
     this.seq = seq;
+  }
+
+  private void validateNull(Object comment, String message) {
+    if (Objects.isNull(comment)) {
+      throw new BadRequestException(message);
+    }
   }
 }
