@@ -101,7 +101,7 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
   }
 
   private BooleanExpression placeIdEq(Long placeId) {
-    return ObjectUtils.isEmpty(placeId) ? null : coursePlace.place.id.eq(placeId);
+    return ObjectUtils.isEmpty(placeId) ? null : course.coursePlaces.any().place.id.eq(placeId);
   }
 
   private OrderSpecifier<?> sortingEq(Sorting sorting) {
