@@ -43,9 +43,9 @@ public class SearchCourseCommentRepositoryImpl implements SearchCourseCommentRep
             )
         )
         .from(courseComment)
-        .leftJoin(courseComment.course, course)
         .leftJoin(user).on(courseComment.userId.eq(user.id))
-        .where(course.id.eq(courseId),
+        .where(
+            courseComment.course.id.eq(courseId),
             courseComment.visibility.eq(Visibility.TRUE)
                 .or(courseComment.visibility.eq(Visibility.DELETED_INFORMATION)))
         .orderBy(otherwise.asc())
