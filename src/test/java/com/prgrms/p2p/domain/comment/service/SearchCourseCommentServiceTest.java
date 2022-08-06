@@ -163,7 +163,8 @@ public class SearchCourseCommentServiceTest {
     // 결과 확인용
     for (CourseCommentDto courseCommentResponse : response.getCourseComments()) {
       System.out.println(
-          "" + courseCommentResponse.getComment());
+          "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
+              .getNickName());
     }
   }
 
@@ -196,7 +197,8 @@ public class SearchCourseCommentServiceTest {
     // 결과 확인용
     for (CourseCommentDto courseCommentResponse : responseAfter.getCourseComments()) {
       System.out.println(
-          "" + courseCommentResponse.getComment());
+          "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
+              .getNickName());
     }
   }
 
@@ -233,7 +235,8 @@ public class SearchCourseCommentServiceTest {
     // 결과 확인용
     for (CourseCommentDto courseCommentResponse : responseAfter.getCourseComments()) {
       System.out.println(
-          "" + courseCommentResponse.getComment());
+          "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
+              .getNickName());
     }
   }
 
@@ -266,7 +269,8 @@ public class SearchCourseCommentServiceTest {
     // 결과 확인용
     for (CourseCommentDto courseCommentResponse : responseAfter.getCourseComments()) {
       System.out.println(
-          "" + courseCommentResponse.getComment());
+          "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
+              .getNickName());
     }
   }
 
@@ -284,7 +288,8 @@ public class SearchCourseCommentServiceTest {
     assertThat(beforeList.size()).isEqualTo(1);
 
     // when
-    courseCommentService.deleteCourseComment(middleSubComment.getId(), course.getId(), user.getId());
+    courseCommentService.deleteCourseComment(middleSubComment.getId(), course.getId(),
+        user.getId());
 
     // then
     CourseCommentResponse responseAfter
@@ -299,7 +304,8 @@ public class SearchCourseCommentServiceTest {
     // 결과 확인용
     for (CourseCommentDto courseCommentResponse : responseAfter.getCourseComments()) {
       System.out.println(
-          "" + courseCommentResponse.getComment());
+          "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
+              .getNickName());
     }
   }
 }
