@@ -11,8 +11,10 @@ import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
+import com.prgrms.p2p.domain.user.exception.InvalidPatternException;
 import com.prgrms.p2p.domain.user.exception.PwdConflictException;
 import com.prgrms.p2p.domain.user.exception.UserNotFoundException;
+import com.prgrms.p2p.domain.user.exception.WrongInfoException;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import com.prgrms.p2p.domain.user.util.PasswordEncrypter;
 import java.util.Optional;
@@ -247,22 +249,22 @@ class UserServiceTest {
     @DisplayName("실패 - 잘못된 비밀번호 입력")
     void failWrongPassword() {
       String nickname = userService.signUp(signUpRequest);
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       assertThatThrownBy(() -> userService.changePassword(user.getId(),"wrong1234", "change1234!"))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(WrongInfoException.class);
     }
 
     @Test
     @DisplayName("실패 - 새로운 비밀번호 형식이 다른 경우")
     void failValidatePassword() {
       String nickname = userService.signUp(signUpRequest);
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       assertThatThrownBy(() -> userService.changePassword(user.getId(),user.getPassword(), "abcd"))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(InvalidPatternException.class);
       assertThatThrownBy(() -> userService.changePassword(user.getId(),user.getPassword(), "   "))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(InvalidPatternException.class);
     }
 
     @Test
