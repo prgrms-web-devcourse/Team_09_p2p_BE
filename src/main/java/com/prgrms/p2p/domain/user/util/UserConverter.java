@@ -41,9 +41,8 @@ public class UserConverter {
 
   public static UserDetailResponse detailFromUser(
       User user,
-      UserLikeResponse userLikeResponse,
       UserBookmarkResponse userBookmarkResponse,
-      UserCommentResponse userCommentResponse,
+      Long userComments,
       Long userCourse) {
 
     String profileUrl = user.getProfileUrl()
@@ -61,9 +60,8 @@ public class UserConverter {
         .build();
 
     UserCounts counts = UserCounts.builder()
-        .courses(userCourse)
-        .comments(userCommentResponse)
-        .likes(userLikeResponse)
+        .course(userCourse)
+        .comments(userComments)
         .bookmarks(userBookmarkResponse)
         .build();
 
@@ -75,9 +73,8 @@ public class UserConverter {
 
   public static OtherUserDetailResponse otherDetailFromUser(
       User user,
-      UserLikeResponse userLikeResponse,
       UserBookmarkResponse userBookmarkResponse,
-      UserCommentResponse userCommentResponse,
+      Long userComments,
       Long userCourse) {
 
     String profileUrl = user.getProfileUrl()
@@ -93,9 +90,8 @@ public class UserConverter {
         .build();
 
     UserCounts counts = UserCounts.builder()
-        .courses(userCourse)
-        .comments(userCommentResponse)
-        .likes(userLikeResponse)
+        .course(userCourse)
+        .comments(userComments)
         .bookmarks(userBookmarkResponse)
         .build();
 

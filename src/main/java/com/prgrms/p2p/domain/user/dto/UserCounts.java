@@ -14,15 +14,12 @@ import lombok.NoArgsConstructor;
 public class UserCounts {
 
   @Schema(description = "유저가 등록한 코스의 개수", example = "1")
-  private Long courses;
+  private Long course;
 
   @Schema(description = "유저가 남긴 댓글 수", example = "1")
-  private UserCommentResponse comments;
+  private Long comments;
 
-  @Schema(description = "유저가 누른 좋아요 수", example = "3")
-  private UserLikeResponse likes;
-
-  @Schema(description = "유저가 즐겨찾기한 수", example = "2")
+  @Schema(description = "유저가 즐겨찾기한 수")
   private UserBookmarkResponse bookmarks;
 
 }

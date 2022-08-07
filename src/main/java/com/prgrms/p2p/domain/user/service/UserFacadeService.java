@@ -8,7 +8,6 @@ import com.prgrms.p2p.domain.like.service.CourseLikeService;
 import com.prgrms.p2p.domain.like.service.PlaceLikeService;
 import com.prgrms.p2p.domain.user.dto.OtherUserDetailResponse;
 import com.prgrms.p2p.domain.user.dto.UserBookmarkResponse;
-import com.prgrms.p2p.domain.user.dto.UserCommentResponse;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
 import com.prgrms.p2p.domain.user.dto.UserLikeResponse;
 import com.prgrms.p2p.domain.user.entity.User;
@@ -42,17 +41,15 @@ public class UserFacadeService {
     Long placeBookmark = placeBookmarkService.countByUserId(userId);
     UserBookmarkResponse userBookmarkResponse = UserConverter.toUserBookmark(placeBookmark, courseBookmark);
 
+    //TODO : 장소 코멘트가 생기면 갯수를 더해 주어야 합니다.
     Long courseComment = courseCommentService.countByUserId(userId);
-    //TODO: 장소 댓글 기능 추가시 수정
-    UserCommentResponse userCommentResponse = UserConverter.toUserComment(0l, courseComment);
 
     Long userCourse = courseService.countByUserId(userId);
 
     return UserConverter.detailFromUser(
         user,
-        userLikeResponse,
         userBookmarkResponse,
-        userCommentResponse,
+        courseComment,
         userCourse);
   }
 
@@ -67,16 +64,15 @@ public class UserFacadeService {
     Long placeBookmark = placeBookmarkService.countByUserId(userId);
     UserBookmarkResponse userBookmarkResponse = UserConverter.toUserBookmark(placeBookmark, courseBookmark);
 
+    //TODO : 장소 코멘트가 생기면 갯수를 더해 주어야 합니다.
     Long courseComment = courseCommentService.countByUserId(userId);
-    UserCommentResponse userCommentResponse = UserConverter.toUserComment(0l, courseComment);
 
     Long userCourse = courseService.countByUserId(userId);
 
     return UserConverter.otherDetailFromUser(
         user,
-        userLikeResponse,
         userBookmarkResponse,
-        userCommentResponse,
+        courseComment,
         userCourse);
   }
 }
