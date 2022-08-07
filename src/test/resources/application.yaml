@@ -28,9 +28,6 @@ spring:
       minimum-idle: 1
       maximum-pool-size: 5
       pool-name: H2_DB
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
   redis:
     host: localhost
     port: 6379
