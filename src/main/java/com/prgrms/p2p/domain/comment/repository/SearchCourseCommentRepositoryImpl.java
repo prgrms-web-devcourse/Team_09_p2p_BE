@@ -33,7 +33,6 @@ public class SearchCourseCommentRepositoryImpl implements SearchCourseCommentRep
                 courseComment.id,
                 courseComment.comment,
                 courseComment.rootCommentId,
-                courseComment.course.id,
                 courseComment.createdAt,
                 courseComment.updatedAt,
                 courseComment.visibility,

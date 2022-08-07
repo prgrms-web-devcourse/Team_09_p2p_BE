@@ -21,13 +21,12 @@ public class CourseCommentForQueryDsl {
   private String userNickName;
   private String userProfileImage;
 
-  public CourseCommentForQueryDsl(Long id, String comment, Long rootCommentId, Long courseId,
-      LocalDateTime createdAt, LocalDateTime updatedAt, Visibility visibility, Long userId,
-      String userNickName, String userProfileImage) {
+  public CourseCommentForQueryDsl(Long id, String comment, Long rootCommentId,
+      LocalDateTime createdAt, LocalDateTime updatedAt, Visibility visibility,
+      Long userId, String userNickName, String userProfileImage) {
     this.id = id;
     this.comment = comment;
     this.rootCommentId = rootCommentId;
-    this.courseId = courseId;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.visibility = visibility;

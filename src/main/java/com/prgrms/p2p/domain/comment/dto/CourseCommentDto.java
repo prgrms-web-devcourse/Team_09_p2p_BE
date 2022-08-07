@@ -15,7 +15,6 @@ public class CourseCommentDto {
   private Long id;
   private String comment;
   private Long rootCommentId;
-  private Long courseId;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private UserDto user;

@@ -51,7 +51,6 @@ public class CommentConverter {
         .id(courseCommentForQueryDsl.getId())
         .comment(courseCommentForQueryDsl.getComment())
         .rootCommentId(courseCommentForQueryDsl.getRootCommentId())
-        .courseId(courseCommentForQueryDsl.getCourseId())
         .createdAt(courseCommentForQueryDsl.getCreatedAt())
         .updatedAt(courseCommentForQueryDsl.getUpdatedAt())
         .user(
