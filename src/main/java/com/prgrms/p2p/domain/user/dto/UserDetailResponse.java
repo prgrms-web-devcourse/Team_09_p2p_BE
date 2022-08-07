@@ -2,12 +2,18 @@ package com.prgrms.p2p.domain.user.dto;
 
 import com.prgrms.p2p.domain.user.entity.Sex;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Schema(description = "내 정보 조회 응답 DTO")
 @Getter
+@Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDetailResponse {
 
   @Schema(description = "유저 아이디", example = "1")
@@ -34,4 +40,5 @@ public class UserDetailResponse {
   @Schema(description = "최신 수정 날짜", example = "2022-08-04T09:51:24")
   private String updatedAt;
 
+  private UserCounts counts;
 }

@@ -46,6 +46,10 @@ public class CourseCommentService {
     return courseCommentRepository.findCourseComment(courseId, pageable);
   }
 
+  public Long countByUserId(Long userId) {
+    return courseCommentRepository.countByUserId(userId);
+  }
+
   private void validateUser(Long userId) {
     if (!userRepository.existsById(userId)) {
       throw new RuntimeException("사용자가 존재하지 않습니다.");

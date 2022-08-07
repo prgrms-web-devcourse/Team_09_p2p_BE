@@ -11,4 +11,5 @@ public interface CourseCommentRepository extends JpaRepository<CourseComment, Lo
   @Query("select count (cc) from CourseComment cc where cc.rootCommentId =:rootCommentId")
   Long findSequence(@Param("rootCommentId") Long rootCommentId);
 
+  Long countByUserId(Long userId);
 }

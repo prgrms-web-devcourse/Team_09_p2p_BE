@@ -27,6 +27,11 @@ public class CourseLikeService implements LikeService {
         .ifPresentOrElse(this::dislike, () -> like(userId, course));
   }
 
+  @Override
+  public Long countByUserId(Long userId) {
+    return courseLikeRepository.countByUserId(userId);
+  }
+
   private void like(Long userId, Course course) {
     CourseLike courseLike = new CourseLike(userId, course);
     courseLikeRepository.save(courseLike);

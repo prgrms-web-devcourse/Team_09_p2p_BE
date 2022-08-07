@@ -2,12 +2,17 @@ package com.prgrms.p2p.domain.user.service;
 
 import static com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum.BAN_EXPIRATION_TIME;
 
+import com.prgrms.p2p.domain.bookmark.service.CourseBookmarkService;
+import com.prgrms.p2p.domain.bookmark.service.PlaceBookmarkService;
+import com.prgrms.p2p.domain.like.service.CourseLikeService;
+import com.prgrms.p2p.domain.like.service.PlaceLikeService;
 import com.prgrms.p2p.domain.user.config.security.JwtTokenProvider;
 import com.prgrms.p2p.domain.user.dto.ChangeProfileResponse;
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
 import com.prgrms.p2p.domain.user.dto.OtherUserDetailResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
+import com.prgrms.p2p.domain.user.dto.UserLikeResponse;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.exception.EmailConflictException;
@@ -20,6 +25,7 @@ import com.prgrms.p2p.domain.user.util.UserConverter;
 import com.prgrms.p2p.domain.user.util.Validation;
 import java.util.Date;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.joda.time.LocalDateTime;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,19 +34,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class UserService {
 
   private final UserRepository userRepository;
   private final JwtTokenProvider jwtTokenProvider;
   private final RedisTemplate redisTemplate;
+  private final UserFacadeService userFacadeService;
 
-  public UserService(UserRepository userRepository,
-      JwtTokenProvider jwtTokenProvider,
-      RedisTemplate redisTemplate) {
-    this.userRepository = userRepository;
-    this.jwtTokenProvider = jwtTokenProvider;
-    this.redisTemplate = redisTemplate;
-  }
 
   @Transactional
   public String signUp(SignUpRequest signUpRequest) {
@@ -134,14 +135,14 @@ public class UserService {
     User user = userRepository.findById(userId)
         .orElseThrow(UserNotFoundException::new);
 
-    return UserConverter.detailFromUser(user);
+    return userFacadeService.getInfo(user);
   }
 
   public OtherUserDetailResponse getOtherInfo(Long userId) {
     User user = userRepository.findById(userId)
         .orElseThrow(UserNotFoundException::new);
 
-    return UserConverter.otherDetailFromUser(user);
+    return userFacadeService.getOtherInfo(user);
   }
 
   public void validateEmail(String email) {

@@ -26,6 +26,11 @@ public class CourseBookmarkService implements BookmarkService {
         .ifPresentOrElse(this::unbookmark, () -> bookmark(userId, course));
   }
 
+  @Override
+  public Long countByUserId(Long userId) {
+    return courseBookmarkRepository.countByUserId(userId);
+  }
+
   private void bookmark(Long userId, Course course) {
     CourseBookmark courseBookmark = new CourseBookmark(userId, course);
     courseBookmarkRepository.save(courseBookmark);

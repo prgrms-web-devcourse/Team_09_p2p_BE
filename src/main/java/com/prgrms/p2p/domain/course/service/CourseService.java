@@ -36,6 +36,10 @@ public class CourseService {
     return course.getId();
   }
 
+  public Long countByUserId(Long userId) {
+    return courseRepository.countByUserId(userId);
+  }
+
   private void saveCoursePlaces(CreateCourseRequest createCourseRequest, List<MultipartFile> images,
       Course course) {
     IntStream.range(0, createCourseRequest.getPlaces().size()).forEach(
