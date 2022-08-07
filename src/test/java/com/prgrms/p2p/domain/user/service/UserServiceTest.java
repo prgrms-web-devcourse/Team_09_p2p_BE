@@ -11,7 +11,10 @@ import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
+import com.prgrms.p2p.domain.user.exception.PwdConflictException;
+import com.prgrms.p2p.domain.user.exception.UserNotFoundException;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
+import com.prgrms.p2p.domain.user.util.PasswordEncrypter;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -27,7 +30,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@Transactional(readOnly = true)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
 @DisplayName("유저 서비스 테스트")
@@ -261,6 +263,25 @@ class UserServiceTest {
           .isInstanceOf(IllegalArgumentException.class);
       assertThatThrownBy(() -> userService.changePassword(user.getId(),user.getPassword(), "   "))
           .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("실패 - 변경하려는 패스워드가 현재 비밀번호와 같은 경우")
+    void failExistPassword() {
+      // Given
+
+      // When
+      String nickname = userService.signUp(signUpRequest);
+      User user = userRepository.findByNickname(nickname)
+          .orElseThrow(UserNotFoundException::new);
+
+      String oldPassword = "test1234!";
+      String newPassword = "test1234!";
+
+      // Then
+      System.out.println(user.getPassword());
+      assertThatThrownBy(() -> userService.changePassword(user.getId(), oldPassword, newPassword))
+          .isInstanceOf(PwdConflictException.class);
     }
   }
 
