@@ -16,9 +16,7 @@ import com.prgrms.p2p.domain.user.exception.PwdConflictException;
 import com.prgrms.p2p.domain.user.exception.UserNotFoundException;
 import com.prgrms.p2p.domain.user.exception.WrongInfoException;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
-import com.prgrms.p2p.domain.user.util.PasswordEncrypter;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +27,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
