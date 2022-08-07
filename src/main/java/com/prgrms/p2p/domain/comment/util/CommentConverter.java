@@ -14,14 +14,13 @@ import java.util.stream.Collectors;
 public class CommentConverter {
 
   public static CourseComment toCourseComment(
-      CreateCommentRequest createCourseCommentReq, Course course, Long seq, Long userId) {
+      CreateCommentRequest createCourseCommentReq, Course course, Long userId) {
 
     return new CourseComment(
         createCourseCommentReq.getComment(),
         createCourseCommentReq.getRootCommentId(),
         userId,
-        course,
-        seq
+        course
     );
   }
 

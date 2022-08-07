@@ -63,45 +63,45 @@ class SearchCourseCommentRepositoryImplTest {
 
     //comment
     Long commentId = courseCommentRepository.save(
-        new CourseComment("comment1", null, userId, course, 0L)).getId();
+        new CourseComment("comment1", null, userId, course)).getId();
 
     // 1번에 다는 대댓글
     courseCommentRepository.save(
-        new CourseComment("    comment2", commentId, userId, course, 1L));
+        new CourseComment("    comment2", commentId, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment3", commentId, userId, course, 2L));
+        new CourseComment("    comment3", commentId, userId, course));
 
     Long commentId2 = courseCommentRepository.save(
-        new CourseComment("comment8", null, userId, course, 0L)).getId();
+        new CourseComment("comment8", null, userId, course)).getId();
 
     // 2번에 다는 대댓글
     courseCommentRepository.save(
-        new CourseComment("    comment9", commentId2, userId, course, 1L));
+        new CourseComment("    comment9", commentId2, userId, course));
 
     courseCommentRepository.save(
-        new CourseComment("    comment10", commentId2, userId, course, 2L));
+        new CourseComment("    comment10", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment11", commentId2, userId, course, 3L));
+        new CourseComment("    comment11", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment12", commentId2, userId, course, 4L));
+        new CourseComment("    comment12", commentId2, userId, course));
 
     // 1번에 다는 대댓글
     courseCommentRepository.save(
-        new CourseComment("    comment4", commentId, userId, course, 3L));
+        new CourseComment("    comment4", commentId, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment5", commentId, userId, course, 4L));
+        new CourseComment("    comment5", commentId, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment6", commentId, userId, course, 5L));
+        new CourseComment("    comment6", commentId, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment7", commentId, userId, course, 6L));
+        new CourseComment("    comment7", commentId, userId, course));
 
     // 2번에 다는 대댓글
     courseCommentRepository.save(
-        new CourseComment("    comment13", commentId2, userId, course, 5L));
+        new CourseComment("    comment13", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment14", commentId2, userId, course, 6L));
+        new CourseComment("    comment14", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment15", commentId2, userId, course, 7L));
+        new CourseComment("    comment15", commentId2, userId, course));
 
     // then
     List<CourseCommentForQueryDsl> courseComments = courseCommentRepository.findCourseComment(course.getId());
@@ -139,44 +139,44 @@ class SearchCourseCommentRepositoryImplTest {
 
     //comment
     Long commentId = courseCommentRepository.save(
-        new CourseComment("comment1", null, userId, course, 0L)).getId();
+        new CourseComment("comment1", null, userId, course)).getId();
 
     // 1번에 다는 대댓글
     courseCommentRepository.save(
-        new CourseComment("    comment2", commentId, userId, course, 1L));
+        new CourseComment("    comment2", commentId, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment3", commentId, userId, course, 2L));
+        new CourseComment("    comment3", commentId, userId, course));
 
     Long commentId2 = courseCommentRepository.save(
-        new CourseComment("comment8", null, userId, course, 0L)).getId();
+        new CourseComment("comment8", null, userId, course)).getId();
 
     // 2번에 다는 대댓글
     courseCommentRepository.save(
-        new CourseComment("    comment9", commentId2, userId, course, 1L));
+        new CourseComment("    comment9", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment10", commentId2, userId, course, 2L));
+        new CourseComment("    comment10", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment11", commentId2, userId, course, 3L));
+        new CourseComment("    comment11", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment12", commentId2, userId, course, 4L));
+        new CourseComment("    comment12", commentId2, userId, course));
 
     // 1번에 다는 대댓글
     courseCommentRepository.save(
-        new CourseComment("    comment4", commentId, userId, course, 3L));
+        new CourseComment("    comment4", commentId, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment5", commentId, userId, course, 4L));
+        new CourseComment("    comment5", commentId, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment6", commentId, userId, course, 5L));
+        new CourseComment("    comment6", commentId, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment7", commentId, userId, course, 6L));
+        new CourseComment("    comment7", commentId, userId, course));
 
     // 2번에 다는 대댓글
     courseCommentRepository.save(
-        new CourseComment("    comment13", commentId2, userId, course, 5L));
+        new CourseComment("    comment13", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment14", commentId2, userId, course, 6L));
+        new CourseComment("    comment14", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment15", commentId2, userId, course, 7L));
+        new CourseComment("    comment15", commentId2, userId, course));
 
     // then
     List<CourseCommentForQueryDsl> courseComments

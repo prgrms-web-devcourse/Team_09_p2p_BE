@@ -68,14 +68,14 @@ class CourseCommentServiceTest {
 
     //comment
     rootCommentId1 = courseCommentRepository.save(
-        new CourseComment("이것은 댓글1 입니다.", null, userId, course, 0L)).getId();
+        new CourseComment("이것은 댓글1 입니다.", null, userId, course)).getId();
 
     rootCommentId2 = courseCommentRepository.save(
-        new CourseComment("이것은 댓글2 입니다.", null, userId, course, 0L)).getId();
+        new CourseComment("이것은 댓글2 입니다.", null, userId, course)).getId();
 
     lastSubComment = courseCommentRepository.save(
         new CourseComment("------> 4번의 첫번째 sub 댓글이에요. 작성시간 : " + LocalTime.now(),
-            rootCommentId2, user.getId(), course, 1L));
+            rootCommentId2, user.getId(), course));
   }
 
   Long rootCommentId1;
@@ -90,7 +90,7 @@ class CourseCommentServiceTest {
   class createCourseComment {
 
     @Test
-    @DisplayName("성공: 코스에 댓글을 작성합니다. -> rootCommentId = null, seq = 0L")
+    @DisplayName("성공: 코스에 댓글을 작성합니다. -> rootCommentId = null")
     public void createCourseRootComment() throws Exception {
 
       //given
@@ -114,7 +114,6 @@ class CourseCommentServiceTest {
       assertThat(courseComment.getCourse()).isEqualTo(course);
       assertThat(courseComment.getRootCommentId()).isNull();
       assertThat(courseComment.getUserId()).isEqualTo(userId);
-      assertThat(courseComment.getSeq()).isEqualTo(0L);
     }
 
     @Test
@@ -158,7 +157,7 @@ class CourseCommentServiceTest {
     }
 
     @Test
-    @DisplayName("성공: 코스에 대댓글을 작성합니다. -> rootCommentId = notNull, seq != 0L")
+    @DisplayName("성공: 코스에 대댓글을 작성합니다. -> rootCommentId = notNull")
     public void createCourseSubComment() throws Exception {
 
       //given
@@ -181,7 +180,6 @@ class CourseCommentServiceTest {
       assertThat(courseComment.getCourse()).isEqualTo(course);
       assertThat(courseComment.getRootCommentId()).isEqualTo(rootCommentId1);
       assertThat(courseComment.getUserId()).isEqualTo(userId);
-      assertThat(courseComment.getSeq()).isEqualTo(1L);
     }
 
     @Test
@@ -202,60 +200,6 @@ class CourseCommentServiceTest {
       //then
       assertThrows(RuntimeException.class,
           () -> courseCommentService.save(createCommentReq, courseId, userId));
-    }
-
-    @Test
-    @DisplayName("성공: 코스에 대댓글을 여러개 작성해도 seq가 정확합니다.")
-    public void createCourseSubComments() throws Exception {
-
-      for (long i = 1; i < 10; i++) {
-        //given
-        String comment = "이것은 대댓글" + i + " 입니다.";
-        Long rootCommentId = rootCommentId1;
-        Long userId = user.getId();
-        Long courseId = course.getId();
-
-        CreateCommentRequest createCommentReq = CreateCommentRequest.builder()
-            .comment(comment)
-            .rootCommentId(rootCommentId)
-            .build();
-
-        //when
-        Long courseCommentId = courseCommentService.save(createCommentReq, courseId, userId);
-        CourseComment courseComment = courseCommentRepository.findById(courseCommentId)
-            .orElseThrow(RuntimeException::new);
-
-        //then
-        assertThat(courseComment.getSeq()).isEqualTo(i);
-      }
-    }
-
-    @Test
-    @DisplayName("성공: 코스에 대댓글을 여러개 작성해도 seq가 정확합니다.")
-    public void fixSeqWhenCreateCourseSubCommentsAndDelete() throws Exception {
-
-      for (long i = 1; i < 10; i++) {
-        //given
-        String comment = "이것은 대댓글" + i + " 입니다.";
-        Long rootCommentId = rootCommentId1;
-        Long userId = user.getId();
-        Long courseId = course.getId();
-
-        CreateCommentRequest createCommentReq = CreateCommentRequest.builder()
-            .comment(comment)
-            .rootCommentId(rootCommentId)
-            .build();
-
-        //when
-        Long courseCommentId = courseCommentService.save(createCommentReq, courseId, userId);
-        courseCommentService.deleteCourseComment(courseCommentId, courseId, userId);
-
-        CourseComment courseComment = courseCommentRepository.findById(courseCommentId)
-            .orElseThrow(RuntimeException::new);
-
-        //then
-        assertThat(courseComment.getSeq()).isEqualTo(i);
-      }
     }
   }
 

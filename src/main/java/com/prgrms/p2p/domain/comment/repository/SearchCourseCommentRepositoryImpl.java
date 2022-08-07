@@ -48,7 +48,7 @@ public class SearchCourseCommentRepositoryImpl implements SearchCourseCommentRep
             courseComment.visibility.eq(Visibility.TRUE)
                 .or(courseComment.visibility.eq(Visibility.DELETED_INFORMATION)))
         .orderBy(otherwise.asc())
-        .orderBy(courseComment.seq.asc())
+        .orderBy(courseComment.createdAt.asc())
         .fetch();
   }
 

@@ -34,8 +34,8 @@ public class CourseComment extends Comment {
   private Visibility visibility = Visibility.TRUE;
 
   public CourseComment(String comment, Long rootCommentId, Long userId,
-      Course course, Long seq) {
-    super(comment, rootCommentId, userId, seq);
+      Course course) {
+    super(comment, rootCommentId, userId);
     this.addCourse(course);
   }
 

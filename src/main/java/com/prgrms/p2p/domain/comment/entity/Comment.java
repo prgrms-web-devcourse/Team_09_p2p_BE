@@ -24,14 +24,10 @@ public abstract class Comment extends BaseEntity {
   @Column(name = "user_id")
   private Long userId;
 
-  @Column(name = "seq")
-  private Long seq;
-
-  public Comment(String comment, Long rootCommentId, Long userId, Long seq) {
+  public Comment(String comment, Long rootCommentId, Long userId) {
     setComment(comment);
     setRootCommentId(rootCommentId);
     setUserId(userId);
-    setSeq(seq);
   }
 
   public void changeComment(String newComment) {
@@ -50,11 +46,6 @@ public abstract class Comment extends BaseEntity {
   private void setUserId(Long userId) {
     validateNull(userId,"댓글 작성자(userId)는 null 일 수 없습니다.");
     this.userId = userId;
-  }
-
-  private void setSeq(Long seq) {
-    validateNull(seq, "댓글 순서(sequence)는 null 일 수 없습니다.");
-    this.seq = seq;
   }
 
   private void validateNull(Object comment, String message) {

@@ -26,7 +26,6 @@ public class CoursePlaceConverter {
   public static CoursePlaceResponse of(CoursePlace coursePlace) {
     return CoursePlaceResponse.builder()
         .id(coursePlace.getId())
-        .seq(coursePlace.getSeq())
         .description(coursePlace.getDescription())
         .recommended(coursePlace.getRecommended())
         .imageUrl(coursePlace.getImageUrl())

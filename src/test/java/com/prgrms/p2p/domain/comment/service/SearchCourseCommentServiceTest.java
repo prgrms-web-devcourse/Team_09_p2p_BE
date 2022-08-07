@@ -69,47 +69,47 @@ public class SearchCourseCommentServiceTest {
     // parent comment 1
     parentComment1 = courseCommentRepository.save(
         new CourseComment("parentComment1.                 작성시간 : " + LocalTime.now()
-            , null, user.getId(), course, 0L));
+            , null, user.getId(), course));
 
     courseCommentRepository.save(
         new CourseComment("------> 1번의 첫번째 sub 댓글이에요. 작성시간 : " + LocalTime.now(),
-            parentComment1.getId(), user.getId(), course, 1L));
+            parentComment1.getId(), user.getId(), course));
 
     // parent comment 2
     parentComment2 = courseCommentRepository.save(
         new CourseComment("parentComment2.                 작성시간 : " + LocalTime.now(), null,
-            user.getId(), course, 0L));
+            user.getId(), course));
 
     middleSubComment = courseCommentRepository.save(
         new CourseComment("------> 1번의 두번째 sub 댓글이에요. 작성시간 : " + LocalTime.now(),
-            parentComment1.getId(), user.getId(), course, 2L));
+            parentComment1.getId(), user.getId(), course));
     courseCommentRepository.save(
         new CourseComment("------> 2번의 첫번째 sub 댓글이에요. 작성시간 : " + LocalTime.now(),
-            parentComment2.getId(), user.getId(), course, 1L));
+            parentComment2.getId(), user.getId(), course));
 
     courseCommentRepository.save(
         new CourseComment("------> 2번의 두번째 sub 댓글이에요. 작성시간 : " + LocalTime.now(),
-            parentComment2.getId(), user.getId(), course, 2L));
+            parentComment2.getId(), user.getId(), course));
     courseCommentRepository.save(
         new CourseComment("------> 2번의 세번째 sub 댓글이에요. 작성시간 : " + LocalTime.now(),
-            parentComment2.getId(), user.getId(), course, 3L));
+            parentComment2.getId(), user.getId(), course));
     courseCommentRepository.save(
         new CourseComment("------> 1번의 세번째 sub 댓글이에요. 작성시간 : " + LocalTime.now(),
-            parentComment1.getId(), user.getId(), course, 3L));
+            parentComment1.getId(), user.getId(), course));
 
     // parent comment 3
     parentComment3 = courseCommentRepository.save(
         new CourseComment("parentComment3.                 작성시간 : " + LocalTime.now(),
-            null, user.getId(), course, 0L));
+            null, user.getId(), course));
 
     // parent comment 4
     parentComment4 = courseCommentRepository.save(
         new CourseComment("parentComment4.                 작성시간 : " + LocalTime.now(),
-            null, user.getId(), course, 0L));
+            null, user.getId(), course));
 
     lastSubComment = courseCommentRepository.save(
         new CourseComment("------> 4번의 첫번째 sub 댓글이에요. 작성시간 : " + LocalTime.now(),
-            parentComment4.getId(), user.getId(), course, 1L));
+            parentComment4.getId(), user.getId(), course));
   }
 
   CourseComment parentComment1;

@@ -37,9 +37,7 @@ public class CourseCommentService {
             !courseCommentRepository.existsById(rootCommentId),
         "존재하지 않는 댓글에 하위 댓글을 작성할 수 없습니다.");
 
-    Long seq = getSeq(createCommentReq);
-
-    CourseComment courseComment = toCourseComment(createCommentReq, course, seq, userId);
+    CourseComment courseComment = toCourseComment(createCommentReq, course, userId);
 
     return courseCommentRepository.save(courseComment).getId();
   }
@@ -90,13 +88,6 @@ public class CourseCommentService {
     if (courseComment) {
       throw new UnAuthorizedException(message);
     }
-  }
-
-  private Long getSeq(CreateCommentRequest createCommentReq) {
-    Long seq = Objects.isNull(createCommentReq.getRootCommentId()) ?
-        0L : courseCommentRepository.findSequence(
-        createCommentReq.getRootCommentId()) + 1;
-    return seq;
   }
 
   private void deleteParentComment(CourseComment courseComment) {
