@@ -22,6 +22,6 @@ public class CreateCoursePlaceRequest {
   private String longitude;
   private Category category;
   private PhoneNumber phoneNumber;
-  private Boolean isRecommended;
-  private Boolean isThumbnail;
+  private Boolean isRecommended = false;
+  private Boolean isThumbnail = false;
 }
