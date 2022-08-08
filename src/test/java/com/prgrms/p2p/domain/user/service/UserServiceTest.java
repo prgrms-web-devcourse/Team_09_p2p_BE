@@ -13,6 +13,7 @@ import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -105,7 +106,7 @@ class UserServiceTest {
     void failValidateNickname() {
       // Given
       // When
-      signUpRequest.setNickname("beomsic");
+      signUpRequest.setNickname("beomsicgoodis");
       // Then
       assertThrows(IllegalArgumentException.class, () -> userService.signUp(signUpRequest));
     }
@@ -235,7 +236,7 @@ class UserServiceTest {
     void success() {
       String nickname = userService.signUp(signUpRequest);
       User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
-      userService.changePassword(user.getId(),user.getPassword(), "change1234!");
+      userService.changePassword(user.getId(),"test1234!", "change1234!");
 
       assertThat(user.getPassword()).isEqualTo("change1234!");
     }
@@ -315,6 +316,42 @@ class UserServiceTest {
 
       assertThatThrownBy(() -> userService.modify(user.getId(), "KATE","1999-11-29",null))
           .isInstanceOf(RuntimeException.class);
+    }
+  }
+
+  @Nested
+  @DisplayName("유저 프로필 변경 테스트")
+  class changeProfileUrlTest {
+
+    @Test
+    @DisplayName("성공 테스트")
+    void success() {
+      String nickname = userService.signUp(signUpRequest);
+      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      userService.changeProfileUrl(user.getId(), "changeurl");
+
+      assertThat(user.getProfileUrl().get()).isEqualTo("changeurl");
+    }
+
+    @Test
+    @DisplayName("실패 - 존재하지 않는 Id 입력")
+    void failNotExistId() {
+      String nickname = userService.signUp(signUpRequest);
+      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+
+      assertThatThrownBy(() -> userService.changeProfileUrl(100L, "changeurl"))
+          .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("실패 - profileurl 이 비어있는 경우")
+    void failWrongProfileUrl() {
+      String nickname = userService.signUp(signUpRequest);
+      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+
+      assertThatThrownBy(() -> userService.changeProfileUrl(user.getId(), "  "))
+          .isInstanceOf(RuntimeException.class);
+
     }
   }
 }

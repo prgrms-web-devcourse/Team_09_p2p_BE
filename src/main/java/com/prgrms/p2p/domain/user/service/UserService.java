@@ -11,6 +11,7 @@ import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
+import com.prgrms.p2p.domain.user.util.PasswordEncrypter;
 import com.prgrms.p2p.domain.user.util.UserConverter;
 import com.prgrms.p2p.domain.user.util.Validation;
 import java.util.Optional;
@@ -49,18 +50,17 @@ public class UserService {
   @Transactional
   public Optional<LoginResponse> login(String email, String password) {
 
+    //TODO : 알맞는 예외 설정해주기 - NotFoundException
+    //이메일 존재유무 확인
+    User user = userRepository.findByEmail(email)
+        .orElseThrow(RuntimeException::new);
+
     //래디스 체크
     redisTemplate.opsForValue().increment(email);
 
     if(Integer.parseInt(String.valueOf(redisTemplate.opsForValue().get(email))) >= 5){
       redisTemplate.opsForValue().set(email, 5, BAN_EXPIRATION_TIME.getValue(), TimeUnit.MILLISECONDS);
     }
-
-
-    //TODO : 알맞는 예외 설정해주기 - NotFoundException
-    //이메일 존재유무 확인
-    User user = userRepository.findByEmail(email)
-        .orElseThrow(RuntimeException::new);
 
     //비밀번호 확인
     user.matchPassword(password);
@@ -92,7 +92,7 @@ public class UserService {
     Validation.validatePassword(newPassword);
 
     user.matchPassword(oldPassword);
-    user.changePassword(newPassword);
+    user.changePassword(PasswordEncrypter.encrypt(newPassword));
 
     userRepository.save(user);
   }

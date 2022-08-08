@@ -23,4 +23,5 @@ public class CreateCoursePlaceRequest {
   private Category category;
   private PhoneNumber phoneNumber;
   private Boolean isRecommended;
+  private Boolean isThumbnail;
 }

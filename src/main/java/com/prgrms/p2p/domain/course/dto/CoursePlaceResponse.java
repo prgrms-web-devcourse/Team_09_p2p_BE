@@ -10,9 +10,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CoursePlaceResponse {
+
   private Long id;
-  private Integer seq;
+  private String name;
   private String description;
+  private String address;
+  private String latitude;
+  private String longitude;
+  private String phoneNumber;
   private String imageUrl;
-  private Boolean recommended;
+  private Boolean isRecommended;
+  private Boolean isThumbnail;
 }
