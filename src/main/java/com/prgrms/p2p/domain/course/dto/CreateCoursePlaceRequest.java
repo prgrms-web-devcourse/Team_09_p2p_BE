@@ -20,8 +20,11 @@ public class CreateCoursePlaceRequest {
   private String roadAddressName;
   private String latitude;
   private String longitude;
+  @Builder.Default
   private Category category = Category.DE9;
   private PhoneNumber phoneNumber;
+  @Builder.Default
   private Boolean isRecommended = false;
+  @Builder.Default
   private Boolean isThumbnail = false;
 }
