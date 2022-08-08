@@ -24,4 +24,8 @@ public class SearchCourseCommentService {
 
     return toCourseCommentResponse(commentForQueryDsl, courseId);
   }
+
+  public Long countByUserId(Long userId) {
+    return courseCommentRepository.countByUserId(userId);
+  }
 }
