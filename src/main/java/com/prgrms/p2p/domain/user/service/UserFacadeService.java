@@ -2,7 +2,7 @@ package com.prgrms.p2p.domain.user.service;
 
 import com.prgrms.p2p.domain.bookmark.service.CourseBookmarkService;
 import com.prgrms.p2p.domain.bookmark.service.PlaceBookmarkService;
-import com.prgrms.p2p.domain.comment.service.CourseCommentService;
+import com.prgrms.p2p.domain.comment.service.SearchCourseCommentService;
 import com.prgrms.p2p.domain.course.service.CourseService;
 import com.prgrms.p2p.domain.user.dto.OtherUserDetailResponse;
 import com.prgrms.p2p.domain.user.dto.UserBookmarkResponse;
@@ -20,7 +20,7 @@ public class UserFacadeService {
 
   private final PlaceBookmarkService placeBookmarkService;
   private final CourseBookmarkService courseBookmarkService;
-  private final CourseCommentService courseCommentService;
+  private final SearchCourseCommentService courseCommentService;
   private final CourseService courseService;
 
 
