@@ -35,7 +35,7 @@ public class PlaceController {
     return ResponseEntity.ok(response);
   }
 
-  @GetMapping("/")
+  @GetMapping
   public ResponseEntity<Slice<SummaryPlaceResponse>> getSummaryPlaceList(
       @RequestBody SearchPlaceRequest searchPlaceRequest,
       Pageable pageable,
