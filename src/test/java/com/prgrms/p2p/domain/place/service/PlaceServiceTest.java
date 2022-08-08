@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.prgrms.p2p.domain.bookmark.entity.PlaceBookmark;
 import com.prgrms.p2p.domain.bookmark.repository.PlaceBookmarkRepository;
-import com.prgrms.p2p.domain.course.dto.CreateCoursePlaceRequest;
+import com.prgrms.p2p.domain.course.dto.CoursePlaceRequest;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.CoursePlace;
 import com.prgrms.p2p.domain.course.entity.Period;
@@ -155,7 +155,7 @@ class PlaceServiceTest {
       String number = "010-1234-1234";
       PhoneNumber phoneNumber = new PhoneNumber(number);
 
-      CreateCoursePlaceRequest createPlaceReq = CreateCoursePlaceRequest.builder()
+      CoursePlaceRequest createPlaceReq = CoursePlaceRequest.builder()
           .kakaoMapId(kakaoMapId)
           .name(name)
           .addressName(addressName)

@@ -2,7 +2,6 @@ package com.prgrms.p2p.domain.place.controller;
 
 import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
 import com.prgrms.p2p.domain.course.dto.CreateCoursePlaceRequest;
-import com.prgrms.p2p.domain.course.entity.Sorting;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.service.PlaceService;
@@ -31,18 +30,15 @@ public class PlaceController {
   private final PlaceService placeService;
 
   @PostMapping
-  public ResponseEntity<Long> savePlace(
-      @RequestBody CreateCoursePlaceRequest createCoursePlaceRequest,
-      @CurrentUser CustomUserDetails user
-  ) {
+  public ResponseEntity<Long> savePlace(@RequestBody CoursePlaceRequest createCoursePlaceRequest,
+      @CurrentUser CustomUserDetails user) {
     validateLoginUser(user);
     Long placeId = placeService.save(createCoursePlaceRequest).getId();
     return ResponseEntity.ok(placeId);
   }
 
   @GetMapping("/{placeId}")
-  public ResponseEntity<DetailPlaceResponse> getDetailPlace(
-      @PathVariable("placeId") Long placeId,
+  public ResponseEntity<DetailPlaceResponse> getDetailPlace(@PathVariable("placeId") Long placeId,
       @CurrentUser CustomUserDetails user) {
     Long userId = Objects.isNull(user) ? null : user.getId();
     DetailPlaceResponse response = placeService.findDetail(placeId, Optional.ofNullable(userId));
@@ -67,8 +63,8 @@ public class PlaceController {
       @RequestParam("userId") Long targetUserId, Pageable pageable,
       @CurrentUser CustomUserDetails user) {
     Long userId = Objects.isNull(user) ? null : user.getId();
-    Slice<SummaryPlaceResponse> bookmarkedPlaceList
-        = placeService.findBookmarkedPlaceList(userId, targetUserId, pageable);
+    Slice<SummaryPlaceResponse> bookmarkedPlaceList = placeService.findBookmarkedPlaceList(userId,
+        targetUserId, pageable);
     return ResponseEntity.ok(bookmarkedPlaceList);
   }
 

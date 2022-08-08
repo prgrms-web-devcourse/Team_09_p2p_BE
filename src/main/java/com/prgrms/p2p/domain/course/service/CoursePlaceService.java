@@ -23,11 +23,10 @@ public class CoursePlaceService {
   public void save(CreateCoursePlaceRequest createCoursePlaceRequest, Integer index,
       String imageUrl, Course course) {
 
-    Place place = placeService.findAndUpdateExistPlace(
-        createCoursePlaceRequest)
-        .orElseGet(() -> placeService.save(createCoursePlaceRequest));
+    Place place = placeService.findAndUpdateExistPlace(coursePlaceRequest)
+        .orElseGet(() -> placeService.save(coursePlaceRequest));
 
-    CoursePlace coursePlace = CoursePlaceConverter.toCoursePlace(createCoursePlaceRequest, index,
+    CoursePlace coursePlace = CoursePlaceConverter.toCoursePlace(coursePlaceRequest, index,
         imageUrl, course, place);
 
     coursePlaceRepository.save(coursePlace);
@@ -37,10 +36,14 @@ public class CoursePlaceService {
       String imageUrl, Course course) {
     Place place = placeService.findAndUpdateExistPlace(updateCoursePlaceRequest)
         .orElseGet(() -> placeService.save(updateCoursePlaceRequest));
-
-    CoursePlace coursePlace = CoursePlaceConverter.toCoursePlace(updateCoursePlaceRequest, index,
-        updateCoursePlaceRequest.getImageUrl(), course, place);
-
-    coursePlaceRepository.save(coursePlace);
+    CoursePlace coursePlace = coursePlaceRepository.findById(
+        updateCoursePlaceRequest.getCoursePlaceId()).orElseGet(() -> coursePlaceRepository.save(
+        CoursePlaceConverter.toCoursePlace(updateCoursePlaceRequest, index, imageUrl, course,
+            place)));
+    coursePlace.changeSeq(index);
+    coursePlace.changeDescription(updateCoursePlaceRequest.getDescription());
+    coursePlace.changeImageUrl(imageUrl);
+    coursePlace.changeRecommended(updateCoursePlaceRequest.getIsRecommended());
+    coursePlace.changeThumbnailed(updateCoursePlaceRequest.getIsThumbnail());
   }
 }
