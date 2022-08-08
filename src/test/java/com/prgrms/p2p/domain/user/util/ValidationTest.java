@@ -5,6 +5,8 @@ import static org.hamcrest.Matchers.is;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
@@ -101,17 +103,20 @@ class ValidationTest {
     void successNickname() {
 
       // Given
-      String nickname1 = "test";
-      String nickname2 = "Test12";
-      String nickname3 = "12345";
-      String nickname4 = "!!!@@#";
+      List<String> nicknames = new ArrayList<>();
+      nicknames.add("test");
+      nicknames.add("Test12");
+      nicknames.add("12345");
+      nicknames.add("!!!@@#");
+      nicknames.add("범석범석");
+      nicknames.add("범석범석12");
+      nicknames.add("범석12!");
       // When
 
       // Then
-      assertThat(Validation.validateNickname(nickname1), is(true));
-      assertThat(Validation.validateNickname(nickname2), is(true));
-      assertThat(Validation.validateNickname(nickname3), is(true));
-      assertThat(Validation.validateNickname(nickname4), is(true));
+      for (String nickname : nicknames) {
+        assertThat(Validation.validateNickname(nickname), is(true));
+      }
     }
 
     @Test

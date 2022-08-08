@@ -26,6 +26,11 @@ public class PlaceBookmarkService implements BookmarkService {
         .ifPresentOrElse(this::unbookmark, () -> bookmark(userId, place));
   }
 
+  @Override
+  public Long countByUserId(Long userId) {
+    return placeBookmarkRepository.countByUserId(userId);
+  }
+
   private void bookmark(Long userId, Place place) {
     PlaceBookmark placeBookmark = new PlaceBookmark(userId, place);
     placeBookmarkRepository.save(placeBookmark);

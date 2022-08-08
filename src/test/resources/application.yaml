@@ -31,7 +31,9 @@ spring:
       minimum-idle: 1
       maximum-pool-size: 5
       pool-name: H2_DB
-
+  redis:
+    host: localhost
+    port: 6379
 cloud:
   aws:
     s3:

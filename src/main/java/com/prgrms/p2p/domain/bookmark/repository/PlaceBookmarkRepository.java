@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PlaceBookmarkRepository extends JpaRepository<PlaceBookmark, Long> {
 
   Optional<PlaceBookmark> findByUserIdAndPlace(Long userId, Place place);
+
+  Long countByUserId(Long userId);
 }

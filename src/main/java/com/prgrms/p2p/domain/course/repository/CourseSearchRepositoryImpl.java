@@ -33,7 +33,6 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
   @Override
   public Slice<Course> searchCourse(SearchCourseRequest request, Pageable pageable) {
     JPAQuery<Course> courseJPAQuery = jpaQueryFactory.select(course).from(course)
-        .leftJoin(course.coursePlaces, coursePlace).fetchJoin()
         .where(keywordListContains(request.getKeyword()), regionEq(request.getRegion()),
             themeEq(request.getThemes()), spotEq(request.getSpots()), periodEq(request.getPeriod()),
             placeIdEq(request.getPlaceId())).orderBy(sortingEq(request.getSorting()))
@@ -101,7 +100,7 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
   }
 
   private BooleanExpression placeIdEq(Long placeId) {
-    return ObjectUtils.isEmpty(placeId) ? null : coursePlace.place.id.eq(placeId);
+    return ObjectUtils.isEmpty(placeId) ? null : course.coursePlaces.any().place.id.eq(placeId);
   }
 
   private OrderSpecifier<?> sortingEq(Sorting sorting) {

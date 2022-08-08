@@ -50,8 +50,9 @@ public class PlaceService {
   }
 
   public Slice<SummaryPlaceResponse> findSummaryList(
-      SearchPlaceRequest searchPlaceReq, Pageable pageable, Long userId) {
-    Slice<Place> placeList = placeRepository.searchPlace(searchPlaceReq, pageable);
+      Optional<String> keyword, Pageable pageable, Long userId) {
+    String keywords = keyword.isEmpty() ? "" : keyword.get();
+    Slice<Place> placeList = placeRepository.searchPlace(keywords, pageable);
     return placeList.map(p -> toSummaryPlaceResponse(p, Optional.ofNullable(userId)));
   }
 

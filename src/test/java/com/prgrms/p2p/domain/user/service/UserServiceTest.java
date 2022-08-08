@@ -6,14 +6,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.prgrms.p2p.domain.user.dto.LoginResponse;
 import com.prgrms.p2p.domain.user.dto.OtherUserDetailResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
+import com.prgrms.p2p.domain.user.exception.InvalidPatternException;
+import com.prgrms.p2p.domain.user.exception.PwdConflictException;
+import com.prgrms.p2p.domain.user.exception.UserNotFoundException;
+import com.prgrms.p2p.domain.user.exception.WrongInfoException;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,10 +28,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@Transactional(readOnly = true)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
 @DisplayName("유저 서비스 테스트")
@@ -245,22 +247,41 @@ class UserServiceTest {
     @DisplayName("실패 - 잘못된 비밀번호 입력")
     void failWrongPassword() {
       String nickname = userService.signUp(signUpRequest);
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       assertThatThrownBy(() -> userService.changePassword(user.getId(),"wrong1234", "change1234!"))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(WrongInfoException.class);
     }
 
     @Test
     @DisplayName("실패 - 새로운 비밀번호 형식이 다른 경우")
     void failValidatePassword() {
       String nickname = userService.signUp(signUpRequest);
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       assertThatThrownBy(() -> userService.changePassword(user.getId(),user.getPassword(), "abcd"))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(InvalidPatternException.class);
       assertThatThrownBy(() -> userService.changePassword(user.getId(),user.getPassword(), "   "))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(InvalidPatternException.class);
+    }
+
+    @Test
+    @DisplayName("실패 - 변경하려는 패스워드가 현재 비밀번호와 같은 경우")
+    void failExistPassword() {
+      // Given
+
+      // When
+      String nickname = userService.signUp(signUpRequest);
+      User user = userRepository.findByNickname(nickname)
+          .orElseThrow(UserNotFoundException::new);
+
+      String oldPassword = "test1234!";
+      String newPassword = "test1234!";
+
+      // Then
+      System.out.println(user.getPassword());
+      assertThatThrownBy(() -> userService.changePassword(user.getId(), oldPassword, newPassword))
+          .isInstanceOf(PwdConflictException.class);
     }
   }
 
@@ -351,6 +372,45 @@ class UserServiceTest {
 
       assertThatThrownBy(() -> userService.changeProfileUrl(user.getId(), "  "))
           .isInstanceOf(RuntimeException.class);
+
+    }
+  }
+
+  @Nested
+  @DisplayName("로그인 테스트")
+  class loginTest {
+
+    @Test
+    @DisplayName("성공 테스트")
+    void success() {
+      String nickname = userService.signUp(signUpRequest);
+      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+
+      LoginResponse login = userService.login(user.getEmail(), "test1234!").orElseThrow(IllegalArgumentException::new);
+
+      assertThat(login.getUser().getId()).isEqualTo(user.getId());
+      assertThat(login.getUser().getNickname()).isEqualTo(user.getNickname());
+      assertThat(login.getUser().getProfileImage()).isEqualTo(null);
+
+    }
+
+    @Test
+    @DisplayName("실패 - 존재하지 않는 email 입력")
+    void failNotExistEmail() {
+      String nickname = userService.signUp(signUpRequest);
+
+      assertThatThrownBy(() -> userService.login("kim1234@gmail.com", "test1234!"))
+          .isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    @DisplayName("실패 - 잘못된 패스워스 인 경우")
+    void failWrongPassword() {
+      String nickname = userService.signUp(signUpRequest);
+      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+
+      assertThatThrownBy(() -> userService.login(user.getEmail(), "wrong1234!"))
+          .isInstanceOf(IllegalArgumentException.class);
 
     }
   }

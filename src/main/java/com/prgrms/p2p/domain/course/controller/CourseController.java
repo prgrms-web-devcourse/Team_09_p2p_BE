@@ -19,6 +19,7 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,13 +61,14 @@ public class CourseController {
       @RequestParam(required = false) String period, @RequestParam(required = false) Long placeId,
       @RequestParam(required = false) List<Spot> spots,
       @RequestParam(required = false) List<Theme> themes,
-      @RequestParam(required = false) Sorting sorting, Pageable pageable,
+      @RequestParam(required = false) Sorting sorting,
+      @PageableDefault(page = 0, size = 15) Pageable pageable,
       @CurrentUser CustomUserDetails user) {
 
     Long userId = Objects.isNull(user) ? null : user.getId();
     SearchCourseRequest searchCourseRequest = SearchCourseRequest.builder().keyword(keyword)
-        .region(region).period(Period.from(period)).placeId(placeId).spots(spots).themes(themes).sorting(sorting)
-        .build();
+        .region(region).period(Period.from(period)).placeId(placeId).spots(spots).themes(themes)
+        .sorting(sorting).build();
 
     Slice<SummaryCourseResponse> summaryList = courseQueryService.findSummaryList(
         searchCourseRequest, pageable, userId);
@@ -75,7 +77,8 @@ public class CourseController {
 
   @GetMapping("/bookmark")
   public ResponseEntity<Slice<SummaryCourseResponse>> getBookmarkPlaceList(
-      @RequestParam("userId") Long userId, Pageable pageable) {
+      @RequestParam("userId") Long userId,
+      @PageableDefault(page = 0, size = 15) Pageable pageable) {
     Slice<SummaryCourseResponse> bookmarkedPlaceList = courseQueryService.findBookmarkedCourseList(
         pageable, userId);
 

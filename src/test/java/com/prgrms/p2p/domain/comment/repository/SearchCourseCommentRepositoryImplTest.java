@@ -2,7 +2,7 @@ package com.prgrms.p2p.domain.comment.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.prgrms.p2p.domain.comment.dto.CourseCommentResponse;
+import com.prgrms.p2p.domain.comment.dto.CourseCommentForQueryDsl;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
 import com.prgrms.p2p.domain.comment.service.CourseCommentService;
 import com.prgrms.p2p.domain.course.entity.Course;
@@ -14,16 +14,16 @@ import com.prgrms.p2p.domain.course.repository.CourseRepository;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Transactional
 class SearchCourseCommentRepositoryImplTest {
 
   @Autowired
@@ -63,55 +63,54 @@ class SearchCourseCommentRepositoryImplTest {
 
     //comment
     Long commentId = courseCommentRepository.save(
-        new CourseComment("comment1", null, userId, course, 0L)).getId();
+        new CourseComment("comment1", null, userId, course)).getId();
 
     // 1번에 다는 대댓글
     courseCommentRepository.save(
-        new CourseComment("    comment2", commentId, userId, course, 1L));
+        new CourseComment("    comment2", commentId, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment3", commentId, userId, course, 2L));
+        new CourseComment("    comment3", commentId, userId, course));
 
     Long commentId2 = courseCommentRepository.save(
-        new CourseComment("comment8", null, userId, course, 0L)).getId();
+        new CourseComment("comment8", null, userId, course)).getId();
 
     // 2번에 다는 대댓글
     courseCommentRepository.save(
-        new CourseComment("    comment9", commentId2, userId, course, 1L));
+        new CourseComment("    comment9", commentId2, userId, course));
+
     courseCommentRepository.save(
-        new CourseComment("    comment10", commentId2, userId, course, 2L));
+        new CourseComment("    comment10", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment11", commentId2, userId, course, 3L));
+        new CourseComment("    comment11", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment12", commentId2, userId, course, 4L));
+        new CourseComment("    comment12", commentId2, userId, course));
 
     // 1번에 다는 대댓글
     courseCommentRepository.save(
-        new CourseComment("    comment4", commentId, userId, course, 3L));
+        new CourseComment("    comment4", commentId, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment5", commentId, userId, course, 4L));
+        new CourseComment("    comment5", commentId, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment6", commentId, userId, course, 5L));
+        new CourseComment("    comment6", commentId, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment7", commentId, userId, course, 6L));
+        new CourseComment("    comment7", commentId, userId, course));
 
     // 2번에 다는 대댓글
     courseCommentRepository.save(
-        new CourseComment("    comment13", commentId2, userId, course, 5L));
+        new CourseComment("    comment13", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment14", commentId2, userId, course, 6L));
+        new CourseComment("    comment14", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment15", commentId2, userId, course, 7L));
+        new CourseComment("    comment15", commentId2, userId, course));
 
     // then
-    Pageable pageable = PageRequest.of(0, 100);
-
-    Slice<CourseCommentResponse> courseComments = courseCommentRepository.findCourseComment(course.getId(),
-        pageable);
+    List<CourseCommentForQueryDsl> courseComments = courseCommentRepository.findCourseComment(course.getId());
 
     for (int i = 0; i < 15; i++) {
-      assertThat(courseComments.getContent().get(i).getComment())
+      assertThat(courseComments.get(i).getComment())
           .contains(String.valueOf(i + 1));
-      System.out.println("comment = " + courseComments.getContent().get(i).getComment());
+      System.out.println("comment = " + courseComments.get(i).getComment());
+      System.out.println("comment = " + courseComments.get(i).getVisibility());
     }
   }
 
@@ -140,51 +139,49 @@ class SearchCourseCommentRepositoryImplTest {
 
     //comment
     Long commentId = courseCommentRepository.save(
-        new CourseComment("comment1", null, userId, course, 0L)).getId();
+        new CourseComment("comment1", null, userId, course)).getId();
 
     // 1번에 다는 대댓글
     courseCommentRepository.save(
-        new CourseComment("    comment2", commentId, userId, course, 1L));
+        new CourseComment("    comment2", commentId, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment3", commentId, userId, course, 2L));
+        new CourseComment("    comment3", commentId, userId, course));
 
     Long commentId2 = courseCommentRepository.save(
-        new CourseComment("comment8", null, userId, course, 0L)).getId();
+        new CourseComment("comment8", null, userId, course)).getId();
 
     // 2번에 다는 대댓글
     courseCommentRepository.save(
-        new CourseComment("    comment9", commentId2, userId, course, 1L));
+        new CourseComment("    comment9", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment10", commentId2, userId, course, 2L));
+        new CourseComment("    comment10", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment11", commentId2, userId, course, 3L));
+        new CourseComment("    comment11", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment12", commentId2, userId, course, 4L));
+        new CourseComment("    comment12", commentId2, userId, course));
 
     // 1번에 다는 대댓글
     courseCommentRepository.save(
-        new CourseComment("    comment4", commentId, userId, course, 3L));
+        new CourseComment("    comment4", commentId, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment5", commentId, userId, course, 4L));
+        new CourseComment("    comment5", commentId, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment6", commentId, userId, course, 5L));
+        new CourseComment("    comment6", commentId, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment7", commentId, userId, course, 6L));
+        new CourseComment("    comment7", commentId, userId, course));
 
     // 2번에 다는 대댓글
     courseCommentRepository.save(
-        new CourseComment("    comment13", commentId2, userId, course, 5L));
+        new CourseComment("    comment13", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment14", commentId2, userId, course, 6L));
+        new CourseComment("    comment14", commentId2, userId, course));
     courseCommentRepository.save(
-        new CourseComment("    comment15", commentId2, userId, course, 7L));
+        new CourseComment("    comment15", commentId2, userId, course));
 
     // then
-    Pageable pageable = PageRequest.of(0, 100);
+    List<CourseCommentForQueryDsl> courseComments
+        = courseCommentRepository.findCourseComment(-1L);
 
-    Slice<CourseCommentResponse> courseComments
-        = courseCommentRepository.findCourseComment(-1L, pageable);
-
-    assertThat(courseComments.getNumberOfElements()).isEqualTo(0);
+    assertThat(courseComments.size()).isEqualTo(0);
   }
 }
