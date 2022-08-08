@@ -59,7 +59,7 @@ class SearchCourseCommentRepositoryImplTest {
     Long userId = user.getId();
 
     Course course = courseRepository.save(
-        new Course(title, oneDay, region, description, themes, spots, user));
+        new Course(title, oneDay, region, themes, spots, user));
 
     //comment
     Long commentId = courseCommentRepository.save(
@@ -135,7 +135,7 @@ class SearchCourseCommentRepositoryImplTest {
     Long userId = user.getId();
 
     Course course = courseRepository.save(
-        new Course(title, oneDay, region, description, themes, spots, user));
+        new Course(title, oneDay, region, themes, spots, user));
 
     //comment
     Long commentId = courseCommentRepository.save(

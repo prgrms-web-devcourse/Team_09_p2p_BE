@@ -64,7 +64,7 @@ public class SearchCourseCommentServiceTest {
     user = userRepository.save(new User(email, password, nick, birth, male));
 
     course = courseRepository.save(
-        new Course(title, oneDay, region, description, themes, spots, user));
+        new Course(title, oneDay, region, themes, spots, user));
 
     // parent comment 1
     parentComment1 = courseCommentRepository.save(
