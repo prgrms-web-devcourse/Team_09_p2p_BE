@@ -46,6 +46,7 @@ public class CourseService {
       List<MultipartFile> newImages, Long userId) {
     User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
     Course course = courseRepository.findById(courseId).orElseThrow(IllegalArgumentException::new);
+    updateCourse(course, updateCourseRequest);
     updateCoursePlaces(updateCourseRequest, newImages, course);
     return courseId;
   }
@@ -68,5 +69,9 @@ public class CourseService {
       coursePlaceService.modify(updateCourseRequest.getPlaces().get(index), index, imageUrl,
           course);
     });
+  }
+
+  private void updateCourse(Course course, UpdateCourseRequest updateCourseRequest) {
+
   }
 }
