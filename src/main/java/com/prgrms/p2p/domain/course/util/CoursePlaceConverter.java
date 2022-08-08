@@ -26,7 +26,9 @@ public class CoursePlaceConverter {
 
   public static CoursePlaceResponse of(CoursePlace coursePlace) {
     return CoursePlaceResponse.builder().id(coursePlace.getId())
+        .kakaoMapId(coursePlace.getPlace().getKakaoMapId())
         .description(coursePlace.getDescription()).isRecommended(coursePlace.getRecommended())
-        .isThumbnail(coursePlace.getThumbnailed()).imageUrl(coursePlace.getImageUrl()).build();
+        .isThumbnail(coursePlace.getThumbnailed())
+        .category(coursePlace.getPlace().getCategory()).imageUrl(coursePlace.getImageUrl()).build();
   }
 }
