@@ -6,5 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CourseCommentRepository extends JpaRepository<CourseComment, Long>,
     SearchCourseCommentRepository {
 
-  Long countByUserId(Long userId);
 }

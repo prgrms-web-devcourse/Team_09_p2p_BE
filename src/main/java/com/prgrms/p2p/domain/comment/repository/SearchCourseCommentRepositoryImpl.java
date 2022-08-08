@@ -1,7 +1,6 @@
 package com.prgrms.p2p.domain.comment.repository;
 
 import static com.prgrms.p2p.domain.comment.entity.QCourseComment.courseComment;
-import static com.prgrms.p2p.domain.course.entity.QCourse.course;
 import static com.prgrms.p2p.domain.user.entity.QUser.*;
 
 import com.prgrms.p2p.domain.comment.dto.CourseCommentForQueryDsl;
@@ -59,6 +58,41 @@ public class SearchCourseCommentRepositoryImpl implements SearchCourseCommentRep
         .where(courseComment.rootCommentId.eq(commentId),
             courseComment.visibility.eq(Visibility.TRUE)
             )
+        .fetch()
+        .get(0);
+  }
+
+  @Override
+  public List<CourseCommentForQueryDsl> findCourseCommentListByUserId(Long userId) {
+    return jpaQueryFactory.select(
+            Projections.constructor(CourseCommentForQueryDsl.class,
+                courseComment.id,
+                courseComment.comment,
+                courseComment.rootCommentId,
+                courseComment.createdAt,
+                courseComment.updatedAt,
+                courseComment.visibility,
+                courseComment.course.id,
+                courseComment.course.title
+            )
+        )
+        .from(courseComment)
+        .leftJoin(user).on(courseComment.userId.eq(user.id))
+        .where(
+            user.id.eq(userId),
+            courseComment.visibility.eq(Visibility.TRUE)
+                .or(courseComment.visibility.eq(Visibility.DELETED_INFORMATION)))
+        .orderBy(courseComment.createdAt.desc())
+        .fetch();
+  }
+
+  @Override
+  public Long countByUserId(Long userId) {
+    return jpaQueryFactory.select(Wildcard.count)
+        .from(courseComment)
+        .where(courseComment.userId.eq(userId),
+            courseComment.visibility.eq(Visibility.TRUE)
+        )
         .fetch()
         .get(0);
   }
