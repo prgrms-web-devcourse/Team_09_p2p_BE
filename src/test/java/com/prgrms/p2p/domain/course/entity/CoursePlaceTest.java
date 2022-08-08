@@ -106,7 +106,7 @@ class CoursePlaceTest {
       //when
       //then
       assertThatThrownBy(
-          () -> new Course(title, period, region, description, new HashSet<>(), new HashSet<>(),
+          () -> new Course(title, period, region, new HashSet<>(), new HashSet<>(),
               null)).isInstanceOf(IllegalArgumentException.class);
     }
   }
