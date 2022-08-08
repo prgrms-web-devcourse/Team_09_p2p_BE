@@ -14,6 +14,7 @@ import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.exception.EmailConflictException;
 import com.prgrms.p2p.domain.user.exception.InvalidPatternException;
+import com.prgrms.p2p.domain.user.exception.LoginFailException;
 import com.prgrms.p2p.domain.user.exception.NicknameConflictException;
 import com.prgrms.p2p.domain.user.exception.PwdConflictException;
 import com.prgrms.p2p.domain.user.exception.UserNotFoundException;
@@ -386,9 +387,9 @@ class UserServiceTest {
     @DisplayName("성공 테스트")
     void success() {
       String nickname = userService.signUp(signUpRequest);
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
-      LoginResponse login = userService.login(user.getEmail(), "test1234!").orElseThrow(IllegalArgumentException::new);
+      LoginResponse login = userService.login(user.getEmail(), "test1234!").orElseThrow(UserNotFoundException::new);
 
       assertThat(login.getUser().getId()).isEqualTo(user.getId());
       assertThat(login.getUser().getNickname()).isEqualTo(user.getNickname());
@@ -402,17 +403,17 @@ class UserServiceTest {
       String nickname = userService.signUp(signUpRequest);
 
       assertThatThrownBy(() -> userService.login("kim1234@gmail.com", "test1234!"))
-          .isInstanceOf(RuntimeException.class);
+          .isInstanceOf(UserNotFoundException.class);
     }
 
     @Test
     @DisplayName("실패 - 잘못된 패스워스 인 경우")
     void failWrongPassword() {
       String nickname = userService.signUp(signUpRequest);
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       assertThatThrownBy(() -> userService.login(user.getEmail(), "wrong1234!"))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(LoginFailException.class);
 
     }
   }
