@@ -12,7 +12,9 @@ import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
+import com.prgrms.p2p.domain.user.exception.EmailConflictException;
 import com.prgrms.p2p.domain.user.exception.InvalidPatternException;
+import com.prgrms.p2p.domain.user.exception.NicknameConflictException;
 import com.prgrms.p2p.domain.user.exception.PwdConflictException;
 import com.prgrms.p2p.domain.user.exception.UserNotFoundException;
 import com.prgrms.p2p.domain.user.exception.WrongInfoException;
@@ -80,7 +82,7 @@ class UserServiceTest {
       // When
       signUpRequest.setPasswordCheck("test1235!");
       // Then
-      assertThrows(IllegalArgumentException.class, () -> userService.signUp(signUpRequest));
+      assertThrows(PwdConflictException.class, () -> userService.signUp(signUpRequest));
     }
 
     @Test
@@ -88,9 +90,9 @@ class UserServiceTest {
     void failValidatePassword() {
       // Given
       // When
-      signUpRequest.setPasswordCheck("test1235!!!!!!!!!!!!!");
+      signUpRequest.setPassword("test1235!!!!!!!!!!!!!");
       // Then
-      assertThrows(IllegalArgumentException.class, () -> userService.signUp(signUpRequest));
+      assertThrows(InvalidPatternException.class, () -> userService.signUp(signUpRequest));
     }
 
     @Test
@@ -100,7 +102,7 @@ class UserServiceTest {
       // When
       signUpRequest.setEmail("test@gmailcom");
       // Then
-      assertThrows(IllegalArgumentException.class, () -> userService.signUp(signUpRequest));
+      assertThrows(InvalidPatternException.class, () -> userService.signUp(signUpRequest));
     }
 
     @Test
@@ -110,7 +112,7 @@ class UserServiceTest {
       // When
       signUpRequest.setNickname("beomsicgoodis");
       // Then
-      assertThrows(IllegalArgumentException.class, () -> userService.signUp(signUpRequest));
+      assertThrows(InvalidPatternException.class, () -> userService.signUp(signUpRequest));
     }
 
     @Test
@@ -126,7 +128,7 @@ class UserServiceTest {
       // When
       userService.signUp(signUpRequest);
       // Then
-      assertThrows(IllegalArgumentException.class, () -> userService.signUp(newRequest));
+      assertThrows(NicknameConflictException.class, () -> userService.signUp(newRequest));
     }
 
     @Test
@@ -142,7 +144,7 @@ class UserServiceTest {
       // When
       userService.signUp(signUpRequest);
       // Then
-      assertThrows(IllegalArgumentException.class, () -> userService.signUp(newRequest));
+      assertThrows(EmailConflictException.class, () -> userService.signUp(newRequest));
     }
   }
 
@@ -155,7 +157,7 @@ class UserServiceTest {
     void success() {
       String nickname = userService.signUp(signUpRequest);
 
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       UserDetailResponse userInfo = userService.getUserInfo(user.getId());
 
@@ -172,7 +174,7 @@ class UserServiceTest {
     void failNotExistId() {
 
       assertThatThrownBy(() -> userService.getUserInfo(100L))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(UserNotFoundException.class);
     }
   }
 
@@ -185,7 +187,7 @@ class UserServiceTest {
     void success() {
       String nickname = userService.signUp(signUpRequest);
 
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       OtherUserDetailResponse otherInfo = userService.getOtherInfo(user.getId());
 
@@ -201,7 +203,7 @@ class UserServiceTest {
     void failNotExistId() {
 
       assertThatThrownBy(() -> userService.getUserInfo(100L))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(UserNotFoundException.class);
     }
   }
 
