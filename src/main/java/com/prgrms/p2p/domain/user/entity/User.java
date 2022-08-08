@@ -5,6 +5,7 @@ import static org.apache.logging.log4j.util.Strings.isBlank;
 
 import com.prgrms.p2p.domain.common.BaseEntity;
 import com.prgrms.p2p.domain.course.entity.Course;
+import com.prgrms.p2p.domain.user.exception.InvalidPatternException;
 import com.prgrms.p2p.domain.user.util.PasswordEncrypter;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -139,9 +140,8 @@ public class User extends BaseEntity {
   }
 
   private void checkBlank(String target) {
-    //TODO: InvalidParamException
     if(isBlank(target)) {
-      throw new RuntimeException();
+      throw new InvalidPatternException();
     }
   }
 
@@ -165,7 +165,7 @@ public class User extends BaseEntity {
     this.birth = LocalDate.parse(birth);
   }
   private void setSex(Sex sex) {
-    if(isNull(sex)) throw new RuntimeException();
+    if(isNull(sex)) throw new InvalidPatternException();
     this.sex = sex;
   }
 
