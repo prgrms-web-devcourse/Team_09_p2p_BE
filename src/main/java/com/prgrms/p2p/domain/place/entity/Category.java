@@ -38,7 +38,8 @@ public enum Category {
 
   HP8("병원"),
 
-  PM9("약국");
+  PM9("약국"),
+  DE9("없음");
 
   private final String category;
 }
