@@ -1,8 +1,10 @@
 package com.prgrms.p2p.domain.bookmark.service;
 
+import com.prgrms.p2p.domain.bookmark.dto.BookmarkResponse;
+
 public interface BookmarkService {
 
-  void toggle(Long userId, Long targetId);
+  BookmarkResponse toggle(Long userId, Long targetId);
 
   Long countByUserId(Long userId);
 }
