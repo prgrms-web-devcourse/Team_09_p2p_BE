@@ -71,7 +71,6 @@ public class UserController {
   @PostMapping("/login")
   public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
 
-    //TODO: UnAuthorizedAccessException 만들기
     LoginResponse login = userService.login(loginRequest.getEmail(), loginRequest.getPassword())
         .orElseThrow(RuntimeException::new);
 
@@ -153,7 +152,6 @@ public class UserController {
   })
   @PutMapping("/password")
   public ResponseEntity changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, @CurrentUser CustomUserDetails user){
-    //TODO: 유저 아이디를 나중에 어노테이션으로 가져올 예정
     userService.changePassword(user.getId(), changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
 
     return ResponseEntity.ok().build();
@@ -184,7 +182,6 @@ public class UserController {
   })
   @DeleteMapping()
   public ResponseEntity delete(@CurrentUser CustomUserDetails user){
-    //TODO: 유저 아이디를 나중에 어노테이션으로 가져올 예정
     userService.delete(user.getId());
 
     return ResponseEntity.noContent().build();

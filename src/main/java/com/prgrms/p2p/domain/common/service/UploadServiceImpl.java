@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
+import com.prgrms.p2p.domain.common.exception.S3UploadException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -44,7 +45,7 @@ public class UploadServiceImpl implements UploadService {
     try {
       image = ImageIO.read(multipartFile.getInputStream());
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new S3UploadException();
     }
     return uploadImgToS3(image, saveFileName, ext);
   }

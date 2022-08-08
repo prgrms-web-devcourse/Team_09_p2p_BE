@@ -107,11 +107,9 @@ public class User extends BaseEntity {
     authorities.add(authority);
   }
 
-  public void matchPassword(String password) {
-    //TODO: 예외 바꿔주기
-    if(!PasswordEncrypter.isMatch(password, this.password)) {
-      throw new IllegalArgumentException();
-    }
+  public boolean matchPassword(String password) {
+    if(!PasswordEncrypter.isMatch(password, this.password)) return false;
+    return true;
   }
 
   public void changePassword(String newPassword) {

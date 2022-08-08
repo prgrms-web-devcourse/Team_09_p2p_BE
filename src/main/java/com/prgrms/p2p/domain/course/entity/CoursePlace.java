@@ -112,10 +112,16 @@ public class CoursePlace extends BaseEntity {
   }
 
   private void setRecommended(Boolean recommended) {
+    if (Objects.isNull(recommended)) {
+      throw new IllegalArgumentException();
+    }
     this.recommended = recommended;
   }
 
   private void setThumbnailed(Boolean thumbnailed) {
+    if (Objects.isNull(thumbnailed)) {
+      throw new IllegalArgumentException();
+    }
     this.thumbnailed = thumbnailed;
   }
 

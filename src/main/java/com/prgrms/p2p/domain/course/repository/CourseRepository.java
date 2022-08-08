@@ -12,4 +12,6 @@ public interface CourseRepository extends JpaRepository<Course, Long>, CourseSea
 
   @Query("select c from Course c left join fetch c.courseBookmarks cb where (:userId is null or cb.userId = :userId)")
   Slice<Course> findBookmarkedCourse(@Param("userId") Long userId, Pageable pageable);
+
+  Long countByUserId(Long userId);
 }
