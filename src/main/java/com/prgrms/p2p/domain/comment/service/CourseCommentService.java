@@ -94,9 +94,4 @@ public class CourseCommentService {
       parentComment.changeVisibility(Visibility.FALSE);
     }
   }
-
-  @Transactional(readOnly = true)
-  public Long countByUserId(Long userId) {
-    return courseCommentRepository.countByUserId(userId);
-  }
 }
