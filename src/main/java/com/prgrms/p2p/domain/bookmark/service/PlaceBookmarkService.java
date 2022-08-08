@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.bookmark.service;
 
+import com.prgrms.p2p.domain.bookmark.dto.BookmarkResponse;
 import com.prgrms.p2p.domain.bookmark.entity.PlaceBookmark;
 import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.bookmark.repository.PlaceBookmarkRepository;
@@ -19,11 +20,20 @@ public class PlaceBookmarkService implements BookmarkService {
 
   @Override
   @Transactional
-  public void toggle(Long userId, Long placeId) {
+  public BookmarkResponse toggle(Long userId, Long placeId) {
     Place place = placeRepository.findById(placeId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 장소에 북마크를 시도했습니다."));
+    BookmarkResponse response = new BookmarkResponse();
+    response.setId(placeId);
     placeBookmarkRepository.findByUserIdAndPlace(userId, place)
-        .ifPresentOrElse(this::unbookmark, () -> bookmark(userId, place));
+        .ifPresentOrElse(placeBookmark -> {
+          unbookmark(placeBookmark);
+          response.setIsBookmarked(Boolean.FALSE);
+        }, () -> {
+          bookmark(userId, place);
+          response.setIsBookmarked(Boolean.TRUE);
+        });
+    return response;
   }
 
   @Override

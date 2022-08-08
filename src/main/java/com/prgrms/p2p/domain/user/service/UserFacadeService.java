@@ -4,12 +4,9 @@ import com.prgrms.p2p.domain.bookmark.service.CourseBookmarkService;
 import com.prgrms.p2p.domain.bookmark.service.PlaceBookmarkService;
 import com.prgrms.p2p.domain.comment.service.CourseCommentService;
 import com.prgrms.p2p.domain.course.service.CourseService;
-import com.prgrms.p2p.domain.like.service.CourseLikeService;
-import com.prgrms.p2p.domain.like.service.PlaceLikeService;
 import com.prgrms.p2p.domain.user.dto.OtherUserDetailResponse;
 import com.prgrms.p2p.domain.user.dto.UserBookmarkResponse;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
-import com.prgrms.p2p.domain.user.dto.UserLikeResponse;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.util.UserConverter;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserFacadeService {
 
-  private final CourseLikeService courseLikeService;
-  private final PlaceLikeService placeLikeService;
   private final PlaceBookmarkService placeBookmarkService;
   private final CourseBookmarkService courseBookmarkService;
   private final CourseCommentService courseCommentService;
@@ -32,10 +27,6 @@ public class UserFacadeService {
   public UserDetailResponse getInfo(User user) {
 
     Long userId = user.getId();
-
-    Long courseLike = courseLikeService.countByUserId(userId);
-    Long placeLike = placeLikeService.countByUserId(userId);
-    UserLikeResponse userLikeResponse = UserConverter.toUserLike(placeLike, courseLike);
 
     Long courseBookmark = courseBookmarkService.countByUserId(userId);
     Long placeBookmark = placeBookmarkService.countByUserId(userId);
@@ -55,10 +46,6 @@ public class UserFacadeService {
 
   public OtherUserDetailResponse getOtherInfo(User user) {
     Long userId = user.getId();
-
-    Long courseLike = courseLikeService.countByUserId(userId);
-    Long placeLike = placeLikeService.countByUserId(userId);
-    UserLikeResponse userLikeResponse = UserConverter.toUserLike(placeLike, courseLike);
 
     Long courseBookmark = courseBookmarkService.countByUserId(userId);
     Long placeBookmark = placeBookmarkService.countByUserId(userId);
