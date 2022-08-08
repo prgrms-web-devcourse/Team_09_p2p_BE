@@ -20,6 +20,7 @@ import com.prgrms.p2p.domain.user.exception.LoginFailException;
 import com.prgrms.p2p.domain.user.exception.NicknameConflictException;
 import com.prgrms.p2p.domain.user.exception.PwdConflictException;
 import com.prgrms.p2p.domain.user.exception.UserNotFoundException;
+import com.prgrms.p2p.domain.user.exception.WrongInfoException;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import com.prgrms.p2p.domain.user.util.UserConverter;
 import com.prgrms.p2p.domain.user.util.Validation;
@@ -105,7 +106,8 @@ public class UserService {
         .orElseThrow(UserNotFoundException::new);
 
     Validation.validatePassword(newPassword);
-    if(!user.matchPassword(oldPassword)) throw new PwdConflictException();
+    if(!user.matchPassword(oldPassword)) throw new WrongInfoException();
+    if(user.matchPassword(newPassword)) throw new PwdConflictException();
     user.changePassword(newPassword);
 
     userRepository.save(user);
