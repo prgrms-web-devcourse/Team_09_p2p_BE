@@ -7,7 +7,6 @@ import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.course.dto.CreateCoursePlaceRequest;
 import com.prgrms.p2p.domain.course.util.CoursePlaceConverter;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
-import com.prgrms.p2p.domain.place.dto.SearchPlaceRequest;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
 import com.prgrms.p2p.domain.place.entity.Place;
