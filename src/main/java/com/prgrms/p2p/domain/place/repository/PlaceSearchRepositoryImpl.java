@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.place.repository;
 
+import static com.prgrms.p2p.domain.course.entity.QCoursePlace.coursePlace;
 import static com.prgrms.p2p.domain.place.entity.QPlace.place;
 import static com.prgrms.p2p.domain.bookmark.entity.QPlaceBookmark.placeBookmark;
 
@@ -8,10 +9,12 @@ import com.prgrms.p2p.domain.place.entity.Place;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -28,10 +31,10 @@ public class PlaceSearchRepositoryImpl implements PlaceSearchRepository {
   }
 
   @Override
-  public Slice<Place> searchPlace(SearchPlaceRequest request, Pageable pageable) {
+  public Slice<Place> searchPlace(String keyword, Pageable pageable) {
     JPAQuery<Place> placeJPAQuery = jpaQueryFactory.selectFrom(place)
         .where(
-            keywordListContains(request.getKeyword())
+            keywordListContains(keyword)
         )
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize() + 1);

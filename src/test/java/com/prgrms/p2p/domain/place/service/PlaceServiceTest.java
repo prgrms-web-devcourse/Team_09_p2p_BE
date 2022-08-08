@@ -17,7 +17,6 @@ import com.prgrms.p2p.domain.like.entity.PlaceLike;
 import com.prgrms.p2p.domain.like.repository.PlaceLikeRepository;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.RecordRequest;
-import com.prgrms.p2p.domain.place.dto.SearchPlaceRequest;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
 import com.prgrms.p2p.domain.place.entity.Category;
@@ -299,20 +298,35 @@ class PlaceServiceTest {
 
     @Test
     @DisplayName("성공: 요약 리스트 조회 성공, 비로그인")
+    public void keywordIsNull() throws Exception {
+
+      //given
+      String keyword = null;
+
+      Pageable pageable = PageRequest.of(0, 10);
+
+      //when
+      Slice<SummaryPlaceResponse> summaryList = placeService.findSummaryList(
+          Optional.ofNullable(keyword), pageable, null);
+
+      //then
+      for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
+        assertThat(summaryPlaceResponse.getBookmarked()).isFalse();
+      }
+    }
+
+    @Test
+    @DisplayName("성공: 요약 리스트 조회 성공, 비로그인")
     public void findSummaryList() throws Exception {
 
       //given
       String keyword = "na";
 
-      SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder()
-          .keyword(keyword)
-          .build();
-
       Pageable pageable = PageRequest.of(0, 10);
 
       //when
-      Slice<SummaryPlaceResponse> summaryList = placeService.findSummaryList(searchPlaceReq,
-          pageable, null);
+      Slice<SummaryPlaceResponse> summaryList = placeService.findSummaryList(
+          Optional.ofNullable(keyword), pageable, null);
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
@@ -328,15 +342,11 @@ class PlaceServiceTest {
       //given
       String keyword = "";
 
-      SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder()
-          .keyword(keyword)
-          .build();
-
       Pageable pageable = PageRequest.of(0, 10);
 
       //when
       Slice<SummaryPlaceResponse> summaryList
-          = placeService.findSummaryList(searchPlaceReq, pageable, userId);
+          = placeService.findSummaryList(Optional.ofNullable(keyword), pageable, userId);
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
@@ -356,15 +366,11 @@ class PlaceServiceTest {
 
       String keyword = "";
 
-      SearchPlaceRequest searchPlaceReq = SearchPlaceRequest.builder()
-          .keyword(keyword)
-          .build();
-
       Pageable pageable = PageRequest.of(0, 10);
 
       //when
       Slice<SummaryPlaceResponse> summaryList
-          = placeService.findSummaryList(searchPlaceReq, pageable, userId);
+          = placeService.findSummaryList(Optional.ofNullable(keyword), pageable, userId);
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {

@@ -12,11 +12,13 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -37,12 +39,12 @@ public class PlaceController {
 
   @GetMapping
   public ResponseEntity<Slice<SummaryPlaceResponse>> getSummaryPlaceList(
-      @RequestBody SearchPlaceRequest searchPlaceRequest,
-      Pageable pageable,
+      @RequestParam("keyword") Optional<String> keyword,
+      @PageableDefault(page = 0, size = 15) Pageable pageable,
       @CurrentUser CustomUserDetails user) {
     Long userId = Objects.isNull(user) ? null : user.getId();
     Slice<SummaryPlaceResponse> summaryList =
-        placeService.findSummaryList(searchPlaceRequest, pageable, userId);
+        placeService.findSummaryList(keyword, pageable, userId);
 
     return ResponseEntity.ok(summaryList);
   }
