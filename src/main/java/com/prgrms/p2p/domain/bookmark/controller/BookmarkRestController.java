@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.bookmark.controller;
 
+import com.prgrms.p2p.domain.bookmark.dto.BookmarkResponse;
 import com.prgrms.p2p.domain.user.aop.annotation.Auth;
 import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
@@ -17,10 +18,10 @@ public class BookmarkRestController {
 
   @Auth
   @GetMapping("/{type}/{id}")
-  public ResponseEntity<Void> toggle(
+  public ResponseEntity<BookmarkResponse> toggle(
       @PathVariable("type") String type, @PathVariable("id") Long id,
       @CurrentUser CustomUserDetails user) {
-    BookmarkType.of(type).toggle(user.getId(), id);
-    return ResponseEntity.ok().build();
+    BookmarkResponse response = BookmarkType.of(type).toggle(user.getId(), id);
+    return ResponseEntity.ok(response);
   }
 }
