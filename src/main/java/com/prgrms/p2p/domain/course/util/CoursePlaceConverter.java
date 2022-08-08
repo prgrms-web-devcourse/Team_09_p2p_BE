@@ -1,7 +1,7 @@
 package com.prgrms.p2p.domain.course.util;
 
+import com.prgrms.p2p.domain.course.dto.CoursePlaceRequest;
 import com.prgrms.p2p.domain.course.dto.CoursePlaceResponse;
-import com.prgrms.p2p.domain.course.dto.CreateCoursePlaceRequest;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.CoursePlace;
 import com.prgrms.p2p.domain.place.entity.Address;
@@ -9,19 +9,19 @@ import com.prgrms.p2p.domain.place.entity.Place;
 
 public class CoursePlaceConverter {
 
-  public static CoursePlace toCoursePlace(CreateCoursePlaceRequest createCoursePlaceRequest,
+  public static CoursePlace toCoursePlace(CoursePlaceRequest coursePlaceRequest,
       Integer index, String imageUrl, Course course, Place place) {
-    return new CoursePlace(index, createCoursePlaceRequest.getDescription(), imageUrl,
-        createCoursePlaceRequest.getIsRecommended(), createCoursePlaceRequest.getIsThumbnail(),
+    return new CoursePlace(index, coursePlaceRequest.getDescription(), imageUrl,
+        coursePlaceRequest.getIsRecommended(), coursePlaceRequest.getIsThumbnail(),
         course, place);
   }
 
-  public static Place toPlace(CreateCoursePlaceRequest createCoursePlaceRequest) {
-    return new Place(createCoursePlaceRequest.getKakaoMapId(), createCoursePlaceRequest.getName(),
-        new Address(createCoursePlaceRequest.getAddressName(),
-            createCoursePlaceRequest.getRoadAddressName()), createCoursePlaceRequest.getLatitude(),
-        createCoursePlaceRequest.getLongitude(), createCoursePlaceRequest.getCategory(),
-        createCoursePlaceRequest.getPhoneNumber());
+  public static Place toPlace(CoursePlaceRequest coursePlaceRequest) {
+    return new Place(coursePlaceRequest.getKakaoMapId(), coursePlaceRequest.getName(),
+        new Address(coursePlaceRequest.getAddressName(),
+            coursePlaceRequest.getRoadAddressName()), coursePlaceRequest.getLatitude(),
+        coursePlaceRequest.getLongitude(), coursePlaceRequest.getCategory(),
+        coursePlaceRequest.getPhoneNumber());
   }
 
   public static CoursePlaceResponse of(CoursePlace coursePlace) {
