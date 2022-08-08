@@ -24,6 +24,7 @@ public class PlaceLikeService implements LikeService {
     Place place = placeRepository.findById(placeId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 장소에 좋아요를 시도했습니다."));
     LikeResponse response = new LikeResponse();
+    response.setId(placeId);
     placeLikeRepository.findByUserIdAndPlace(userId, place)
         .ifPresentOrElse(placeLike -> {
           dislike(placeLike);

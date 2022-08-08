@@ -24,6 +24,7 @@ public class CourseLikeService implements LikeService {
     Course course = courseRepository.findById(courseId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 코스에 좋아요를 시도했습니다."));
     LikeResponse response = new LikeResponse();
+    response.setId(courseId);
     courseLikeRepository.findByUserIdAndCourse(userId, course)
         .ifPresentOrElse(courseLike -> {
           dislike(courseLike);
