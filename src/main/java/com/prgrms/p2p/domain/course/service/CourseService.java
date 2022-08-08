@@ -61,10 +61,10 @@ public class CourseService {
 
   private void updateCoursePlaces(UpdateCourseRequest updateCourseRequest,
       List<MultipartFile> images, Course course) {
-    AtomicInteger idx = new AtomicInteger();
+    AtomicInteger imageOrder = new AtomicInteger();
     IntStream.range(0, updateCourseRequest.getPlaces().size()).forEach(index -> {
       String imageUrl = Objects.isNull(updateCourseRequest.getPlaces().get(index).getImageUrl())
-          ? uploadService.uploadImg(images.get(idx.getAndIncrement()))
+          ? uploadService.uploadImg(images.get(imageOrder.getAndIncrement()))
           : updateCourseRequest.getPlaces().get(index).getImageUrl();
       coursePlaceService.modify(updateCourseRequest.getPlaces().get(index), index, imageUrl,
           course);
