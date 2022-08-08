@@ -31,10 +31,17 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
 
   @Override
   public Slice<Course> searchCourse(SearchCourseRequest request, Pageable pageable) {
-    JPAQuery<Course> courseJPAQuery = jpaQueryFactory.select(course).from(course)
-        .where(keywordListContains(request.getKeyword()), regionEq(request.getRegion()),
-            themeEq(request.getThemes()), spotEq(request.getSpots()), periodEq(request.getPeriod()),
-            placeIdEq(request.getPlaceId())).orderBy(sortingEq(request.getSorting()))
+    JPAQuery<Course> courseJPAQuery = jpaQueryFactory
+        .select(course)
+        .from(course)
+        .where(
+            keywordListContains(request.getKeyword()),
+            regionEq(request.getRegion()),
+            themeEq(request.getThemes()),
+            spotEq(request.getSpots()),
+            periodEq(request.getPeriod()),
+            placeIdEq(request.getPlaceId())
+        ).orderBy(sortingEq(request.getSorting()))
         .offset(pageable.getOffset()).limit(pageable.getPageSize() + 1);
 
 //    for (Sort.Order o : pageable.getSort()) {
