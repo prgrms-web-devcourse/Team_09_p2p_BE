@@ -155,7 +155,7 @@ class UserServiceTest {
     void success() {
       String nickname = userService.signUp(signUpRequest);
 
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       UserDetailResponse userInfo = userService.getUserInfo(user.getId());
 
@@ -172,7 +172,7 @@ class UserServiceTest {
     void failNotExistId() {
 
       assertThatThrownBy(() -> userService.getUserInfo(100L))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(UserNotFoundException.class);
     }
   }
 
@@ -185,7 +185,7 @@ class UserServiceTest {
     void success() {
       String nickname = userService.signUp(signUpRequest);
 
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       OtherUserDetailResponse otherInfo = userService.getOtherInfo(user.getId());
 
@@ -201,7 +201,7 @@ class UserServiceTest {
     void failNotExistId() {
 
       assertThatThrownBy(() -> userService.getUserInfo(100L))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(UserNotFoundException.class);
     }
   }
 
