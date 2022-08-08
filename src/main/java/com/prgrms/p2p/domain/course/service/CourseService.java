@@ -72,6 +72,10 @@ public class CourseService {
   }
 
   private void updateCourse(Course course, UpdateCourseRequest updateCourseRequest) {
-
+    course.changeTitle(updateCourseRequest.getTitle());
+    course.changePeriod(updateCourseRequest.getPeriod());
+    course.changeRegion(updateCourseRequest.getRegion());
+    course.changeThemes(updateCourseRequest.getThemes());
+    course.changeSpots(updateCourseRequest.getSpots());
   }
 }
