@@ -20,7 +20,7 @@ public class CreateCoursePlaceRequest {
   private String roadAddressName;
   private String latitude;
   private String longitude;
-  private Category category;
+  private Category category = Category.DE9;
   private PhoneNumber phoneNumber;
   private Boolean isRecommended = false;
   private Boolean isThumbnail = false;
