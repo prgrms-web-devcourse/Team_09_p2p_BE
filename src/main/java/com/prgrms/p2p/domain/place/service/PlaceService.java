@@ -35,9 +35,9 @@ public class PlaceService {
 
   @Transactional
   public Optional<Place> findAndUpdateExistPlace(
-      CreateCoursePlaceRequest createCoursePlaceRequest, String imageUrl) {
-    Optional<Place> place =
-        placeRepository.findByKakaoMapId(createCoursePlaceRequest.getKakaoMapId());
+      CreateCoursePlaceRequest createCoursePlaceRequest) {
+    Optional<Place> place = placeRepository.findByKakaoMapId(
+        createCoursePlaceRequest.getKakaoMapId());
     place.ifPresent(p -> update(p, createCoursePlaceRequest));
     return place;
   }
@@ -48,14 +48,15 @@ public class PlaceService {
     return toDetailPlaceResponse(place, userId);
   }
 
-  public Slice<SummaryPlaceResponse> findSummaryList(
-      Optional<String> keyword, Pageable pageable, Long userId) {
+  public Slice<SummaryPlaceResponse> findSummaryList(Optional<String> keyword, Pageable pageable,
+      Long userId) {
     String keywords = keyword.isEmpty() ? "" : keyword.get();
     Slice<Place> placeList = placeRepository.searchPlace(keywords, pageable);
     return placeList.map(p -> toSummaryPlaceResponse(p, Optional.ofNullable(userId)));
   }
 
-  public Slice<SummaryPlaceResponse> findBookmarkedPlaceList(Long userId, Long targetUserId, Pageable pageable) {
+  public Slice<SummaryPlaceResponse> findBookmarkedPlaceList(Long userId, Long targetUserId,
+      Pageable pageable) {
     if (Objects.isNull(targetUserId)) {
       throw new BadRequestException("입력값을 확인해주세요.");
     }
@@ -65,8 +66,7 @@ public class PlaceService {
 
   private void update(Place place, CreateCoursePlaceRequest updateReq) {
     place.changeName(place.getName());
-    Address newAddress =
-        new Address(updateReq.getAddressName(), updateReq.getRoadAddressName());
+    Address newAddress = new Address(updateReq.getAddressName(), updateReq.getRoadAddressName());
     place.changeAddress(newAddress);
     place.changeCategory(updateReq.getCategory());
     place.changePhoneNumber(updateReq.getPhoneNumber());
