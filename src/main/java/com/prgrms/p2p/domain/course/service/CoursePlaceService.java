@@ -1,6 +1,6 @@
 package com.prgrms.p2p.domain.course.service;
 
-import com.prgrms.p2p.domain.course.dto.CreateCoursePlaceRequest;
+import com.prgrms.p2p.domain.course.dto.CoursePlaceRequest;
 import com.prgrms.p2p.domain.course.dto.UpdateCoursePlaceRequest;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.CoursePlace;
@@ -20,7 +20,7 @@ public class CoursePlaceService {
   private final CoursePlaceRepository coursePlaceRepository;
   private final PlaceService placeService;
 
-  public void save(CreateCoursePlaceRequest createCoursePlaceRequest, Integer index,
+  public void save(CoursePlaceRequest coursePlaceRequest, Integer index,
       String imageUrl, Course course) {
 
     Place place = placeService.findAndUpdateExistPlace(coursePlaceRequest)

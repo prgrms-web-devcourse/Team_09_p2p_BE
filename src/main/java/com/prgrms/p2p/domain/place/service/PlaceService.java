@@ -5,7 +5,8 @@ import static com.prgrms.p2p.domain.place.util.PlaceConverter.toDetailPlaceRespo
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSummaryPlaceResponse;
 
 import com.prgrms.p2p.domain.common.exception.BadRequestException;
-import com.prgrms.p2p.domain.course.dto.CreateCoursePlaceRequest;
+import com.prgrms.p2p.domain.course.dto.CoursePlaceRequest;
+import com.prgrms.p2p.domain.course.entity.Sorting;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
@@ -28,7 +29,7 @@ public class PlaceService {
   private final PlaceRepository placeRepository;
 
   @Transactional
-  public Place save(CreateCoursePlaceRequest createPlaceReq) {
+  public Place save(CoursePlaceRequest createPlaceReq) {
     Optional<Place> placeByKakaoMapId =
         placeRepository.findByKakaoMapId(createPlaceReq.getKakaoMapId());
 

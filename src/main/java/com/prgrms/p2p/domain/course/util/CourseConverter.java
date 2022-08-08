@@ -32,13 +32,22 @@ public class CourseConverter {
   }
 
   public static SummaryCourseResponse ofSummary(Course course, Boolean isBookmarked) {
-    return SummaryCourseResponse.builder().id(course.getId()).title(course.getTitle())
-        .thumbnail(pickThumbnail(course)).region(course.getRegion()).period(course.getPeriod())
-        .themes(List.copyOf(course.getThemes())).places(
-            course.getCoursePlaces().stream().map(coursePlace -> coursePlace.getPlace().getName())
-                .collect(Collectors.toList())).likes(course.getCourseLikes().size())
-        .isBookmarked(isBookmarked).nickname(course.getUser().getNickname())
-        .profileImage(course.getUser().getProfileUrl().orElse(null)).build();
+    return SummaryCourseResponse.builder()
+        .id(course.getId())
+        .title(course.getTitle())
+        .thumbnail(pickThumbnail(course))
+        .region(course.getRegion())
+        .period(course.getPeriod())
+        .themes(List.copyOf(course.getThemes()))
+        .places(
+            course.getCoursePlaces().stream().map(
+                coursePlace -> coursePlace.getPlace().getName())
+                .collect(Collectors.toList()))
+        .likes(course.getCourseLikes().size())
+        .isBookmarked(isBookmarked)
+        .nickname(course.getUser().getNickname())
+        .profileImage(course.getUser().getProfileUrl().orElse(null))
+        .build();
   }
 
   public static String pickThumbnail(Course course) {
