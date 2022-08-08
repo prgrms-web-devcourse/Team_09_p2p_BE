@@ -6,8 +6,10 @@ import com.prgrms.p2p.domain.comment.dto.CourseCommentDto.UserDto;
 import com.prgrms.p2p.domain.comment.dto.CourseCommentResponse;
 import com.prgrms.p2p.domain.comment.dto.CreateCommentRequest;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
+import com.prgrms.p2p.domain.comment.entity.PlaceComment;
 import com.prgrms.p2p.domain.comment.entity.Visibility;
 import com.prgrms.p2p.domain.course.entity.Course;
+import com.prgrms.p2p.domain.place.entity.Place;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,5 +60,15 @@ public class CommentConverter {
                 courseCommentForQueryDsl.getUserProfileImage())
         )
         .build();
+  }
+
+  public static PlaceComment toPlaceComment(
+      CreateCommentRequest commentRequest, Place place, Long userId) {
+
+    return new PlaceComment(commentRequest.getComment(),
+        commentRequest.getRootCommentId(),
+        userId,
+        place
+    );
   }
 }
