@@ -3,6 +3,7 @@ package com.prgrms.p2p.domain.comment.service;
 import static com.prgrms.p2p.domain.comment.util.CommentConverter.toPlaceComment;
 
 import com.prgrms.p2p.domain.comment.dto.CreateCommentRequest;
+import com.prgrms.p2p.domain.comment.dto.UpdateCommentRequest;
 import com.prgrms.p2p.domain.comment.entity.PlaceComment;
 import com.prgrms.p2p.domain.comment.repository.PlaceCommentRepository;
 import com.prgrms.p2p.domain.common.exception.NotFoundException;
@@ -14,6 +15,7 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 @Transactional
 @RequiredArgsConstructor
@@ -25,24 +27,42 @@ public class PlaceCommentService {
   private final UserRepository userRepository;
 
 
-  public Long save(CreateCommentRequest commentRequest, Long placeId, Long userId) {
+  public Long save(CreateCommentRequest createCommentRequest, Long placeId, Long userId) {
     //유저가 존재하는지 확인
     validateAuth(!userRepository.existsById(userId), "존재하지 않는 계정입니다.");
 
     //Place 가져오기
     Place place = placeRepository.findById(placeId)
-        .orElseThrow(() -> new NotFoundException("장소가 존재하지 않습니다"));
+        .orElseThrow(() -> new NotFoundException("장소가 존재하지 않습니다."));
 
     //상위 댓글이 있는지 확인
-    Long rootCommentId = commentRequest.getRootCommentId();
+    Long rootCommentId = createCommentRequest.getRootCommentId();
     validateAuth(
         !Objects.isNull(rootCommentId) && !placeCommentRepository.existsById(rootCommentId),
         "존재하지 않는 댓글에 하위 댓글을 작성할 수 없습니다.");
 
     //placeComment으로 바꾸기
-    PlaceComment placeComment = toPlaceComment(commentRequest, place, userId);
+    PlaceComment placeComment = toPlaceComment(createCommentRequest, place, userId);
 
     return placeCommentRepository.save(placeComment).getId();
+  }
+
+  public Long updatePlaceComment(UpdateCommentRequest updateCommentRequest, Long placeId, Long commentId, Long userId) {
+
+    //장소 실제 여부
+    validateAuth(!placeRepository.existsById(placeId),"존재하지 않는 장소 입니다.");
+
+    //placeComment 가져오기
+    PlaceComment placeComment = placeCommentRepository.findById(commentId)
+        .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글입니다."));
+
+    //수정 권한 확인
+    validateAuth(!placeComment.getUserId().equals(userId), "댓글의 수정 권한이 없습니다.");
+
+    //Comment 바꾸어주기
+    placeComment.changeComment(updateCommentRequest.getComment());
+
+    return placeComment.getId();
   }
 
   private void validateAuth(boolean courseComment, String message) {
@@ -50,4 +70,6 @@ public class PlaceCommentService {
       throw new UnAuthorizedException(message);
     }
   }
+
+
 }
