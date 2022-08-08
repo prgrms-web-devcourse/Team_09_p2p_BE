@@ -94,11 +94,40 @@ public class Course extends BaseEntity {
   }
 
   public void changeTitle(String newTitle) {
+    if (Objects.isNull(newTitle)) {
+      throw new IllegalArgumentException();
+    }
     this.title = newTitle;
   }
 
   public void changePeriod(Period newPeriod) {
+    if (Objects.isNull(newPeriod)) {
+      throw new IllegalArgumentException();
+    }
     this.period = newPeriod;
+  }
+
+  public void changeRegion(Region newRegion) {
+    if (Objects.isNull(newRegion)) {
+      throw new IllegalArgumentException();
+    }
+    this.region = newRegion;
+  }
+
+  public void changeThemes(List<Theme> themes) {
+    if (Objects.isNull(themes)) {
+      throw new IllegalArgumentException();
+    }
+
+    this.themes = Set.copyOf(themes);
+  }
+
+  public void changeSpots(List<Spot> spots) {
+    if (Objects.isNull(spots)) {
+      throw new IllegalArgumentException();
+    }
+
+    this.spots = Set.copyOf(spots);
   }
 
   public void addUser(User user) {
