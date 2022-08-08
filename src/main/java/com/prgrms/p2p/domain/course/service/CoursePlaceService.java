@@ -24,7 +24,7 @@ public class CoursePlaceService {
       String imageUrl, Course course) {
 
     Place place = placeService.findAndUpdateExistPlace(
-            createCoursePlaceRequest, imageUrl)
+            createCoursePlaceRequest)
         .orElseGet(() -> placeService.save(createCoursePlaceRequest));
 
     CoursePlace coursePlace = CoursePlaceConverter.toCoursePlace(createCoursePlaceRequest, index,

@@ -4,6 +4,7 @@ import static com.prgrms.p2p.domain.place.util.PlaceConverter.toDetailPlaceRespo
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSummaryPlaceResponse;
 
 import com.prgrms.p2p.domain.common.exception.BadRequestException;
+import com.prgrms.p2p.domain.common.exception.ConflictException;
 import com.prgrms.p2p.domain.course.dto.CreateCoursePlaceRequest;
 import com.prgrms.p2p.domain.course.util.CoursePlaceConverter;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
@@ -35,7 +36,7 @@ public class PlaceService {
 
   @Transactional
   public Optional<Place> findAndUpdateExistPlace(
-      CreateCoursePlaceRequest createCoursePlaceRequest, String imageUrl) {
+      CreateCoursePlaceRequest createCoursePlaceRequest) {
     Optional<Place> place =
         placeRepository.findByKakaoMapId(createCoursePlaceRequest.getKakaoMapId());
     place.ifPresent(p -> update(p, createCoursePlaceRequest));
