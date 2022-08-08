@@ -9,5 +9,4 @@ public interface PlaceLikeRepository extends JpaRepository<PlaceLike, Long> {
 
   Optional<PlaceLike> findByUserIdAndPlace(Long userId, Place place);
 
-  Long countByUserId(Long userId);
 }

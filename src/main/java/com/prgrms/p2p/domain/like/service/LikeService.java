@@ -4,5 +4,4 @@ public interface LikeService {
 
   void toggle(Long userId, Long targetId);
 
-  Long countByUserId(Long userId);
 }

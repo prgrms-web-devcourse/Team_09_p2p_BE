@@ -26,11 +26,6 @@ public class PlaceLikeService implements LikeService {
         .ifPresentOrElse(this::dislike, () -> like(userId, place));
   }
 
-  @Override
-  public Long countByUserId(Long userId) {
-    return placeLikeRepository.countByUserId(userId);
-  }
-
   private void like(Long userId, Place place) {
     PlaceLike placeLike = new PlaceLike(userId, place);
     placeLikeRepository.save(placeLike);
