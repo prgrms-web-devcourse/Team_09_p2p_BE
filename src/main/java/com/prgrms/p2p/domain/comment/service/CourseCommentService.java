@@ -33,8 +33,7 @@ public class CourseCommentService {
 
     Long rootCommentId = createCommentReq.getRootCommentId();
     validateAuth(
-        !Objects.isNull(rootCommentId) &&
-            !courseCommentRepository.existsById(rootCommentId),
+        !Objects.isNull(rootCommentId) && !courseCommentRepository.existsById(rootCommentId),
         "존재하지 않는 댓글에 하위 댓글을 작성할 수 없습니다.");
 
     CourseComment courseComment = toCourseComment(createCommentReq, course, userId);
@@ -42,11 +41,8 @@ public class CourseCommentService {
     return courseCommentRepository.save(courseComment).getId();
   }
 
-  public Long updateCourseComment(
-      UpdateCommentRequest updateReq,
-      Long courseCommentId,
-      Long courseId,
-      Long userId) {
+  public Long updateCourseComment(UpdateCommentRequest updateReq, Long courseCommentId,
+      Long courseId, Long userId) {
 
     validateAuth(!courseRepository.existsById(courseId), "게시글이 존재하지 않습니다.");
     CourseComment courseComment = courseCommentRepository.findById(courseCommentId)
@@ -92,10 +88,15 @@ public class CourseCommentService {
 
   private void deleteParentComment(CourseComment courseComment) {
     if (courseCommentRepository.findSubCommentCount(courseComment.getRootCommentId()) == 1) {
-      CourseComment parentComment
-          = courseCommentRepository.findById(courseComment.getRootCommentId())
-          .orElseThrow(()-> new NotFoundException("부모 댓글이 존재하지 않습니다."));
+      CourseComment parentComment = courseCommentRepository.findById(
+              courseComment.getRootCommentId())
+          .orElseThrow(() -> new NotFoundException("부모 댓글이 존재하지 않습니다."));
       parentComment.changeVisibility(Visibility.FALSE);
     }
+  }
+
+  @Transactional(readOnly = true)
+  public Long countByUserId(Long userId) {
+    return courseCommentRepository.countByUserId(userId);
   }
 }
