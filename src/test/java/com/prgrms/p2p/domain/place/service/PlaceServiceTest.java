@@ -16,7 +16,6 @@ import com.prgrms.p2p.domain.course.repository.CourseRepository;
 import com.prgrms.p2p.domain.like.entity.PlaceLike;
 import com.prgrms.p2p.domain.like.repository.PlaceLikeRepository;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
-import com.prgrms.p2p.domain.place.dto.RecordRequest;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
 import com.prgrms.p2p.domain.place.entity.Category;
@@ -108,7 +107,7 @@ class PlaceServiceTest {
     List<Spot> spotList = new ArrayList<>();
     spotList.add(Spot.바다);
 
-    Course course = new Course(title, period, region, courseDescription, themes, null, user);
+    Course course = new Course(title, period, region, themes, null, user);
     courseRepository.save(course);
 
     //coursePlace
@@ -116,8 +115,8 @@ class PlaceServiceTest {
     String description = "description";
     String imageUrl = "/imageUrl";
     boolean recommended = false;
-    CoursePlace coursePlace = new CoursePlace(index, description, imageUrl, recommended, course,
-        savedPlace);
+    CoursePlace coursePlace = new CoursePlace(index, description, imageUrl, recommended, false,
+        course, savedPlace);
 
     CoursePlace savedCoursePlace = coursePlaceRepository.save(coursePlace);
 
@@ -173,7 +172,7 @@ class PlaceServiceTest {
 
       //then
       assertThat(createPlaceReq).usingRecursiveComparison()
-          .ignoringFields("addressName", "roadAddressName", "isRecommended", "description")
+          .ignoringFields("addressName", "roadAddressName", "isRecommended", "description", "isThumbnail")
           .isEqualTo(place);
 
       assertThat(createPlaceReq.getAddressName()).isEqualTo(place.getAddress().getAddressName());
@@ -298,25 +297,6 @@ class PlaceServiceTest {
 
     @Test
     @DisplayName("성공: 요약 리스트 조회 성공, 비로그인")
-    public void keywordIsNull() throws Exception {
-
-      //given
-      String keyword = null;
-
-      Pageable pageable = PageRequest.of(0, 10);
-
-      //when
-      Slice<SummaryPlaceResponse> summaryList = placeService.findSummaryList(
-          Optional.ofNullable(keyword), pageable, null);
-
-      //then
-      for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
-        assertThat(summaryPlaceResponse.getBookmarked()).isFalse();
-      }
-    }
-
-    @Test
-    @DisplayName("성공: 요약 리스트 조회 성공, 비로그인")
     public void findSummaryList() throws Exception {
 
       //given
@@ -387,16 +367,12 @@ class PlaceServiceTest {
     @Test
     @DisplayName("성공: 북마크 하나도 없어서 조회 개수 0")
     public void findBookmarkedPlaceList() throws Exception {
-
       //given
       Pageable pageable = PageRequest.of(0, 10);
 
-      RecordRequest recordRequest = RecordRequest.builder()
-          .userId(userId)
-          .build();
       //when
       Slice<SummaryPlaceResponse> bookmarkedPlaceList
-          = placeService.findBookmarkedPlaceList(recordRequest, pageable);
+          = placeService.findBookmarkedPlaceList(null, userId, pageable);
 
       //then
       assertThat(bookmarkedPlaceList.getNumberOfElements()).isEqualTo(0);
@@ -405,20 +381,15 @@ class PlaceServiceTest {
     @Test
     @DisplayName("성공: 북마크 1개 했으므로 조회 개수 1")
     public void findBookmarkedPlaceListResult1() throws Exception {
-
       //given
       Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
       PlaceBookmark placeBookmark = new PlaceBookmark(userId, place);
       placeBookmarkRepository.save(placeBookmark);
-
-      RecordRequest recordRequest = RecordRequest.builder()
-          .userId(userId)
-          .build();
       Pageable pageable = PageRequest.of(0, 10);
 
       //when
       Slice<SummaryPlaceResponse> bookmarkedPlaceList
-          = placeService.findBookmarkedPlaceList(recordRequest, pageable);
+          = placeService.findBookmarkedPlaceList(null, userId, pageable);
 
       //then
       assertThat(bookmarkedPlaceList.getNumberOfElements()).isEqualTo(1);

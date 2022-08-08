@@ -12,7 +12,9 @@ import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
+import com.prgrms.p2p.domain.user.exception.EmailConflictException;
 import com.prgrms.p2p.domain.user.exception.InvalidPatternException;
+import com.prgrms.p2p.domain.user.exception.NicknameConflictException;
 import com.prgrms.p2p.domain.user.exception.PwdConflictException;
 import com.prgrms.p2p.domain.user.exception.UserNotFoundException;
 import com.prgrms.p2p.domain.user.exception.WrongInfoException;
@@ -80,7 +82,7 @@ class UserServiceTest {
       // When
       signUpRequest.setPasswordCheck("test1235!");
       // Then
-      assertThrows(IllegalArgumentException.class, () -> userService.signUp(signUpRequest));
+      assertThrows(PwdConflictException.class, () -> userService.signUp(signUpRequest));
     }
 
     @Test
@@ -88,9 +90,9 @@ class UserServiceTest {
     void failValidatePassword() {
       // Given
       // When
-      signUpRequest.setPasswordCheck("test1235!!!!!!!!!!!!!");
+      signUpRequest.setPassword("test1235!!!!!!!!!!!!!");
       // Then
-      assertThrows(IllegalArgumentException.class, () -> userService.signUp(signUpRequest));
+      assertThrows(InvalidPatternException.class, () -> userService.signUp(signUpRequest));
     }
 
     @Test
@@ -100,7 +102,7 @@ class UserServiceTest {
       // When
       signUpRequest.setEmail("test@gmailcom");
       // Then
-      assertThrows(IllegalArgumentException.class, () -> userService.signUp(signUpRequest));
+      assertThrows(InvalidPatternException.class, () -> userService.signUp(signUpRequest));
     }
 
     @Test
@@ -110,7 +112,7 @@ class UserServiceTest {
       // When
       signUpRequest.setNickname("beomsicgoodis");
       // Then
-      assertThrows(IllegalArgumentException.class, () -> userService.signUp(signUpRequest));
+      assertThrows(InvalidPatternException.class, () -> userService.signUp(signUpRequest));
     }
 
     @Test
@@ -126,7 +128,7 @@ class UserServiceTest {
       // When
       userService.signUp(signUpRequest);
       // Then
-      assertThrows(IllegalArgumentException.class, () -> userService.signUp(newRequest));
+      assertThrows(NicknameConflictException.class, () -> userService.signUp(newRequest));
     }
 
     @Test
@@ -142,7 +144,7 @@ class UserServiceTest {
       // When
       userService.signUp(signUpRequest);
       // Then
-      assertThrows(IllegalArgumentException.class, () -> userService.signUp(newRequest));
+      assertThrows(EmailConflictException.class, () -> userService.signUp(newRequest));
     }
   }
 
@@ -155,7 +157,7 @@ class UserServiceTest {
     void success() {
       String nickname = userService.signUp(signUpRequest);
 
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       UserDetailResponse userInfo = userService.getUserInfo(user.getId());
 
@@ -172,7 +174,7 @@ class UserServiceTest {
     void failNotExistId() {
 
       assertThatThrownBy(() -> userService.getUserInfo(100L))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(UserNotFoundException.class);
     }
   }
 
@@ -185,7 +187,7 @@ class UserServiceTest {
     void success() {
       String nickname = userService.signUp(signUpRequest);
 
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       OtherUserDetailResponse otherInfo = userService.getOtherInfo(user.getId());
 
@@ -201,7 +203,7 @@ class UserServiceTest {
     void failNotExistId() {
 
       assertThatThrownBy(() -> userService.getUserInfo(100L))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(UserNotFoundException.class);
     }
   }
 
@@ -214,7 +216,7 @@ class UserServiceTest {
     void success() {
       String nickname = userService.signUp(signUpRequest);
 
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       userService.delete(user.getId());
       Optional<User> target = userRepository.findById(user.getId());
@@ -225,7 +227,7 @@ class UserServiceTest {
     @DisplayName("실패 - 존재하지 않는 Id 입력")
     void failNotExistId() {
       assertThatThrownBy(() -> userService.delete(100L))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(UserNotFoundException.class);
     }
   }
 
@@ -237,7 +239,7 @@ class UserServiceTest {
     @DisplayName("성공 테스트")
     void success() {
       String nickname = userService.signUp(signUpRequest);
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
       userService.changePassword(user.getId(),"test1234!", "change1234!");
 
       assertThat(user.getPassword()).isEqualTo("change1234!");
@@ -294,9 +296,9 @@ class UserServiceTest {
     void success() {
       String nickname = userService.signUp(signUpRequest);
 
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
       userService.modify(user.getId(), "KATE","1999-11-29",Sex.FEMALE);
-      User target = userRepository.findById(user.getId()).orElseThrow(IllegalArgumentException::new);
+      User target = userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
 
       assertThat(target.getId()).isEqualTo(user.getId());
       assertThat(target.getNickname()).isEqualTo("KATE");
@@ -310,10 +312,10 @@ class UserServiceTest {
     void failBlankNickname() {
       String nickname = userService.signUp(signUpRequest);
 
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       assertThatThrownBy(() -> userService.modify(user.getId(), "  ","1999-11-29",Sex.FEMALE))
-          .isInstanceOf(RuntimeException.class);
+          .isInstanceOf(InvalidPatternException.class);
 
     }
 
@@ -322,10 +324,10 @@ class UserServiceTest {
     void failBlankBirth() {
       String nickname = userService.signUp(signUpRequest);
 
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       assertThatThrownBy(() -> userService.modify(user.getId(), "KATE","  ",Sex.FEMALE))
-          .isInstanceOf(RuntimeException.class);
+          .isInstanceOf(InvalidPatternException.class);
     }
 
     @Test
@@ -333,10 +335,10 @@ class UserServiceTest {
     void failNullSex() {
       String nickname = userService.signUp(signUpRequest);
 
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       assertThatThrownBy(() -> userService.modify(user.getId(), "KATE","1999-11-29",null))
-          .isInstanceOf(RuntimeException.class);
+          .isInstanceOf(InvalidPatternException.class);
     }
   }
 
@@ -348,7 +350,7 @@ class UserServiceTest {
     @DisplayName("성공 테스트")
     void success() {
       String nickname = userService.signUp(signUpRequest);
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
       userService.changeProfileUrl(user.getId(), "changeurl");
 
       assertThat(user.getProfileUrl().get()).isEqualTo("changeurl");
@@ -358,20 +360,20 @@ class UserServiceTest {
     @DisplayName("실패 - 존재하지 않는 Id 입력")
     void failNotExistId() {
       String nickname = userService.signUp(signUpRequest);
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       assertThatThrownBy(() -> userService.changeProfileUrl(100L, "changeurl"))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(InvalidPatternException.class);
     }
 
     @Test
     @DisplayName("실패 - profileurl 이 비어있는 경우")
     void failWrongProfileUrl() {
       String nickname = userService.signUp(signUpRequest);
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       assertThatThrownBy(() -> userService.changeProfileUrl(user.getId(), "  "))
-          .isInstanceOf(RuntimeException.class);
+          .isInstanceOf(InvalidPatternException.class);
 
     }
   }

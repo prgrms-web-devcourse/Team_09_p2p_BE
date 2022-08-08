@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.like.controller;
 
+import com.prgrms.p2p.domain.like.dto.LikeResponse;
 import com.prgrms.p2p.domain.like.service.LikeService;
 import com.prgrms.p2p.domain.like.service.LikeServiceFactory;
 import javax.annotation.PostConstruct;
@@ -9,13 +10,13 @@ import org.springframework.stereotype.Component;
 public enum LikeType {
   COURSES("courseLikeService") {
     @Override
-    public void toggle(Long userId, Long courseId) {
-      getLikeService().toggle(userId, courseId);
+    public LikeResponse toggle(Long userId, Long courseId) {
+      return getLikeService().toggle(userId, courseId);
     }
   }, PLACES("placeLikeService") {
     @Override
-    public void toggle(Long userId, Long placeId) {
-      getLikeService().toggle(userId, placeId);
+    public LikeResponse toggle(Long userId, Long placeId) {
+      return getLikeService().toggle(userId, placeId);
     }
   };
 
@@ -34,7 +35,7 @@ public enum LikeType {
     return likeService;
   }
 
-  public abstract void toggle(Long userId, Long targetId);
+  public abstract LikeResponse toggle(Long userId, Long targetId);
 
   public static LikeType of(String type) {
     return LikeType.valueOf(type.toUpperCase());

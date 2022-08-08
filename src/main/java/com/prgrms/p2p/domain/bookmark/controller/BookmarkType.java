@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.bookmark.controller;
 
+import com.prgrms.p2p.domain.bookmark.dto.BookmarkResponse;
 import com.prgrms.p2p.domain.bookmark.service.BookmarkService;
 import com.prgrms.p2p.domain.bookmark.service.BookmarkServiceFactory;
 import javax.annotation.PostConstruct;
@@ -9,13 +10,13 @@ import org.springframework.stereotype.Component;
 public enum BookmarkType {
   COURSES("courseBookmarkService") {
     @Override
-    public void toggle(Long userId, Long courseId) {
-      getBookmarkService().toggle(userId, courseId);
+    public BookmarkResponse toggle(Long userId, Long courseId) {
+      return getBookmarkService().toggle(userId, courseId);
     }
   }, PLACES("placeBookmarkService") {
     @Override
-    public void toggle(Long userId, Long placeId) {
-      getBookmarkService().toggle(userId, placeId);
+    public BookmarkResponse toggle(Long userId, Long placeId) {
+      return getBookmarkService().toggle(userId, placeId);
     }
   };
 
@@ -34,7 +35,7 @@ public enum BookmarkType {
     return bookmarkService;
   }
 
-  public abstract void toggle(Long userId, Long targetId);
+  public abstract BookmarkResponse toggle(Long userId, Long targetId);
 
   public static BookmarkType of(String type) {
     return BookmarkType.valueOf(type.toUpperCase());
