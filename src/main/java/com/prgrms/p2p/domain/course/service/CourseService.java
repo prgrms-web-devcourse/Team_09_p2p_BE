@@ -46,6 +46,7 @@ public class CourseService {
       List<MultipartFile> newImages, Long userId) {
     User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
     Course course = courseRepository.findById(courseId).orElseThrow(IllegalArgumentException::new);
+    updateCourse(course, updateCourseRequest);
     updateCoursePlaces(updateCourseRequest, newImages, course);
     return courseId;
   }
@@ -60,13 +61,21 @@ public class CourseService {
 
   private void updateCoursePlaces(UpdateCourseRequest updateCourseRequest,
       List<MultipartFile> images, Course course) {
-    AtomicInteger idx = new AtomicInteger();
+    AtomicInteger imageOrder = new AtomicInteger();
     IntStream.range(0, updateCourseRequest.getPlaces().size()).forEach(index -> {
       String imageUrl = Objects.isNull(updateCourseRequest.getPlaces().get(index).getImageUrl())
-          ? uploadService.uploadImg(images.get(idx.getAndIncrement()))
+          ? uploadService.uploadImg(images.get(imageOrder.getAndIncrement()))
           : updateCourseRequest.getPlaces().get(index).getImageUrl();
       coursePlaceService.modify(updateCourseRequest.getPlaces().get(index), index, imageUrl,
           course);
     });
+  }
+
+  private void updateCourse(Course course, UpdateCourseRequest updateCourseRequest) {
+    course.changeTitle(updateCourseRequest.getTitle());
+    course.changePeriod(updateCourseRequest.getPeriod());
+    course.changeRegion(updateCourseRequest.getRegion());
+    course.changeThemes(updateCourseRequest.getThemes());
+    course.changeSpots(updateCourseRequest.getSpots());
   }
 }

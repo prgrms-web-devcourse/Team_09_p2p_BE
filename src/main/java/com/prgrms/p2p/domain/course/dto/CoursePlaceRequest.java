@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateCoursePlaceRequest {
+public class CoursePlaceRequest {
 
   private String kakaoMapId;
   private String name;

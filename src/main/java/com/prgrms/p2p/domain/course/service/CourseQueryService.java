@@ -43,4 +43,11 @@ public class CourseQueryService {
     return courses.map(course -> CourseConverter.ofSummary(course, true));
   }
 
+  public void deleteCourse(Long courseId, Long userId) {
+    Course course = courseRepository.findById(courseId).orElseThrow(IllegalArgumentException::new);
+    if (course.getUser().getId().equals(userId)) {
+      throw new IllegalArgumentException();
+    }
+    courseRepository.delete(course);
+  }
 }

@@ -69,6 +69,41 @@ public class CoursePlace extends BaseEntity {
     addPlace(place);
   }
 
+  public void changeSeq(Integer newSeq) {
+    if (Objects.isNull(newSeq)) {
+      throw new IllegalArgumentException();
+    }
+    this.seq = newSeq;
+  }
+
+  public void changeDescription(String newDescription) {
+    if (Objects.isNull(newDescription)) {
+      throw new IllegalArgumentException();
+    }
+    this.description = newDescription;
+  }
+
+  public void changeImageUrl(String newImageUrl) {
+    if (Objects.isNull(newImageUrl)) {
+      throw new IllegalArgumentException();
+    }
+    this.imageUrl = newImageUrl;
+  }
+
+  public void changeRecommended(Boolean recommended) {
+    if (Objects.isNull(recommended)) {
+      throw new IllegalArgumentException();
+    }
+    this.recommended = recommended;
+  }
+
+  public void changeThumbnailed(Boolean thumbnailed) {
+    if (Objects.isNull(thumbnailed)) {
+      throw new IllegalArgumentException();
+    }
+    this.thumbnailed = thumbnailed;
+  }
+
 
   public void addCourse(Course course) {
     if (Objects.isNull(course)) {
