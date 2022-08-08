@@ -77,7 +77,8 @@ public class CourseController {
 
   @GetMapping("/bookmark")
   public ResponseEntity<Slice<SummaryCourseResponse>> getBookmarkPlaceList(
-      @RequestParam("userId") Long userId, Pageable pageable) {
+      @RequestParam("userId") Long userId,
+      @PageableDefault(page = 0, size = 15) Pageable pageable) {
     Slice<SummaryCourseResponse> bookmarkedPlaceList = courseQueryService.findBookmarkedCourseList(
         pageable, userId);
 
