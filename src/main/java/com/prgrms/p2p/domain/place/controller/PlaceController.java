@@ -2,6 +2,7 @@ package com.prgrms.p2p.domain.place.controller;
 
 import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
 import com.prgrms.p2p.domain.course.dto.CreateCoursePlaceRequest;
+import com.prgrms.p2p.domain.course.entity.Sorting;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.service.PlaceService;
@@ -51,11 +52,12 @@ public class PlaceController {
   @GetMapping
   public ResponseEntity<Slice<SummaryPlaceResponse>> getSummaryPlaceList(
       @RequestParam("keyword") Optional<String> keyword,
+      @RequestParam("sorting") Optional<Sorting> sorting,
       @PageableDefault(page = 0, size = 15) Pageable pageable,
       @CurrentUser CustomUserDetails user) {
     Long userId = Objects.isNull(user) ? null : user.getId();
     Slice<SummaryPlaceResponse> summaryList =
-        placeService.findSummaryList(keyword, pageable, userId);
+        placeService.findSummaryList(keyword, sorting, pageable, userId);
 
     return ResponseEntity.ok(summaryList);
   }

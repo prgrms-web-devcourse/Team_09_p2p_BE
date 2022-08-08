@@ -6,6 +6,7 @@ import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSummaryPlaceResp
 
 import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.course.dto.CreateCoursePlaceRequest;
+import com.prgrms.p2p.domain.course.entity.Sorting;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
@@ -43,8 +44,8 @@ public class PlaceService {
   @Transactional
   public Optional<Place> findAndUpdateExistPlace(
       CreateCoursePlaceRequest createCoursePlaceRequest) {
-    Optional<Place> place = placeRepository.findByKakaoMapId(
-        createCoursePlaceRequest.getKakaoMapId());
+    Optional<Place> place =
+        placeRepository.findByKakaoMapId(createCoursePlaceRequest.getKakaoMapId());
     place.ifPresent(p -> update(p, createCoursePlaceRequest));
     return place;
   }
@@ -55,10 +56,10 @@ public class PlaceService {
     return toDetailPlaceResponse(place, userId);
   }
 
-  public Slice<SummaryPlaceResponse> findSummaryList(Optional<String> keyword, Pageable pageable,
-      Long userId) {
-    String keywords = keyword.isEmpty() ? "" : keyword.get();
-    Slice<Place> placeList = placeRepository.searchPlace(keywords, pageable);
+  public Slice<SummaryPlaceResponse> findSummaryList(
+      Optional<String> keyword, Optional<Sorting> sorting, Pageable pageable, Long userId) {
+    Slice<Place> placeList
+        = placeRepository.searchPlace(keyword.orElseGet(() -> ""), sorting, pageable);
     return placeList.map(p -> toSummaryPlaceResponse(p, Optional.ofNullable(userId)));
   }
 
@@ -73,7 +74,8 @@ public class PlaceService {
 
   private void update(Place place, CreateCoursePlaceRequest updateReq) {
     place.changeName(place.getName());
-    Address newAddress = new Address(updateReq.getAddressName(), updateReq.getRoadAddressName());
+    Address newAddress =
+        new Address(updateReq.getAddressName(), updateReq.getRoadAddressName());
     place.changeAddress(newAddress);
     place.changeCategory(updateReq.getCategory());
     place.changePhoneNumber(updateReq.getPhoneNumber());
