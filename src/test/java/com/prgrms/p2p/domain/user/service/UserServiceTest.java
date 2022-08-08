@@ -216,7 +216,7 @@ class UserServiceTest {
     void success() {
       String nickname = userService.signUp(signUpRequest);
 
-      User user = userRepository.findByNickname(nickname).orElseThrow(IllegalArgumentException::new);
+      User user = userRepository.findByNickname(nickname).orElseThrow(UserNotFoundException::new);
 
       userService.delete(user.getId());
       Optional<User> target = userRepository.findById(user.getId());
@@ -227,7 +227,7 @@ class UserServiceTest {
     @DisplayName("실패 - 존재하지 않는 Id 입력")
     void failNotExistId() {
       assertThatThrownBy(() -> userService.delete(100L))
-          .isInstanceOf(IllegalArgumentException.class);
+          .isInstanceOf(UserNotFoundException.class);
     }
   }
 
