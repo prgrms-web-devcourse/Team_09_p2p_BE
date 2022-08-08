@@ -1,7 +1,6 @@
 package com.prgrms.p2p.domain.course.repository;
 
 import static com.prgrms.p2p.domain.course.entity.QCourse.course;
-import static com.prgrms.p2p.domain.course.entity.QCoursePlace.coursePlace;
 
 import com.prgrms.p2p.domain.course.dto.SearchCourseRequest;
 import com.prgrms.p2p.domain.course.entity.Course;
@@ -79,7 +78,7 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
     BooleanBuilder builder = new BooleanBuilder();
 
     for (Spot spot : spots) {
-      builder.or(course.spots.any().eq(spot));
+      builder.and(course.spots.any().eq(spot));
     }
     return builder;
   }
@@ -90,7 +89,7 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
     }
     BooleanBuilder builder = new BooleanBuilder();
     for (Theme theme : themes) {
-      builder.or(course.themes.any().eq(theme));
+      builder.and(course.themes.any().eq(theme));
     }
     return builder;
   }

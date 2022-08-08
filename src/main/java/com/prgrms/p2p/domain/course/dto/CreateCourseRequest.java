@@ -18,12 +18,13 @@ import lombok.NoArgsConstructor;
 public class CreateCourseRequest {
 
   private String title;
-  private Region region;
+  @Builder.Default
+  private Region region = Region.전체보기;
   private Period period;
   @Builder.Default
-  private List<Theme> themes =new ArrayList<>();
+  private List<Theme> themes = new ArrayList<>();
   @Builder.Default
   private List<Spot> spots = new ArrayList<>();
   @Builder.Default
-  private List<CreateCoursePlaceRequest> places=new ArrayList<>();
+  private List<CreateCoursePlaceRequest> places = new ArrayList<>();
 }
