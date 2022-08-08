@@ -1,12 +1,11 @@
 package com.prgrms.p2p.domain.place.service;
 
+import static com.prgrms.p2p.domain.course.util.CoursePlaceConverter.*;
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toDetailPlaceResponse;
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSummaryPlaceResponse;
 
 import com.prgrms.p2p.domain.common.exception.BadRequestException;
-import com.prgrms.p2p.domain.common.exception.ConflictException;
 import com.prgrms.p2p.domain.course.dto.CreateCoursePlaceRequest;
-import com.prgrms.p2p.domain.course.util.CoursePlaceConverter;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
@@ -29,9 +28,16 @@ public class PlaceService {
   private final PlaceRepository placeRepository;
 
   @Transactional
-  public Place save(CreateCoursePlaceRequest createCoursePlaceRequest) {
-    Place place = CoursePlaceConverter.toPlace(createCoursePlaceRequest);
-    return placeRepository.save(place);
+  public Place save(CreateCoursePlaceRequest createPlaceReq) {
+    Optional<Place> placeByKakaoMapId =
+        placeRepository.findByKakaoMapId(createPlaceReq.getKakaoMapId());
+
+    Place place = placeByKakaoMapId.map(p -> {
+              update(p, createPlaceReq);
+              return p;
+            }
+        ).orElseGet(() -> placeRepository.save(toPlace(createPlaceReq)));
+    return place;
   }
 
   @Transactional
@@ -56,7 +62,8 @@ public class PlaceService {
     return placeList.map(p -> toSummaryPlaceResponse(p, Optional.ofNullable(userId)));
   }
 
-  public Slice<SummaryPlaceResponse> findBookmarkedPlaceList(Long userId, Long targetUserId, Pageable pageable) {
+  public Slice<SummaryPlaceResponse> findBookmarkedPlaceList(Long userId, Long targetUserId,
+      Pageable pageable) {
     if (Objects.isNull(targetUserId)) {
       throw new BadRequestException("입력값을 확인해주세요.");
     }
