@@ -12,8 +12,7 @@ public class CoursePlaceConverter {
   public static CoursePlace toCoursePlace(CreateCoursePlaceRequest createCoursePlaceRequest,
       Integer index, String imageUrl, Course course, Place place) {
     return new CoursePlace(index, createCoursePlaceRequest.getDescription(), imageUrl,
-        createCoursePlaceRequest.getIsRecommended(), createCoursePlaceRequest.getIsThumbnail(),
-        course, place);
+        createCoursePlaceRequest.getIsRecommended(), course, place);
   }
 
   public static Place toPlace(CreateCoursePlaceRequest createCoursePlaceRequest) {
@@ -25,13 +24,11 @@ public class CoursePlaceConverter {
   }
 
   public static CoursePlaceResponse of(CoursePlace coursePlace) {
-    return CoursePlaceResponse.builder().id(coursePlace.getId())
-        .name(coursePlace.getPlace().getName()).description(coursePlace.getDescription())
-        .address(coursePlace.getPlace().getAddress().getAddressName())
-        .latitude(coursePlace.getPlace().getLatitude())
-        .longitude(coursePlace.getPlace().getLongitude())
-        .phoneNumber(coursePlace.getPlace().getPhoneNumber().getNumber())
-        .imageUrl(coursePlace.getImageUrl()).isRecommended(coursePlace.getRecommended())
-        .isThumbnail(coursePlace.getThumbnailed()).build();
+    return CoursePlaceResponse.builder()
+        .id(coursePlace.getId())
+        .description(coursePlace.getDescription())
+        .recommended(coursePlace.getRecommended())
+        .imageUrl(coursePlace.getImageUrl())
+        .build();
   }
 }
