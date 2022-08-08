@@ -59,7 +59,7 @@ public class PlaceService {
   public Slice<SummaryPlaceResponse> findSummaryList(
       Optional<String> keyword, Optional<Sorting> sorting, Pageable pageable, Long userId) {
     Slice<Place> placeList
-        = placeRepository.searchPlace(keyword.orElseGet(() -> ""), sorting, pageable);
+        = placeRepository.searchPlace(keyword.orElse(""), sorting, pageable);
     return placeList.map(p -> toSummaryPlaceResponse(p, Optional.ofNullable(userId)));
   }
 
