@@ -6,6 +6,7 @@ import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
 import com.prgrms.p2p.domain.user.dto.SignUpResponse;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +32,8 @@ public class LikeRestController {
   @Auth
   @GetMapping("/{type}/{id}")
   public ResponseEntity<LikeResponse> toggle(
-      @PathVariable("type") String type, @PathVariable("id") Long id,
+      @ApiParam(value = "장소/코스 type") @PathVariable("type") String type,
+      @ApiParam(value = "타겟 장소/코스 아이디") @PathVariable("id") Long id,
       @CurrentUser CustomUserDetails user) {
     LikeResponse response = LikeType.of(type).toggle(user.getId(), id);
     return ResponseEntity.ok(response);
