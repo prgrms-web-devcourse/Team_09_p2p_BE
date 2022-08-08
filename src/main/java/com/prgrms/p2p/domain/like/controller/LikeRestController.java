@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.like.controller;
 
+import com.prgrms.p2p.domain.like.dto.LikeResponse;
 import com.prgrms.p2p.domain.user.aop.annotation.Auth;
 import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
@@ -17,10 +18,10 @@ public class LikeRestController {
 
   @Auth
   @GetMapping("/{type}/{id}")
-  public ResponseEntity<Void> toggle(
+  public ResponseEntity<LikeResponse> toggle(
       @PathVariable("type") String type, @PathVariable("id") Long id,
       @CurrentUser CustomUserDetails user) {
-    LikeType.of(type).toggle(user.getId(), id);
-    return ResponseEntity.ok().build();
+    LikeResponse response = LikeType.of(type).toggle(user.getId(), id);
+    return ResponseEntity.ok(response);
   }
 }
