@@ -1,8 +1,12 @@
 package com.prgrms.p2p.domain.user.config.security;
 
+import com.amazonaws.util.IOUtils;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.Scanner;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -14,56 +18,51 @@ import org.slf4j.LoggerFactory;
 public class RequestServletWrapper extends HttpServletRequestWrapper {
 
   private static final Logger logger = LoggerFactory.getLogger(RequestServletWrapper.class);
-  private String requestData = null;
+  // 가로챈 데이터를 가공하여 담을 final 변수
+  private final String requestBody;
 
-  public RequestServletWrapper(HttpServletRequest request) {
+  public RequestServletWrapper(HttpServletRequest request) throws IOException{
     super(request);
-    try (Scanner s = new Scanner(request.getInputStream()).useDelimiter("\\A")) {
-      requestData = s.hasNext() ? s.next() : "";
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+
+    String requestData = requestDataByte(request); // Request Data 가로채기
+    requestBody = requestData;
   }
 
   @Override
-  public ServletInputStream getInputStream() throws IOException {
-
-    StringReader reader = new StringReader(requestData);
+  public ServletInputStream getInputStream() {
+    final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(requestBody.getBytes(StandardCharsets.UTF_8));
     return new ServletInputStream() {
-      private ReadListener readListener = null;
       @Override
-      public int read() throws IOException {
-        return reader.read();
-      }
-
-      @Override
-      public void setReadListener(ReadListener listener) {
-        this.readListener = listener;
-        try {
-          if (!isFinished()) {
-            readListener.onDataAvailable();
-          } else {
-            readListener.onAllDataRead();
-          }
-        } catch (IOException io) {
-          logger.info("RequestServlet Wrapper - setReadListener 에러");
-        }
+      public boolean isFinished() {
+        return false;
       }
 
       @Override
       public boolean isReady() {
-        return isFinished();
+        return false;
       }
 
       @Override
-      public boolean isFinished() {
-        try {
-          return reader.read() < 0;
-        } catch (IOException e) {
-          logger.info("RequestServlet Wrapper - isFinished 에러");
-        }
-        return false;
+      public void setReadListener(ReadListener listener) {
+      }
+
+      @Override
+      public int read() {
+        return byteArrayInputStream.read();
       }
     };
+  }
+
+  @Override
+  public BufferedReader getReader() {
+    return new BufferedReader(new InputStreamReader(this.getInputStream()));
+  }
+
+  //==request Body 가로채기==//
+  private String requestDataByte(HttpServletRequest request) throws IOException {
+    byte[] rawData = new byte[128];
+    InputStream inputStream = request.getInputStream();
+    rawData = IOUtils.toByteArray(inputStream);
+    return new String(rawData);
   }
 }
