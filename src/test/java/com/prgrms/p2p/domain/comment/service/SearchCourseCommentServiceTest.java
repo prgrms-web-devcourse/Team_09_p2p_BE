@@ -164,7 +164,7 @@ public class SearchCourseCommentServiceTest {
     for (CourseCommentDto courseCommentResponse : response.getCourseComments()) {
       System.out.println(
           "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
-              .getNickName());
+              .getNickname());
     }
   }
 
@@ -198,7 +198,7 @@ public class SearchCourseCommentServiceTest {
     for (CourseCommentDto courseCommentResponse : responseAfter.getCourseComments()) {
       System.out.println(
           "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
-              .getNickName());
+              .getNickname());
     }
   }
 
@@ -227,7 +227,7 @@ public class SearchCourseCommentServiceTest {
         .collect(Collectors.toList());
     assertThat(afterList.size()).isEqualTo(1);
     assertThat(afterList.get(0).getComment()).isEqualTo("삭제된 댓글입니다.");
-    assertThat(afterList.get(0).getUser().getNickName()).isNull();
+    assertThat(afterList.get(0).getUser().getNickname()).isNull();
     assertThat(afterList.get(0).getUser().getProfileImage()).isNull();
     assertThat(afterList.get(0).getCreatedAt()).isNull();
     assertThat(afterList.get(0).getUpdatedAt()).isNull();
@@ -236,7 +236,7 @@ public class SearchCourseCommentServiceTest {
     for (CourseCommentDto courseCommentResponse : responseAfter.getCourseComments()) {
       System.out.println(
           "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
-              .getNickName());
+              .getNickname());
     }
   }
 
@@ -270,7 +270,7 @@ public class SearchCourseCommentServiceTest {
     for (CourseCommentDto courseCommentResponse : responseAfter.getCourseComments()) {
       System.out.println(
           "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
-              .getNickName());
+              .getNickname());
     }
   }
 
@@ -303,7 +303,7 @@ public class SearchCourseCommentServiceTest {
     for (CourseCommentDto courseCommentResponse : responseAfter.getCourseComments()) {
       System.out.println(
           "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
-              .getNickName());
+              .getNickname());
     }
   }
 
@@ -338,7 +338,7 @@ public class SearchCourseCommentServiceTest {
     for (CourseCommentDto courseCommentResponse : responseAfter.getCourseComments()) {
       System.out.println(
           "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
-              .getNickName());
+              .getNickname());
     }
   }
 }

@@ -1,12 +1,12 @@
 package com.prgrms.p2p.domain.comment.service;
 
+import static com.prgrms.p2p.domain.comment.entity.Visibility.*;
 import static com.prgrms.p2p.domain.comment.entity.Visibility.DELETED_INFORMATION;
 import static com.prgrms.p2p.domain.comment.util.CommentConverter.toCourseComment;
 
 import com.prgrms.p2p.domain.comment.dto.CreateCommentRequest;
 import com.prgrms.p2p.domain.comment.dto.UpdateCommentRequest;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
-import com.prgrms.p2p.domain.comment.entity.Visibility;
 import com.prgrms.p2p.domain.comment.repository.CourseCommentRepository;
 import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.common.exception.NotFoundException;
@@ -69,12 +69,12 @@ public class CourseCommentService {
 
     if (!Objects.isNull(courseComment.getRootCommentId())) {
       deleteParentComment(courseComment);
-      courseComment.changeVisibility(Visibility.FALSE);
+      courseComment.changeVisibility(FALSE);
       return;
     }
 
-    if (courseCommentRepository.findSubCommentCount(courseComment.getId()) == 0) {
-      courseComment.changeVisibility(Visibility.FALSE);
+    if (courseCommentRepository.findSubCommentCount(courseComment.getId()).equals(0L)) {
+      courseComment.changeVisibility(FALSE);
       return;
     }
 
@@ -98,9 +98,9 @@ public class CourseCommentService {
         = courseCommentRepository.findById(courseComment.getRootCommentId())
         .orElseThrow(() -> new NotFoundException("부모 댓글이 존재하지 않습니다."));
 
-    if (courseCommentRepository.findSubCommentCount(courseComment.getRootCommentId()) == 1
+    if (courseCommentRepository.findSubCommentCount(courseComment.getRootCommentId()).equals(1L)
         && parentComment.getVisibility().equals(DELETED_INFORMATION)) {
-      parentComment.changeVisibility(Visibility.FALSE);
+      parentComment.changeVisibility(FALSE);
     }
   }
 }
