@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,7 @@ public class MergeCommentService {
   private final CourseCommentRepository courseCommentRepository;
   private final PlaceCommentRepository placeCommentRepository;
 
-  public SliceImpl<MergeCommentResponse> findCommentsByUserId(Long userId, Pageable pageable) {
+  public Slice<MergeCommentResponse> findCommentsByUserId(Long userId, Pageable pageable) {
     List<MergeCommentResponse> mergeCommentsByUser = new ArrayList<>();
     List<MergeCommentResponse> courseComments = courseCommentRepository.findCourseCommentsByUserId(
             userId).stream().map(comment -> toMergeCommentResponse(comment, "코스"))
@@ -36,13 +37,18 @@ public class MergeCommentService {
     mergeCommentsByUser.addAll(placeComments);
 
     mergeCommentsByUser.sort(Collections.reverseOrder());
+
     boolean hasNext = false;
-
-    if (mergeCommentsByUser.size() > pageable.getPageSize()) {
-      mergeCommentsByUser.remove(pageable.getPageSize());
+    Integer lastIndex;
+    if (mergeCommentsByUser.size() > (pageable.getPageNumber() + 1) * pageable.getPageSize()) {
       hasNext = true;
+      lastIndex = (pageable.getPageNumber() + 1) * pageable.getPageSize();
+    } else {
+      lastIndex = mergeCommentsByUser.size();
     }
+    List<MergeCommentResponse> mergeCommentResponses = mergeCommentsByUser.subList(
+        pageable.getPageNumber() * pageable.getPageSize(), lastIndex);
 
-    return new SliceImpl<>(mergeCommentsByUser, pageable, hasNext);
+    return new SliceImpl<>(mergeCommentResponses, pageable, hasNext);
   }
 }
