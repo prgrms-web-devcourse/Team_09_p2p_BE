@@ -68,7 +68,7 @@ public class PlaceCommentService {
       return;
     }
 
-    if(placeCommentRepository.findSubCommentCount(placeComment.getRootCommentId()) == 0){
+    if(placeCommentRepository.findSubCommentCount(placeComment.getId()) == 0){
       placeComment.changeVisibility(Visibility.FALSE);
       return;
     }
