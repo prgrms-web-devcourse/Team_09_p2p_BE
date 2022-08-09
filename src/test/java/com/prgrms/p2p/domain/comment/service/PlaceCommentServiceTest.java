@@ -2,11 +2,9 @@ package com.prgrms.p2p.domain.comment.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.prgrms.p2p.domain.comment.dto.CreateCommentRequest;
 import com.prgrms.p2p.domain.comment.dto.UpdateCommentRequest;
-import com.prgrms.p2p.domain.comment.entity.CourseComment;
 import com.prgrms.p2p.domain.comment.entity.PlaceComment;
 import com.prgrms.p2p.domain.comment.entity.Visibility;
 import com.prgrms.p2p.domain.comment.repository.PlaceCommentRepository;
@@ -20,7 +18,6 @@ import com.prgrms.p2p.domain.place.repository.PlaceRepository;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
-import java.time.LocalTime;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -352,7 +349,7 @@ public class PlaceCommentServiceTest {
 
     @Test
     @DisplayName("실패: 존재하지 않는 댓글은 삭제할 수 없습니다.")
-    public void failAsWrongCommentId() {
+    public void failWrongCommentId() {
 
       assertThatThrownBy(()->placeCommentService.deletePlaceComment(place.getId(), 100L, user.getId()))
           .isInstanceOf(NotFoundException.class);
