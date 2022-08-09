@@ -213,6 +213,23 @@ public class PlaceCommentServiceTest {
       assertThatThrownBy( () -> placeCommentService.save(createReq, placeId, userId))
           .isInstanceOf(UnAuthorizedException.class);
     }
+
+    @Test
+    @DisplayName("실패: 대댓글에 대댓글을 작성하지 못합니다.")
+    public void failCreateSubSubComment() {
+
+      Long rootCommentId = lastSubComment;
+      Long userId = user.getId();
+      Long placeId = place.getId();
+
+      createReq = CreateCommentRequest.builder()
+          .comment(comment)
+          .rootCommentId(rootCommentId)
+          .build();
+
+      assertThatThrownBy( () -> placeCommentService.save(createReq, placeId, userId))
+          .isInstanceOf(RuntimeException.class);
+    }
   }
 
   @Nested
