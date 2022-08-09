@@ -3,6 +3,7 @@ package com.prgrms.p2p.domain.course.service;
 import static com.prgrms.p2p.domain.course.util.CourseConverter.ofSummary;
 
 import com.prgrms.p2p.domain.bookmark.repository.CourseBookmarkRepository;
+import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.course.dto.DetailCourseResponse;
 import com.prgrms.p2p.domain.course.dto.SearchCourseRequest;
 import com.prgrms.p2p.domain.course.dto.SummaryCourseResponse;
@@ -26,7 +27,7 @@ public class CourseQueryService {
   private final CourseBookmarkRepository bookmarkRepository;
 
   public DetailCourseResponse findDetail(Long id, Long userId) {
-    Course course = courseRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+    Course course = courseRepository.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 코스입니다."));
     Boolean isLiked = likeRepository.existsByUserIdAndCourse(userId, course);
     Boolean isBookmarked = bookmarkRepository.existsByUserIdAndCourse(userId, course);
     return CourseConverter.ofDetail(course, isLiked, isBookmarked);
@@ -43,5 +44,9 @@ public class CourseQueryService {
   public Slice<SummaryCourseResponse> findBookmarkedCourseList(Pageable pageable, Long userId) {
     Slice<Course> courses = courseRepository.findBookmarkedCourse(userId, pageable);
     return courses.map(course -> ofSummary(course, true));
+  }
+
+  public Long countByUserId(Long userId) {
+    return courseRepository.countByUserId(userId);
   }
 }

@@ -3,6 +3,7 @@ package com.prgrms.p2p.domain.course.entity;
 import com.prgrms.p2p.domain.bookmark.entity.CourseBookmark;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
 import com.prgrms.p2p.domain.common.BaseEntity;
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.like.entity.CourseLike;
 import com.prgrms.p2p.domain.user.entity.User;
 import java.util.ArrayList;
@@ -94,45 +95,37 @@ public class Course extends BaseEntity {
   }
 
   public void changeTitle(String newTitle) {
-    if (Objects.isNull(newTitle)) {
-      throw new IllegalArgumentException();
+    if (Strings.isBlank(newTitle)) {
+      throw new BadRequestException("제목에 빈 값을 받을 수 없습니다.");
     }
     this.title = newTitle;
   }
 
   public void changePeriod(Period newPeriod) {
     if (Objects.isNull(newPeriod)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("기간에 빈 값을 받을 수 없습니다.");
     }
     this.period = newPeriod;
   }
 
   public void changeRegion(Region newRegion) {
     if (Objects.isNull(newRegion)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("지역에 빈 값을 받을 수 없습니다.");
     }
     this.region = newRegion;
   }
 
   public void changeThemes(List<Theme> themes) {
-    if (Objects.isNull(themes)) {
-      throw new IllegalArgumentException();
-    }
-
     this.themes = Set.copyOf(themes);
   }
 
   public void changeSpots(List<Spot> spots) {
-    if (Objects.isNull(spots)) {
-      throw new IllegalArgumentException();
-    }
-
     this.spots = Set.copyOf(spots);
   }
 
   public void addUser(User user) {
     if (Objects.isNull(user)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("유저에 값을 받을 수 없습니다.");
     }
     if (this.user != null) {
       this.user.getCourses().remove(this);
@@ -179,7 +172,7 @@ public class Course extends BaseEntity {
 
   private void setTitle(String title) {
     if (Strings.isBlank(title)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("제목에 값을 받을 수 없습니다.");
     }
     this.title = title;
   }
