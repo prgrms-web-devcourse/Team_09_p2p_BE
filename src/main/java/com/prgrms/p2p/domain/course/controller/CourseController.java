@@ -101,7 +101,7 @@ public class CourseController {
   public ResponseEntity deleteCourse(@PathVariable("courseId") Long courseId,
       @CurrentUser CustomUserDetails user) {
     Long userId = Objects.isNull(user) ? null : user.getId();
-    courseQueryService.deleteCourse(courseId, userId);
+    courseService.deleteCourse(courseId, userId);
     return ResponseEntity.noContent().build();
   }
 }
