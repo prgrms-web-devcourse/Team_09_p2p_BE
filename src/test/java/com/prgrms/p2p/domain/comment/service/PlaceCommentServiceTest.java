@@ -49,6 +49,11 @@ public class PlaceCommentServiceTest {
   private Long rootCommentId1;
   private Long rootCommentId2;
   private Long lastSubComment;
+
+  private CreateCommentRequest createReq;
+  private UpdateCommentRequest updateReq;
+  private String comment;
+  private String newComment;
   @BeforeEach
   void setup() {
 
@@ -82,6 +87,12 @@ public class PlaceCommentServiceTest {
     user = userRepository.save(new User(email, password, nick, birth, male));
     Long userId = user.getId();
 
+    comment = "범석님 아프지마요.";
+    newComment = "범석님 약드세요.";
+    updateReq = UpdateCommentRequest.builder()
+        .comment(newComment)
+        .build();
+
     Place savePlace = placeRepository.save(place);
 
     //댓글
@@ -110,17 +121,16 @@ public class PlaceCommentServiceTest {
     @DisplayName("성공: 장소에 댓글을 작성")
     public void createRootComment() {
 
-      String comment = "범석님 아프지마요.";
       Long rootCommentId = null;
       Long userId = user.getId();
       Long placeId = place.getId();
 
-      CreateCommentRequest createCommentReq = CreateCommentRequest.builder()
+      createReq = CreateCommentRequest.builder()
           .comment(comment)
           .rootCommentId(rootCommentId)
           .build();
 
-      Long placeCommentId = placeCommentService.save(createCommentReq, placeId, userId);
+      Long placeCommentId = placeCommentService.save(createReq, placeId, userId);
       PlaceComment placeComment = placeCommentRepository.findById(placeCommentId)
           .orElseThrow(RuntimeException::new);
 
@@ -134,17 +144,16 @@ public class PlaceCommentServiceTest {
     @DisplayName("실패: 존재하지 않는 유저는 댓글을 작성할 수 없습니다.")
     public void failNotExistUser() {
 
-      String comment = "범석님 아프지마요.";
       Long rootCommentId = null;
       Long userId = 100L;
       Long placeId = place.getId();
 
-      CreateCommentRequest createCommentReq = CreateCommentRequest.builder()
+      createReq= CreateCommentRequest.builder()
           .comment(comment)
           .rootCommentId(rootCommentId)
           .build();
 
-      assertThatThrownBy( () -> placeCommentService.save(createCommentReq, placeId, userId))
+      assertThatThrownBy( () -> placeCommentService.save(createReq, placeId, userId))
           .isInstanceOf(UnAuthorizedException.class);
     }
 
@@ -152,17 +161,16 @@ public class PlaceCommentServiceTest {
     @DisplayName("실패: 존재하지 않는 장소에는 댓글을 작성할 수 없습니다.")
     public void failNotExistPlace() {
 
-      String comment = "범석님 아프지마요.";
       Long rootCommentId = null;
       Long userId = user.getId();
       Long placeId = 100L;
 
-      CreateCommentRequest createCommentReq = CreateCommentRequest.builder()
+      createReq = CreateCommentRequest.builder()
           .comment(comment)
           .rootCommentId(rootCommentId)
           .build();
 
-      assertThatThrownBy( () -> placeCommentService.save(createCommentReq, placeId, userId))
+      assertThatThrownBy( () -> placeCommentService.save(createReq, placeId, userId))
           .isInstanceOf(NotFoundException.class);
     }
 
@@ -170,16 +178,16 @@ public class PlaceCommentServiceTest {
     @DisplayName("성공: 장소에 대댓글을 작성")
     public void createSubComment() {
 
-      String comment = "범석님 아프지마요.";
       Long rootCommentId = rootCommentId1;
       Long userId = user.getId();
       Long placeId = place.getId();
-      CreateCommentRequest createCommentReq = CreateCommentRequest.builder()
+      
+      createReq = CreateCommentRequest.builder()
           .comment(comment)
           .rootCommentId(rootCommentId)
           .build();
 
-      Long placeCommentId = placeCommentService.save(createCommentReq, placeId, userId);
+      Long placeCommentId = placeCommentService.save(createReq, placeId, userId);
       PlaceComment placeComment = placeCommentRepository.findById(placeCommentId)
           .orElseThrow(RuntimeException::new);
 
@@ -193,17 +201,16 @@ public class PlaceCommentServiceTest {
     @DisplayName("실패: 존재하지 않는 root 댓글에는 대댓글을 작성할 수 없습니다.")
     public void failNotExistRootComment() {
 
-      String comment = "범석님 아프지마요.";
       Long rootCommentId = 100L;
       Long userId = user.getId();
       Long placeId = place.getId();
 
-      CreateCommentRequest createCommentReq = CreateCommentRequest.builder()
+      createReq = CreateCommentRequest.builder()
           .comment(comment)
           .rootCommentId(rootCommentId)
           .build();
 
-      assertThatThrownBy( () -> placeCommentService.save(createCommentReq, placeId, userId))
+      assertThatThrownBy( () -> placeCommentService.save(createReq, placeId, userId))
           .isInstanceOf(UnAuthorizedException.class);
     }
   }
@@ -215,11 +222,6 @@ public class PlaceCommentServiceTest {
     @Test
     @DisplayName("성공: 댓글을 정상적으로 수정합니다.")
     public void updateComment() {
-
-      String newComment = "범석님 약드세요.";
-      UpdateCommentRequest updateReq = UpdateCommentRequest.builder()
-          .comment(newComment)
-          .build();
 
       Long changedCommentId = placeCommentService.updatePlaceComment(
           updateReq, place.getId(), rootCommentId1, user.getId()
@@ -235,11 +237,7 @@ public class PlaceCommentServiceTest {
     @DisplayName("실패: 수정 권한이 없는 유저입니다.")
     public void failWrongUser() {
 
-      String newComment = "범석님 약드세요.";
       Long userId = 100L;
-      UpdateCommentRequest updateReq = UpdateCommentRequest.builder()
-          .comment(newComment)
-          .build();
 
       assertThatThrownBy(() -> placeCommentService
           .updatePlaceComment(updateReq, place.getId(), rootCommentId1, userId))
@@ -250,11 +248,7 @@ public class PlaceCommentServiceTest {
     @DisplayName("실패: 존재하지 않는 장소의 댓글은 수정할 수 없습니다.")
     public void failNotExistPlace() {
 
-      String newComment = "범석님 약드세요.";
       Long placeId = 100L;
-      UpdateCommentRequest updateReq = UpdateCommentRequest.builder()
-          .comment(newComment)
-          .build();
 
       assertThatThrownBy(() -> placeCommentService
           .updatePlaceComment(updateReq, placeId, rootCommentId1, user.getId()))
@@ -265,11 +259,7 @@ public class PlaceCommentServiceTest {
     @DisplayName("실패: 존재하지 않는 댓글은 수정할 수 없습니다.")
     public void failNotExistComment() {
 
-      String newComment = "범석님 약드세요.";
       Long commentId = 100L;
-      UpdateCommentRequest updateReq = UpdateCommentRequest.builder()
-          .comment(newComment)
-          .build();
 
       assertThatThrownBy(() -> placeCommentService
           .updatePlaceComment(updateReq, place.getId(), commentId, user.getId()))
