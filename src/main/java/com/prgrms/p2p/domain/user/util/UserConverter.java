@@ -82,6 +82,7 @@ public class UserConverter {
 
     OtherUserDetailResponse otherUserDetail = OtherUserDetailResponse.builder()
         .id(user.getId())
+        .email(user.getEmail())
         .nickname(user.getNickname())
         .profileImage(profileUrl)
         .birth(fromLocalDate(user.getBirth()))

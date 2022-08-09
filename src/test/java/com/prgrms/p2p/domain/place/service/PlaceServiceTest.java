@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.place.service;
 
+import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSearchPlaceDto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.prgrms.p2p.domain.bookmark.entity.PlaceBookmark;
@@ -9,6 +10,7 @@ import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.CoursePlace;
 import com.prgrms.p2p.domain.course.entity.Period;
 import com.prgrms.p2p.domain.course.entity.Region;
+import com.prgrms.p2p.domain.course.entity.Sorting;
 import com.prgrms.p2p.domain.course.entity.Spot;
 import com.prgrms.p2p.domain.course.entity.Theme;
 import com.prgrms.p2p.domain.course.repository.CoursePlaceRepository;
@@ -16,6 +18,7 @@ import com.prgrms.p2p.domain.course.repository.CourseRepository;
 import com.prgrms.p2p.domain.like.entity.PlaceLike;
 import com.prgrms.p2p.domain.like.repository.PlaceLikeRepository;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
+import com.prgrms.p2p.domain.place.dto.SearchPlaceDto;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
 import com.prgrms.p2p.domain.place.entity.Category;
@@ -172,7 +175,50 @@ class PlaceServiceTest {
 
       //then
       assertThat(createPlaceReq).usingRecursiveComparison()
-          .ignoringFields("addressName", "roadAddressName", "isRecommended", "description", "isThumbnail")
+          .ignoringFields("addressName", "roadAddressName", "isRecommended", "description",
+              "isThumbnail")
+          .isEqualTo(place);
+
+      assertThat(createPlaceReq.getAddressName()).isEqualTo(place.getAddress().getAddressName());
+      assertThat(createPlaceReq.getRoadAddressName()).isEqualTo(
+          place.getAddress().getRoadAddressName());
+    }
+
+    @Test
+    @DisplayName("성공: kakaoMapId가 null 일 떄 장소 저장에 성공")
+    public void savePlaceWhenKaKaoIdIsNull() throws Exception {
+
+      //given
+      String kakaoMapId = null;
+      String name = "name";
+      String addressName = "addressName";
+      String roadAddressName = "roadAddressName";
+      String latitude = "latitude";
+      String longitude = "longitude";
+      Category category = Category.MT1;
+      String number = "010-1234-1234";
+      PhoneNumber phoneNumber = new PhoneNumber(number);
+
+      CoursePlaceRequest createPlaceReq = CoursePlaceRequest.builder()
+          .kakaoMapId(kakaoMapId)
+          .name(name)
+          .addressName(addressName)
+          .roadAddressName(roadAddressName)
+          .latitude(latitude)
+          .longitude(longitude)
+          .category(category)
+          .phoneNumber(phoneNumber)
+          .build();
+
+      //when
+      Long placeId = placeService.save(createPlaceReq).getId();
+
+      Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
+
+      //then
+      assertThat(createPlaceReq).usingRecursiveComparison()
+          .ignoringFields("addressName", "roadAddressName", "isRecommended", "description",
+              "isThumbnail")
           .isEqualTo(place);
 
       assertThat(createPlaceReq.getAddressName()).isEqualTo(place.getAddress().getAddressName());
@@ -231,8 +277,8 @@ class PlaceServiceTest {
               "liked", "bookmarked", "imageUrl").isEqualTo(place);
 
       assertThat(detailPlaceResp.getAddressName()).isEqualTo(place.getAddress().getAddressName());
-      assertThat(detailPlaceResp.getRoadAddressName()).isEqualTo(
-          place.getAddress().getRoadAddressName());
+      assertThat(detailPlaceResp.getRoadAddressName())
+          .isEqualTo(place.getAddress().getRoadAddressName());
 
       assertThat(detailPlaceResp.getPhoneNumber().getNumber()).isEqualTo(
           place.getPhoneNumber().getNumber());
@@ -252,10 +298,11 @@ class PlaceServiceTest {
       Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
       PlaceLike placeLike = new PlaceLike(userId, place);
       placeLikeRepository.save(placeLike);
+      Optional<Long> userId = Optional.ofNullable(PlaceServiceTest.this.userId);
 
       //when
-      DetailPlaceResponse detailPlaceResp = placeService.findDetail(placeId,
-          Optional.ofNullable(userId));
+      DetailPlaceResponse detailPlaceResp
+          = placeService.findDetail(placeId, userId);
 
       //then
       assertThat(detailPlaceResp).usingRecursiveComparison()
@@ -277,10 +324,11 @@ class PlaceServiceTest {
       Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
       PlaceBookmark placeBookmark = new PlaceBookmark(userId, place);
       placeBookmarkRepository.save(placeBookmark);
+      Optional<Long> userId = Optional.ofNullable(PlaceServiceTest.this.userId);
 
       //when
-      DetailPlaceResponse detailPlaceResp = placeService.findDetail(placeId,
-          Optional.ofNullable(userId));
+      DetailPlaceResponse detailPlaceResp
+          = placeService.findDetail(placeId, userId);
 
       //then
       assertThat(detailPlaceResp.getLiked()).isFalse();
@@ -300,17 +348,19 @@ class PlaceServiceTest {
     public void findSummaryList() throws Exception {
 
       //given
-      String keyword = "na";
+      Optional<String> keyword = Optional.ofNullable("na");
+      Optional<Sorting> orderByFamous = Optional.ofNullable(Sorting.인기순);
+      SearchPlaceDto searchPlaceDto = toSearchPlaceDto(keyword, Optional.empty(), orderByFamous);
 
       Pageable pageable = PageRequest.of(0, 10);
 
       //when
-      Slice<SummaryPlaceResponse> summaryList = placeService.findSummaryList(
-          Optional.ofNullable(keyword), pageable, null);
+      Slice<SummaryPlaceResponse> summaryList
+          = placeService.findSummaryList(searchPlaceDto, pageable, null);
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
-        assertThat(summaryPlaceResponse.getTitle()).contains(keyword);
+        assertThat(summaryPlaceResponse.getTitle()).contains("na");
         assertThat(summaryPlaceResponse.getBookmarked()).isFalse();
       }
     }
@@ -320,17 +370,19 @@ class PlaceServiceTest {
     public void findSummaryListByLoginUserNonBookmark() throws Exception {
 
       //given
-      String keyword = "";
 
+      Optional<String> keyword = Optional.ofNullable("");
       Pageable pageable = PageRequest.of(0, 10);
+      Optional<Sorting> orderByFamous = Optional.ofNullable(Sorting.인기순);
+      SearchPlaceDto searchPlaceDto = toSearchPlaceDto(keyword, Optional.empty(), orderByFamous);
 
       //when
       Slice<SummaryPlaceResponse> summaryList
-          = placeService.findSummaryList(Optional.ofNullable(keyword), pageable, userId);
+          = placeService.findSummaryList(searchPlaceDto, pageable, userId);
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
-        assertThat(summaryPlaceResponse.getTitle()).contains(keyword);
+        assertThat(summaryPlaceResponse.getTitle()).contains("");
         assertThat(summaryPlaceResponse.getBookmarked()).isFalse();
       }
     }
@@ -340,21 +392,23 @@ class PlaceServiceTest {
     public void findSummaryListByLoginAndBookmarkUser() throws Exception {
 
       //given
+      Optional<String> keyword = Optional.ofNullable("");
       Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
       PlaceBookmark placeBookmark = new PlaceBookmark(userId, place);
       placeBookmarkRepository.save(placeBookmark);
+      Optional<Sorting> orderByFamous = Optional.ofNullable(Sorting.인기순);
+      SearchPlaceDto searchPlaceDto = toSearchPlaceDto(keyword, Optional.empty(), orderByFamous);
 
-      String keyword = "";
 
       Pageable pageable = PageRequest.of(0, 10);
 
       //when
       Slice<SummaryPlaceResponse> summaryList
-          = placeService.findSummaryList(Optional.ofNullable(keyword), pageable, userId);
+          = placeService.findSummaryList(searchPlaceDto, pageable, userId);
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
-        assertThat(summaryPlaceResponse.getTitle()).contains(keyword);
+        assertThat(summaryPlaceResponse.getTitle()).contains("");
         assertThat(summaryPlaceResponse.getBookmarked()).isTrue();
       }
     }

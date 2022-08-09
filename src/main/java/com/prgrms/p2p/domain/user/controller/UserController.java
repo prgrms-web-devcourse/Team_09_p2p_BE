@@ -181,7 +181,7 @@ public class UserController {
       @ApiResponse(code = 401, message = "인증 실패")
   })
   @DeleteMapping()
-  public ResponseEntity delete(@CurrentUser CustomUserDetails user){
+  public ResponseEntity<Void> delete(@CurrentUser CustomUserDetails user){
     userService.delete(user.getId());
 
     return ResponseEntity.noContent().build();

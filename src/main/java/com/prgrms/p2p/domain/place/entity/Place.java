@@ -128,9 +128,6 @@ public class Place extends BaseEntity {
   }
 
   private void setKakaoMapId(String kakaoMapId) {
-    if (kakaoMapId.isBlank()) {
-      throw new IllegalArgumentException();
-    }
     this.kakaoMapId = kakaoMapId;
   }
 

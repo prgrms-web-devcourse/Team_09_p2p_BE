@@ -1,12 +1,13 @@
 package com.prgrms.p2p.domain.place.service;
 
+import static com.prgrms.p2p.domain.course.util.CoursePlaceConverter.*;
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toDetailPlaceResponse;
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSummaryPlaceResponse;
 
 import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.course.dto.CoursePlaceRequest;
-import com.prgrms.p2p.domain.course.util.CoursePlaceConverter;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
+import com.prgrms.p2p.domain.place.dto.SearchPlaceDto;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
 import com.prgrms.p2p.domain.place.entity.Place;
@@ -28,9 +29,16 @@ public class PlaceService {
   private final PlaceRepository placeRepository;
 
   @Transactional
-  public Place save(CoursePlaceRequest coursePlaceRequest) {
-    Place place = CoursePlaceConverter.toPlace(coursePlaceRequest);
-    return placeRepository.save(place);
+  public Place save(CoursePlaceRequest createPlaceReq) {
+    Optional<Place> placeByKakaoMapId =
+        placeRepository.findByKakaoMapId(createPlaceReq.getKakaoMapId());
+
+    Place place = placeByKakaoMapId.map(p -> {
+              update(p, createPlaceReq);
+              return p;
+            }
+        ).orElseGet(() -> placeRepository.save(toPlace(createPlaceReq)));
+    return place;
   }
 
   @Transactional
@@ -48,10 +56,11 @@ public class PlaceService {
     return toDetailPlaceResponse(place, userId);
   }
 
-  public Slice<SummaryPlaceResponse> findSummaryList(Optional<String> keyword, Pageable pageable,
-      Long userId) {
-    String keywords = keyword.isEmpty() ? "" : keyword.get();
-    Slice<Place> placeList = placeRepository.searchPlace(keywords, pageable);
+  public Slice<SummaryPlaceResponse> findSummaryList(
+      SearchPlaceDto searchPlaceDto, Pageable pageable, Long userId) {
+
+    Slice<Place> placeList
+        = placeRepository.searchPlace(searchPlaceDto, pageable);
     return placeList.map(p -> toSummaryPlaceResponse(p, Optional.ofNullable(userId)));
   }
 
