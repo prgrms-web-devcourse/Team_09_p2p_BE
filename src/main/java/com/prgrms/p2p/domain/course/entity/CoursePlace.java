@@ -77,14 +77,14 @@ public class CoursePlace extends BaseEntity {
   }
 
   public void changeDescription(String newDescription) {
-    if (Objects.isNull(newDescription)) {
+    if (Strings.isBlank(newDescription)) {
       throw new IllegalArgumentException();
     }
     this.description = newDescription;
   }
 
   public void changeImageUrl(String newImageUrl) {
-    if (Objects.isNull(newImageUrl)) {
+    if (Strings.isBlank(newImageUrl)) {
       throw new IllegalArgumentException();
     }
     this.imageUrl = newImageUrl;
