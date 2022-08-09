@@ -46,7 +46,7 @@ public class CourseService {
       List<MultipartFile> newImages, Long userId) {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
-    Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotFoundException("존재하지 않는 코가입니다."));
+    Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotFoundException("존재하지 않는 코스입니다."));
     validateAuthorization(userId, course);
     updateCourse(course, updateCourseRequest);
     updateCoursePlaces(updateCourseRequest, newImages, course);

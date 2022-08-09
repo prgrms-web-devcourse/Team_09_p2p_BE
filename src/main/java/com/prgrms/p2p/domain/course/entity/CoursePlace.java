@@ -3,7 +3,7 @@ package com.prgrms.p2p.domain.course.entity;
 
 import com.prgrms.p2p.domain.common.BaseEntity;
 import com.prgrms.p2p.domain.common.exception.BadRequestException;
-import com.prgrms.p2p.domain.course.exception.LessThanZeroBadRequestException;
+import com.prgrms.p2p.domain.course.exception.LessThanZeroSeqBadRequestException;
 import com.prgrms.p2p.domain.place.entity.Place;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -181,7 +181,7 @@ public class CoursePlace extends BaseEntity {
       throw new BadRequestException("순서에 빈 값을 받을 수 없습니다.");
     }
     if (index < 0) {
-      throw new LessThanZeroBadRequestException("순서에 0보다 작은 값은 받을 수 없습니다.");
+      throw new LessThanZeroSeqBadRequestException("순서에 0보다 작은 값은 받을 수 없습니다.");
     }
     this.seq = index;
   }
