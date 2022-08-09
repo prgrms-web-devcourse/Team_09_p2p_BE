@@ -64,7 +64,7 @@ public class PlaceCommentController {
     return ResponseEntity.ok(updatedCommentId);
   }
 
-  //장소 댓글 수정
+  //장소 댓글 삭제
   @DeleteMapping("/{place_id}/comments/{comment_id}")
   public ResponseEntity<Void> deleteComment(
       @CurrentUser CustomUserDetails user,
