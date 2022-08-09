@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.prgrms.p2p.domain.comment.dto.CreateCommentRequest;
+import com.prgrms.p2p.domain.comment.dto.UpdateCommentRequest;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
 import com.prgrms.p2p.domain.comment.entity.PlaceComment;
 import com.prgrms.p2p.domain.comment.repository.PlaceCommentRepository;
@@ -207,6 +208,75 @@ public class PlaceCommentServiceTest {
 
       assertThatThrownBy( () -> placeCommentService.save(createCommentReq, placeId, userId))
           .isInstanceOf(UnAuthorizedException.class);
+    }
+  }
+
+  @Nested
+  @DisplayName("장소 댓글 수정 기능 테스트")
+  class updatePlaceComment {
+
+    @Test
+    @DisplayName("성공: 댓글을 정상적으로 수정합니다.")
+    public void updateComment() {
+
+      String newComment = "범석님 약드세요.";
+      UpdateCommentRequest updateReq = UpdateCommentRequest.builder()
+          .comment(newComment)
+          .build();
+
+      Long changedCommentId = placeCommentService.updatePlaceComment(
+          updateReq, place.getId(), rootCommentId1, user.getId()
+      );
+
+      PlaceComment placeComment = placeCommentRepository.findById(changedCommentId)
+          .orElseThrow(RuntimeException::new);
+
+      assertThat(placeComment.getComment()).isEqualTo(newComment);
+    }
+
+    @Test
+    @DisplayName("실패: 수정 권한이 없는 유저입니다.")
+    public void failWrongUser() {
+
+      String newComment = "범석님 약드세요.";
+      Long userId = 100L;
+      UpdateCommentRequest updateReq = UpdateCommentRequest.builder()
+          .comment(newComment)
+          .build();
+
+      assertThatThrownBy(() -> placeCommentService
+          .updatePlaceComment(updateReq, place.getId(), rootCommentId1, userId))
+          .isInstanceOf(UnAuthorizedException.class);
+    }
+
+    @Test
+    @DisplayName("실패: 존재하지 않는 장소의 댓글은 수정할 수 없습니다.")
+    public void failNotExistPlace() {
+
+      String newComment = "범석님 약드세요.";
+      Long placeId = 100L;
+      UpdateCommentRequest updateReq = UpdateCommentRequest.builder()
+          .comment(newComment)
+          .build();
+
+      assertThatThrownBy(() -> placeCommentService
+          .updatePlaceComment(updateReq, placeId, rootCommentId1, user.getId()))
+          .isInstanceOf(UnAuthorizedException.class);
+    }
+
+    @Test
+    @DisplayName("실패: 존재하지 않는 댓글은 수정할 수 없습니다.")
+    public void failNotExistComment() {
+
+      String newComment = "범석님 약드세요.";
+      Long commentId = 100L;
+      UpdateCommentRequest updateReq = UpdateCommentRequest.builder()
+          .comment(newComment)
+          .build();
+
+      assertThatThrownBy(() -> placeCommentService
+          .updatePlaceComment(updateReq, place.getId(), commentId, user.getId()))
+          .isInstanceOf(NotFoundException.class);
     }
   }
 }
