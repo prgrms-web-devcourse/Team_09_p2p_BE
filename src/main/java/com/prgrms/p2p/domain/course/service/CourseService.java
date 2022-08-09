@@ -71,6 +71,14 @@ public class CourseService {
     });
   }
 
+  public void deleteCourse(Long courseId, Long userId) {
+    Course course = courseRepository.findById(courseId).orElseThrow(IllegalArgumentException::new);
+    if (!course.getUser().getId().equals(userId)) {
+      throw new IllegalArgumentException();
+    }
+    courseRepository.delete(course);
+  }
+
   private void updateCourse(Course course, UpdateCourseRequest updateCourseRequest) {
     course.changeTitle(updateCourseRequest.getTitle());
     course.changePeriod(updateCourseRequest.getPeriod());
