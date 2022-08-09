@@ -93,23 +93,31 @@ class PlaceTest {
     }
 
     @Test
-    @DisplayName("실패: 카카오 맵 아이디가 공백일 때")
-    public void failAsKakaoMapIdIsBlank() throws Exception {
+    @DisplayName("성공: 카카오 맵 아이디가 null 일 때")
+    public void createPlaceWhenKakaoMapIdIsNull() throws Exception {
 
       //given
-      String kakaoMapId = " ";
+      String kakaoMapId = null;
+
+      //when
+      Place place = new Place(
+          kakaoMapId,
+          name,
+          address,
+          latitude,
+          logitude,
+          category,
+          phoneNumber
+      );
 
       //then
-      Assertions.assertThrows(IllegalArgumentException.class,
-          () -> new Place(
-              kakaoMapId,
-              name,
-              address,
-              latitude,
-              logitude,
-              category,
-              phoneNumber
-          ));
+      assertThat(place.getAddress())
+          .usingRecursiveComparison()
+          .isEqualTo(address);
+
+      assertThat(place.getPhoneNumber())
+          .usingRecursiveComparison()
+          .isEqualTo(phoneNumber);
     }
 
     @Test

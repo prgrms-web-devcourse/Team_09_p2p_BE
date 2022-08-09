@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.place.service;
 
+import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSearchPlaceDto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.prgrms.p2p.domain.bookmark.entity.PlaceBookmark;
@@ -17,6 +18,7 @@ import com.prgrms.p2p.domain.course.repository.CourseRepository;
 import com.prgrms.p2p.domain.like.entity.PlaceLike;
 import com.prgrms.p2p.domain.like.repository.PlaceLikeRepository;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
+import com.prgrms.p2p.domain.place.dto.SearchPlaceDto;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
 import com.prgrms.p2p.domain.place.entity.Category;
@@ -181,6 +183,48 @@ class PlaceServiceTest {
       assertThat(createPlaceReq.getRoadAddressName()).isEqualTo(
           place.getAddress().getRoadAddressName());
     }
+
+    @Test
+    @DisplayName("성공: kakaoMapId가 null 일 떄 장소 저장에 성공")
+    public void savePlaceWhenKaKaoIdIsNull() throws Exception {
+
+      //given
+      String kakaoMapId = null;
+      String name = "name";
+      String addressName = "addressName";
+      String roadAddressName = "roadAddressName";
+      String latitude = "latitude";
+      String longitude = "longitude";
+      Category category = Category.MT1;
+      String number = "010-1234-1234";
+      PhoneNumber phoneNumber = new PhoneNumber(number);
+
+      CoursePlaceRequest createPlaceReq = CoursePlaceRequest.builder()
+          .kakaoMapId(kakaoMapId)
+          .name(name)
+          .addressName(addressName)
+          .roadAddressName(roadAddressName)
+          .latitude(latitude)
+          .longitude(longitude)
+          .category(category)
+          .phoneNumber(phoneNumber)
+          .build();
+
+      //when
+      Long placeId = placeService.save(createPlaceReq).getId();
+
+      Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
+
+      //then
+      assertThat(createPlaceReq).usingRecursiveComparison()
+          .ignoringFields("addressName", "roadAddressName", "isRecommended", "description",
+              "isThumbnail")
+          .isEqualTo(place);
+
+      assertThat(createPlaceReq.getAddressName()).isEqualTo(place.getAddress().getAddressName());
+      assertThat(createPlaceReq.getRoadAddressName()).isEqualTo(
+          place.getAddress().getRoadAddressName());
+    }
   }
 
   @Nested
@@ -305,12 +349,14 @@ class PlaceServiceTest {
 
       //given
       Optional<String> keyword = Optional.ofNullable("na");
-      Pageable pageable = PageRequest.of(0, 10);
       Optional<Sorting> orderByFamous = Optional.ofNullable(Sorting.인기순);
+      SearchPlaceDto searchPlaceDto = toSearchPlaceDto(keyword, Optional.empty(), orderByFamous);
+
+      Pageable pageable = PageRequest.of(0, 10);
 
       //when
       Slice<SummaryPlaceResponse> summaryList
-          = placeService.findSummaryList(keyword, orderByFamous, pageable, null);
+          = placeService.findSummaryList(searchPlaceDto, pageable, null);
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
@@ -328,10 +374,11 @@ class PlaceServiceTest {
       Optional<String> keyword = Optional.ofNullable("");
       Pageable pageable = PageRequest.of(0, 10);
       Optional<Sorting> orderByFamous = Optional.ofNullable(Sorting.인기순);
+      SearchPlaceDto searchPlaceDto = toSearchPlaceDto(keyword, Optional.empty(), orderByFamous);
 
       //when
       Slice<SummaryPlaceResponse> summaryList
-          = placeService.findSummaryList(keyword, orderByFamous, pageable, userId);
+          = placeService.findSummaryList(searchPlaceDto, pageable, userId);
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
@@ -350,12 +397,14 @@ class PlaceServiceTest {
       PlaceBookmark placeBookmark = new PlaceBookmark(userId, place);
       placeBookmarkRepository.save(placeBookmark);
       Optional<Sorting> orderByFamous = Optional.ofNullable(Sorting.인기순);
+      SearchPlaceDto searchPlaceDto = toSearchPlaceDto(keyword, Optional.empty(), orderByFamous);
+
 
       Pageable pageable = PageRequest.of(0, 10);
 
       //when
       Slice<SummaryPlaceResponse> summaryList
-          = placeService.findSummaryList(keyword, orderByFamous, pageable, userId);
+          = placeService.findSummaryList(searchPlaceDto, pageable, userId);
 
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {

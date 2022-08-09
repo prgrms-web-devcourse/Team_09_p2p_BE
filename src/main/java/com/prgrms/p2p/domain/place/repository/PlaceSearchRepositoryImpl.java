@@ -2,10 +2,13 @@ package com.prgrms.p2p.domain.place.repository;
 
 import static com.prgrms.p2p.domain.place.entity.QPlace.place;
 
+import com.prgrms.p2p.domain.course.entity.Region;
 import com.prgrms.p2p.domain.course.entity.Sorting;
+import com.prgrms.p2p.domain.place.dto.SearchPlaceDto;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -25,12 +28,14 @@ public class PlaceSearchRepositoryImpl implements PlaceSearchRepository {
   }
 
   @Override
-  public Slice<Place> searchPlace(String keyword, Optional<Sorting> sorting, Pageable pageable) {
+  public Slice<Place> searchPlace(SearchPlaceDto searchPlaceDto, Pageable pageable) {
     JPAQuery<Place> placeJPAQuery = jpaQueryFactory.selectFrom(place)
         .where(
-            keywordListContains(keyword)
+            keywordListContains(searchPlaceDto.getKeyword().orElse("")),
+            regionEq(searchPlaceDto.getRegion()),
+            place.kakaoMapId.isNotNull()
         )
-        .orderBy(sortingEq(sorting))
+        .orderBy(sortingEq(searchPlaceDto.getSorting()))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize() + 1);
 
@@ -56,6 +61,10 @@ public class PlaceSearchRepositoryImpl implements PlaceSearchRepository {
       builder.and(place.name.containsIgnoreCase(value));
     }
     return builder;
+  }
+
+  private BooleanExpression regionEq(Optional<Region> region) {
+    return region.isEmpty() ? null : place.coursePlaces.any().course.region.eq(region.get());
   }
 
   private OrderSpecifier<?> sortingEq(Optional<Sorting> sorting) {

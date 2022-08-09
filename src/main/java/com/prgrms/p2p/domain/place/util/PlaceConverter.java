@@ -1,8 +1,11 @@
 package com.prgrms.p2p.domain.place.util;
 
 import com.prgrms.p2p.domain.bookmark.entity.PlaceBookmark;
+import com.prgrms.p2p.domain.course.entity.Region;
+import com.prgrms.p2p.domain.course.entity.Sorting;
 import com.prgrms.p2p.domain.like.entity.PlaceLike;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
+import com.prgrms.p2p.domain.place.dto.SearchPlaceDto;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Place;
 import java.util.List;
@@ -52,6 +55,17 @@ public class PlaceConverter {
         .category(place.getCategory())
         .thumbnail(imageUrl)
         .bookmarked(bookmarked)
+        .build();
+  }
+
+  public static SearchPlaceDto toSearchPlaceDto(
+      Optional<String> keyword,
+      Optional<Region> region,
+      Optional<Sorting> sorting) {
+    return SearchPlaceDto.builder()
+        .keyword(keyword)
+        .region(region)
+        .sorting(sorting)
         .build();
   }
 

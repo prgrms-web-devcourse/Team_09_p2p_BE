@@ -2,10 +2,13 @@ package com.prgrms.p2p.domain.place.controller;
 
 import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
 import com.prgrms.p2p.domain.course.dto.CoursePlaceRequest;
+import com.prgrms.p2p.domain.course.entity.Region;
 import com.prgrms.p2p.domain.course.entity.Sorting;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
+import com.prgrms.p2p.domain.place.dto.SearchPlaceDto;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.service.PlaceService;
+import com.prgrms.p2p.domain.place.util.PlaceConverter;
 import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import java.util.Objects;
@@ -49,12 +52,15 @@ public class PlaceController {
   @GetMapping
   public ResponseEntity<Slice<SummaryPlaceResponse>> getSummaryPlaceList(
       @RequestParam("keyword") Optional<String> keyword,
+      @RequestParam("region") Optional<Region> region,
       @RequestParam("sorting") Optional<Sorting> sorting,
       @PageableDefault(page = 0, size = 15) Pageable pageable,
       @CurrentUser CustomUserDetails user) {
     Long userId = Objects.isNull(user) ? null : user.getId();
+
+    SearchPlaceDto searchPlaceDto = PlaceConverter.toSearchPlaceDto(keyword, region, sorting);
     Slice<SummaryPlaceResponse> summaryList =
-        placeService.findSummaryList(keyword, sorting, pageable, userId);
+        placeService.findSummaryList(searchPlaceDto, pageable, userId);
 
     return ResponseEntity.ok(summaryList);
   }
