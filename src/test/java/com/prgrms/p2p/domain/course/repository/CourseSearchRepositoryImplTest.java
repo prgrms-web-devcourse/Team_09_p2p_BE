@@ -169,21 +169,21 @@ class CourseSearchRepositoryImplTest {
     @Test
     @DisplayName("성공: 포함장소 검색")
     public void successSportsSearch() {
-      SearchCourseRequest 바다와숙소 = new SearchCourseRequest(null, Region.서울, Period.ONE_DAY, null,
-          List.of(Spot.바다, Spot.숙소), null, null);
+      SearchCourseRequest 바다 = new SearchCourseRequest(null, Region.서울, Period.ONE_DAY, null,
+          List.of(Spot.바다), null, null);
       PageRequest pageable = PageRequest.of(0, 10);
-      Slice<Course> courses = courseRepository.searchCourse(바다와숙소, pageable);
-      assertThat(courses.getNumberOfElements()).isEqualTo(10);
+      Slice<Course> courses = courseRepository.searchCourse(바다, pageable);
+      assertThat(courses.getNumberOfElements()).isEqualTo(5);
     }
 
     @Test
     @DisplayName("성공: 전체 지역 검색")
     public void successNotExistRegionSearch() {
       SearchCourseRequest 전체지역 = new SearchCourseRequest(null, Region.전체보기, null, null,
-          List.of(Spot.바다, Spot.숙소), null, null);
+          List.of(Spot.바다), null, null);
       PageRequest pageable = PageRequest.of(0, 10);
       Slice<Course> courses = courseRepository.searchCourse(전체지역, pageable);
-      assertThat(courses.getNumberOfElements()).isEqualTo(10);
+      assertThat(courses.getNumberOfElements()).isEqualTo(5);
     }
 
   }
@@ -195,10 +195,10 @@ class CourseSearchRepositoryImplTest {
     @DisplayName("성공: 테마 검색")
     public void successSportsSearch() {
       SearchCourseRequest 테마검색 = new SearchCourseRequest(null, Region.서울, null, null, null,
-          List.of(Theme.가족여행, Theme.데이트코스, Theme.이쁜카페), null);
+          List.of(Theme.가족여행), null);
       PageRequest pageable = PageRequest.of(0, 20);
       Slice<Course> courses = courseRepository.searchCourse(테마검색, pageable);
-      assertThat(courses.getNumberOfElements()).isEqualTo(10);
+      assertThat(courses.getNumberOfElements()).isEqualTo(5);
     }
 
     @Test

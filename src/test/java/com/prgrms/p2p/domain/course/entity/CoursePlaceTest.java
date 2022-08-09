@@ -3,6 +3,7 @@ package com.prgrms.p2p.domain.course.entity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.place.entity.Address;
 import com.prgrms.p2p.domain.place.entity.Category;
 import com.prgrms.p2p.domain.place.entity.PhoneNumber;
@@ -87,7 +88,7 @@ class CoursePlaceTest {
       //then
       assertThatThrownBy(
           () -> new CoursePlace(0, null, imageUrl, true,true, course, place)).isInstanceOf(
-          IllegalArgumentException.class);
+          BadRequestException.class);
     }
 
     @Test
@@ -97,7 +98,7 @@ class CoursePlaceTest {
       //then
       assertThatThrownBy(
           () -> new CoursePlace(0, description, null, true,true, course, place)).isInstanceOf(
-          IllegalArgumentException.class);
+          BadRequestException.class);
     }
 
     @Test
@@ -107,7 +108,7 @@ class CoursePlaceTest {
       //then
       assertThatThrownBy(
           () -> new Course(title, period, region, new HashSet<>(), new HashSet<>(),
-              null)).isInstanceOf(IllegalArgumentException.class);
+              null)).isInstanceOf(BadRequestException.class);
     }
   }
 }
