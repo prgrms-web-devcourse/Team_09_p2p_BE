@@ -8,6 +8,7 @@ import com.prgrms.p2p.domain.comment.dto.CreateCommentRequest;
 import com.prgrms.p2p.domain.comment.dto.UpdateCommentRequest;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
 import com.prgrms.p2p.domain.comment.entity.PlaceComment;
+import com.prgrms.p2p.domain.comment.entity.Visibility;
 import com.prgrms.p2p.domain.comment.repository.PlaceCommentRepository;
 import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
@@ -50,7 +51,7 @@ public class PlaceCommentServiceTest {
 
   private Long rootCommentId1;
   private Long rootCommentId2;
-  private PlaceComment lastSubComment;
+  private Long lastSubComment;
   @BeforeEach
   void setup() {
 
@@ -94,8 +95,7 @@ public class PlaceCommentServiceTest {
         new PlaceComment("이것은 댓글2 입니다.", null, userId, place)).getId();
 
     lastSubComment = placeCommentRepository.save(
-        new PlaceComment("------> 4번의 첫번째 sub 댓글이에요. 작성시간 : " + LocalTime.now(),
-            rootCommentId2, user.getId(), place));
+        new PlaceComment("첫번째 sub 댓글이에요.", rootCommentId2, user.getId(), place)).getId();
   }
 
   @AfterEach
@@ -276,6 +276,85 @@ public class PlaceCommentServiceTest {
 
       assertThatThrownBy(() -> placeCommentService
           .updatePlaceComment(updateReq, place.getId(), commentId, user.getId()))
+          .isInstanceOf(NotFoundException.class);
+    }
+  }
+
+  @Nested
+  @DisplayName("댓글 삭제 테스트")
+  class deletePlaceComment {
+
+    @Test
+    @DisplayName("성공: 대댓글이 없는 댓글을 삭제하면 visibility = false 입니다.")
+    public void deleteNotHaveSubComment() {
+
+      placeCommentService.deletePlaceComment(place.getId(),rootCommentId1, user.getId());
+
+      PlaceComment placeComment = placeCommentRepository.findById(rootCommentId1)
+          .orElseThrow(RuntimeException::new);
+
+      assertThat(placeComment.getVisibility()).isEqualTo(Visibility.FALSE);
+    }
+
+    @Test
+    @DisplayName("성공: 대댓글을 삭제하면 visibility = false 입니다.")
+    public void deleteSubComment() {
+
+      placeCommentService.deletePlaceComment(place.getId(),lastSubComment, user.getId());
+
+      PlaceComment placeComment = placeCommentRepository.findById(lastSubComment)
+          .orElseThrow(RuntimeException::new);
+
+      assertThat(placeComment.getVisibility()).isEqualTo(Visibility.FALSE);
+    }
+
+    @Test
+    @DisplayName("성공: 대댓글이 존재하는 댓글을 삭제하면 visibility = deleted_information 입니다.")
+    public void deleteHaveSubComment() {
+
+      placeCommentService.deletePlaceComment(place.getId(), rootCommentId2, user.getId());
+
+      PlaceComment placeComment = placeCommentRepository.findById(rootCommentId2)
+          .orElseThrow(RuntimeException::new);
+
+      //then
+      assertThat(placeComment.getVisibility()).isEqualTo(Visibility.DELETED_INFORMATION);
+    }
+
+    @Test
+    @DisplayName("성공: 삭제된 댓글의 마지막 대댓글을 삭제하면(대댓글이 더이상 존재하지 않는다면), 댓글의 visibility = false 입니다")
+    public void deleteNotHaveSubComment2() {
+
+      placeCommentService.deletePlaceComment(place.getId(), rootCommentId2, user.getId());
+      placeCommentService.deletePlaceComment(place.getId(), lastSubComment, user.getId());
+
+      PlaceComment placeComment = placeCommentRepository.findById(rootCommentId2)
+          .orElseThrow(RuntimeException::new);
+
+      assertThat(placeComment.getVisibility()).isEqualTo(Visibility.FALSE);
+    }
+
+    @Test
+    @DisplayName("실패: 삭제 권한이 없는 유저입니다.")
+    public void failWrongUserId() {
+
+      assertThatThrownBy(()->placeCommentService.deletePlaceComment(place.getId(), rootCommentId2, 100L))
+          .isInstanceOf(UnAuthorizedException.class);
+    }
+
+    @Test
+    @DisplayName("실패: 존재하지 않는 장소에 댓글은 삭제할 수 없습니다.")
+    public void failWrongPlaceId() {
+
+      assertThatThrownBy(()->placeCommentService.deletePlaceComment(100L, rootCommentId2, user.getId()))
+          .isInstanceOf(UnAuthorizedException.class);
+    }
+
+    @Test
+    @DisplayName("실패: 존재하지 않는 댓글은 삭제할 수 없습니다.")
+    public void failAsWrongCommentId() {
+
+      assertThatThrownBy(()->placeCommentService.deletePlaceComment(place.getId(), 100L, user.getId()))
           .isInstanceOf(NotFoundException.class);
     }
   }
