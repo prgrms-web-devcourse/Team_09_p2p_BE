@@ -5,7 +5,8 @@ import static com.prgrms.p2p.domain.place.util.PlaceConverter.toDetailPlaceRespo
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSummaryPlaceResponse;
 
 import com.prgrms.p2p.domain.common.exception.BadRequestException;
-import com.prgrms.p2p.domain.course.dto.CreateCoursePlaceRequest;
+import com.prgrms.p2p.domain.course.dto.CoursePlaceRequest;
+import com.prgrms.p2p.domain.course.entity.Sorting;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
@@ -28,7 +29,7 @@ public class PlaceService {
   private final PlaceRepository placeRepository;
 
   @Transactional
-  public Place save(CreateCoursePlaceRequest createPlaceReq) {
+  public Place save(CoursePlaceRequest createPlaceReq) {
     Optional<Place> placeByKakaoMapId =
         placeRepository.findByKakaoMapId(createPlaceReq.getKakaoMapId());
 
@@ -42,10 +43,10 @@ public class PlaceService {
 
   @Transactional
   public Optional<Place> findAndUpdateExistPlace(
-      CreateCoursePlaceRequest createCoursePlaceRequest) {
-    Optional<Place> place =
-        placeRepository.findByKakaoMapId(createCoursePlaceRequest.getKakaoMapId());
-    place.ifPresent(p -> update(p, createCoursePlaceRequest));
+      CoursePlaceRequest coursePlaceRequest) {
+    Optional<Place> place = placeRepository.findByKakaoMapId(
+        coursePlaceRequest.getKakaoMapId());
+    place.ifPresent(p -> update(p, coursePlaceRequest));
     return place;
   }
 
@@ -56,9 +57,9 @@ public class PlaceService {
   }
 
   public Slice<SummaryPlaceResponse> findSummaryList(
-      Optional<String> keyword, Pageable pageable, Long userId) {
-    String keywords = keyword.isEmpty() ? "" : keyword.get();
-    Slice<Place> placeList = placeRepository.searchPlace(keywords, pageable);
+      Optional<String> keyword, Optional<Sorting> sorting, Pageable pageable, Long userId) {
+    Slice<Place> placeList
+        = placeRepository.searchPlace(keyword.orElse(""), sorting, pageable);
     return placeList.map(p -> toSummaryPlaceResponse(p, Optional.ofNullable(userId)));
   }
 
@@ -71,10 +72,9 @@ public class PlaceService {
     return bookmarkedPlace.map(place -> toSummaryPlaceResponse(place, Optional.ofNullable(userId)));
   }
 
-  private void update(Place place, CreateCoursePlaceRequest updateReq) {
+  private void update(Place place, CoursePlaceRequest updateReq) {
     place.changeName(place.getName());
-    Address newAddress =
-        new Address(updateReq.getAddressName(), updateReq.getRoadAddressName());
+    Address newAddress = new Address(updateReq.getAddressName(), updateReq.getRoadAddressName());
     place.changeAddress(newAddress);
     place.changeCategory(updateReq.getCategory());
     place.changePhoneNumber(updateReq.getPhoneNumber());

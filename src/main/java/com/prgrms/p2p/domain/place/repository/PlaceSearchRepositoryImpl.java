@@ -2,19 +2,18 @@ package com.prgrms.p2p.domain.place.repository;
 
 import static com.prgrms.p2p.domain.place.entity.QPlace.place;
 
+import com.prgrms.p2p.domain.course.entity.Sorting;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
-import org.springframework.data.domain.Sort;
 import org.springframework.util.ObjectUtils;
 
 public class PlaceSearchRepositoryImpl implements PlaceSearchRepository {
@@ -26,22 +25,14 @@ public class PlaceSearchRepositoryImpl implements PlaceSearchRepository {
   }
 
   @Override
-  public Slice<Place> searchPlace(String keyword, Pageable pageable) {
+  public Slice<Place> searchPlace(String keyword, Optional<Sorting> sorting, Pageable pageable) {
     JPAQuery<Place> placeJPAQuery = jpaQueryFactory.selectFrom(place)
         .where(
             keywordListContains(keyword)
         )
+        .orderBy(sortingEq(sorting))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize() + 1);
-
-    for (Sort.Order o : pageable.getSort()) {
-      PathBuilder pathBuilder = new PathBuilder<>(place.getType(), place.getMetadata());
-
-      placeJPAQuery.orderBy(new OrderSpecifier(
-          o.isAscending() ? Order.ASC : Order.DESC, pathBuilder.get(o.getProperty())
-          )
-      );
-    }
 
     List<Place> placeList = placeJPAQuery.fetch();
 
@@ -65,5 +56,9 @@ public class PlaceSearchRepositoryImpl implements PlaceSearchRepository {
       builder.and(place.name.containsIgnoreCase(value));
     }
     return builder;
+  }
+
+  private OrderSpecifier<?> sortingEq(Optional<Sorting> sorting) {
+    return sorting.isEmpty() ? Sorting.최신순.expressionForPlace() : sorting.get().expressionForPlace();
   }
 }

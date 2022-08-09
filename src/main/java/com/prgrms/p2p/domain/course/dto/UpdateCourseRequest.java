@@ -15,21 +15,16 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SummaryCourseResponse {
+public class UpdateCourseRequest {
 
-  private Long id;
   private String title;
-  private String thumbnail;
-  private Region region;
+  @Builder.Default
+  private Region region = Region.전체보기;
   private Period period;
   @Builder.Default
   private List<Theme> themes = new ArrayList<>();
   @Builder.Default
   private List<Spot> spots = new ArrayList<>();
   @Builder.Default
-  private List<String> places = new ArrayList<>();
-  private Integer likes;
-  private Boolean isBookmarked;
-  private String nickname;
-  private String profileImage;
+  private List<UpdateCoursePlaceRequest> places = new ArrayList<>();
 }
