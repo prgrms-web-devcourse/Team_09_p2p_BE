@@ -6,8 +6,8 @@ import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSummaryPlaceResp
 
 import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.course.dto.CoursePlaceRequest;
-import com.prgrms.p2p.domain.course.entity.Sorting;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
+import com.prgrms.p2p.domain.place.dto.SearchPlaceDto;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
 import com.prgrms.p2p.domain.place.entity.Place;
@@ -57,9 +57,10 @@ public class PlaceService {
   }
 
   public Slice<SummaryPlaceResponse> findSummaryList(
-      Optional<String> keyword, Optional<Sorting> sorting, Pageable pageable, Long userId) {
+      SearchPlaceDto searchPlaceDto, Pageable pageable, Long userId) {
+
     Slice<Place> placeList
-        = placeRepository.searchPlace(keyword.orElse(""), sorting, pageable);
+        = placeRepository.searchPlace(searchPlaceDto, pageable);
     return placeList.map(p -> toSummaryPlaceResponse(p, Optional.ofNullable(userId)));
   }
 
