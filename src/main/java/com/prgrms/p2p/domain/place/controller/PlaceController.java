@@ -2,6 +2,7 @@ package com.prgrms.p2p.domain.place.controller;
 
 import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
 import com.prgrms.p2p.domain.course.dto.CoursePlaceRequest;
+import com.prgrms.p2p.domain.course.entity.Sorting;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.service.PlaceService;
@@ -30,10 +31,10 @@ public class PlaceController {
   private final PlaceService placeService;
 
   @PostMapping
-  public ResponseEntity<Long> savePlace(@RequestBody CoursePlaceRequest createCoursePlaceRequest,
+  public ResponseEntity<Long> savePlace(@RequestBody CoursePlaceRequest coursePlaceRequest,
       @CurrentUser CustomUserDetails user) {
     validateLoginUser(user);
-    Long placeId = placeService.save(createCoursePlaceRequest).getId();
+    Long placeId = placeService.save(coursePlaceRequest).getId();
     return ResponseEntity.ok(placeId);
   }
 
@@ -48,11 +49,12 @@ public class PlaceController {
   @GetMapping
   public ResponseEntity<Slice<SummaryPlaceResponse>> getSummaryPlaceList(
       @RequestParam("keyword") Optional<String> keyword,
+      @RequestParam("sorting") Optional<Sorting> sorting,
       @PageableDefault(page = 0, size = 15) Pageable pageable,
       @CurrentUser CustomUserDetails user) {
     Long userId = Objects.isNull(user) ? null : user.getId();
-    Slice<SummaryPlaceResponse> summaryList = placeService.findSummaryList(keyword, pageable,
-        userId);
+    Slice<SummaryPlaceResponse> summaryList =
+        placeService.findSummaryList(keyword, sorting, pageable, userId);
 
     return ResponseEntity.ok(summaryList);
   }

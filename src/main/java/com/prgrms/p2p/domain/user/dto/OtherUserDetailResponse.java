@@ -19,6 +19,9 @@ public class OtherUserDetailResponse {
   @Schema(description = "타인의 아이디", example = "1")
   private Long id;
 
+  @Schema(description = "타인의 이메일", example = "qjatjr29@khu.ac.kr")
+  private String email;
+
   @Schema(description = "타인의 닉네임", example = "beomsic")
   private String nickname;
 

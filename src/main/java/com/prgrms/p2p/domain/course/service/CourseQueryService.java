@@ -1,5 +1,7 @@
 package com.prgrms.p2p.domain.course.service;
 
+import static com.prgrms.p2p.domain.course.util.CourseConverter.ofSummary;
+
 import com.prgrms.p2p.domain.bookmark.repository.CourseBookmarkRepository;
 import com.prgrms.p2p.domain.course.dto.DetailCourseResponse;
 import com.prgrms.p2p.domain.course.dto.SearchCourseRequest;
@@ -33,13 +35,13 @@ public class CourseQueryService {
   public Slice<SummaryCourseResponse> findSummaryList(SearchCourseRequest searchCourseRequest,
       Pageable pageable, Long userId) {
     Slice<Course> courses = courseRepository.searchCourse(searchCourseRequest, pageable);
-    return courses.map(course -> CourseConverter.ofSummary(course,
-        course.getCourseBookmarks().stream()
+    return courses.map(course -> ofSummary(
+        course, course.getCourseBookmarks().stream()
             .anyMatch(courseBookmark -> courseBookmark.getUserId().equals(userId))));
   }
 
   public Slice<SummaryCourseResponse> findBookmarkedCourseList(Pageable pageable, Long userId) {
     Slice<Course> courses = courseRepository.findBookmarkedCourse(userId, pageable);
-    return courses.map(course -> CourseConverter.ofSummary(course, true));
+    return courses.map(course -> ofSummary(course, true));
   }
 }
