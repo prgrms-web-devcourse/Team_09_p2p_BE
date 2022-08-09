@@ -20,8 +20,8 @@ public class CoursePlaceService {
   private final CoursePlaceRepository coursePlaceRepository;
   private final PlaceService placeService;
 
-  public void save(CoursePlaceRequest coursePlaceRequest, Integer index,
-      String imageUrl, Course course) {
+  public void save(CoursePlaceRequest coursePlaceRequest, Integer index, String imageUrl,
+      Course course) {
 
     Place place = placeService.findAndUpdateExistPlace(coursePlaceRequest)
         .orElseGet(() -> placeService.save(coursePlaceRequest));
@@ -40,6 +40,11 @@ public class CoursePlaceService {
         updateCoursePlaceRequest.getCoursePlaceId()).orElseGet(() -> coursePlaceRepository.save(
         CoursePlaceConverter.toCoursePlace(updateCoursePlaceRequest, index, imageUrl, course,
             place)));
+    updateCoursePlaces(updateCoursePlaceRequest, index, imageUrl, coursePlace);
+  }
+
+  private void updateCoursePlaces(UpdateCoursePlaceRequest updateCoursePlaceRequest, Integer index,
+      String imageUrl, CoursePlace coursePlace) {
     coursePlace.changeSeq(index);
     coursePlace.changeDescription(updateCoursePlaceRequest.getDescription());
     coursePlace.changeImageUrl(imageUrl);
