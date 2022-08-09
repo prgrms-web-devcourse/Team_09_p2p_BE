@@ -1,6 +1,8 @@
 package com.prgrms.p2p.domain.comment.entity;
 
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.place.entity.Place;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,6 +30,9 @@ public class PlaceComment extends Comment {
   @JoinColumn(name = "place_id")
   private Place place;
 
+  @Column(name = "visibility")
+  private Visibility visibility = Visibility.TRUE;
+
   public PlaceComment(String comment, Long rootCommentId, Long userId,
       Place place) {
     super(comment, rootCommentId, userId);
@@ -39,10 +44,26 @@ public class PlaceComment extends Comment {
       this.place.getPlaceComments().remove(this);
     }
     place.addPlaceComment(this);
-    this.place = place;
+    setPlace(place);
+  }
+
+  public void changeVisibility(Visibility visibility) {
+    setVisibility(visibility);
   }
 
   private void setPlace(Place place) {
+    validateNull(place, "장소는 null 일 수 없습니다.");
     this.place = place;
+  }
+
+  private void setVisibility(Visibility visibility) {
+    validateNull(visibility, "댓글 노출여부는 null 일 수 없습니다.");
+    this.visibility = visibility;
+  }
+
+  private void validateNull(Object comment, String message) {
+    if (Objects.isNull(comment)) {
+      throw new BadRequestException(message);
+    }
   }
 }
