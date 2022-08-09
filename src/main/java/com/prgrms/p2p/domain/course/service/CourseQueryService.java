@@ -43,4 +43,8 @@ public class CourseQueryService {
     Slice<Course> courses = courseRepository.findBookmarkedCourse(userId, pageable);
     return courses.map(course -> CourseConverter.ofSummary(course, true));
   }
+
+  public Long countByUserId(Long userId) {
+    return courseRepository.countByUserId(userId);
+  }
 }
