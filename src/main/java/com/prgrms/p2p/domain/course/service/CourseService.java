@@ -2,6 +2,7 @@ package com.prgrms.p2p.domain.course.service;
 
 import static com.prgrms.p2p.domain.course.util.CourseConverter.toCourse;
 
+import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
 import com.prgrms.p2p.domain.common.service.UploadService;
 import com.prgrms.p2p.domain.course.dto.CreateCourseRequest;
 import com.prgrms.p2p.domain.course.dto.UpdateCourseRequest;
@@ -74,7 +75,7 @@ public class CourseService {
   public void deleteCourse(Long courseId, Long userId) {
     Course course = courseRepository.findById(courseId).orElseThrow(IllegalArgumentException::new);
     if (!course.getUser().getId().equals(userId)) {
-      throw new IllegalArgumentException();
+      throw new UnAuthorizedException("권한이 없습니다.");
     }
     courseRepository.delete(course);
   }
