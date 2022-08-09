@@ -2,6 +2,8 @@ package com.prgrms.p2p.domain.course.entity;
 
 
 import com.prgrms.p2p.domain.common.BaseEntity;
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
+import com.prgrms.p2p.domain.course.exception.LessThanZeroBadRequestException;
 import com.prgrms.p2p.domain.place.entity.Place;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -71,35 +73,35 @@ public class CoursePlace extends BaseEntity {
 
   public void changeSeq(Integer newSeq) {
     if (Objects.isNull(newSeq)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("순서에 빈 값을 받을 수 없습니다.");
     }
     this.seq = newSeq;
   }
 
   public void changeDescription(String newDescription) {
     if (Strings.isBlank(newDescription)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("장소 설명에 빈 값을 받을 수 없습니다.");
     }
     this.description = newDescription;
   }
 
   public void changeImageUrl(String newImageUrl) {
     if (Strings.isBlank(newImageUrl)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("장소 이미지에 빈 값을 받을 수 없습니다.");
     }
     this.imageUrl = newImageUrl;
   }
 
   public void changeRecommended(Boolean recommended) {
     if (Objects.isNull(recommended)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("코스 장소 추천에 빈 값을 받을 수 없습니다.");
     }
     this.recommended = recommended;
   }
 
   public void changeThumbnailed(Boolean thumbnailed) {
     if (Objects.isNull(thumbnailed)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("썸네일에 빈 값을 받을 수 없습니다.");
     }
     this.thumbnailed = thumbnailed;
   }
@@ -107,7 +109,7 @@ public class CoursePlace extends BaseEntity {
 
   public void addCourse(Course course) {
     if (Objects.isNull(course)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("코스에 빈 값을 받을 수 없습니다.");
     }
     if (this.course != null) {
       this.course.getCoursePlaces().remove(this);
@@ -123,7 +125,7 @@ public class CoursePlace extends BaseEntity {
 
   public void addPlace(Place place) {
     if (Objects.isNull(place)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("장소에 빈 값을 받을 수 없습니다.");
     }
     if (this.place != null) {
       this.place.getCoursePlaces().remove(this);
@@ -134,52 +136,52 @@ public class CoursePlace extends BaseEntity {
 
   private void setDescription(String description) {
     if (Strings.isBlank(description)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("장소 설명에 빈 값을 받을 수 없습니다.");
     }
     this.description = description;
   }
 
   private void setImageUrl(String imageUrl) {
     if (Strings.isBlank(imageUrl)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("장소 이미지에 빈 값을 받을 수 없습니다.");
     }
     this.imageUrl = imageUrl;
   }
 
   private void setRecommended(Boolean recommended) {
     if (Objects.isNull(recommended)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("코스 장소 추천에 빈 값을 받을 수 없습니다.");
     }
     this.recommended = recommended;
   }
 
   private void setThumbnailed(Boolean thumbnailed) {
     if (Objects.isNull(thumbnailed)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("썸네일에 빈 값을 받을 수 없습니다.");
     }
     this.thumbnailed = thumbnailed;
   }
 
   private void setCourse(Course course) {
     if (Objects.isNull(course)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("코스에 빈 값을 받을 수 없습니다.");
     }
     this.course = course;
   }
 
   private void setPlace(Place place) {
     if (Objects.isNull(course)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("장소에 빈 값을 받을 수 없습니다.");
     }
     this.place = place;
   }
 
   private void setSeq(Integer index) {
     if (Objects.isNull(index)) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("순서에 빈 값을 받을 수 없습니다.");
     }
     if (index < 0) {
-      throw new IllegalArgumentException();
+      throw new LessThanZeroBadRequestException("순서에 0보다 작은 값은 받을 수 없습니다.");
     }
     this.seq = index;
   }
