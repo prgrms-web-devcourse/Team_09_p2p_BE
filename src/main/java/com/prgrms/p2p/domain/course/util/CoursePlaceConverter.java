@@ -6,6 +6,7 @@ import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.CoursePlace;
 import com.prgrms.p2p.domain.place.entity.Address;
 import com.prgrms.p2p.domain.place.entity.Place;
+import java.util.Objects;
 
 public class CoursePlaceConverter {
 
@@ -27,12 +28,14 @@ public class CoursePlaceConverter {
   public static CoursePlaceResponse of(CoursePlace coursePlace) {
     return CoursePlaceResponse.builder().id(coursePlace.getId())
         .kakaoMapId(coursePlace.getPlace().getKakaoMapId()).name(coursePlace.getPlace().getName())
-        .description(coursePlace.getDescription())
-        .address(coursePlace.getPlace().getAddress().getRoadAddressName())
+        .description(coursePlace.getDescription()).address(
+            Objects.isNull(coursePlace.getPlace().getAddress()) ? null
+                : coursePlace.getPlace().getAddress().getRoadAddressName())
         .latitude(coursePlace.getPlace().getLatitude())
         .longitude(coursePlace.getPlace().getLongitude())
-        .category(coursePlace.getPlace().getCategory())
-        .phoneNumber(coursePlace.getPlace().getPhoneNumber().getNumber())
+        .category(coursePlace.getPlace().getCategory()).phoneNumber(
+            Objects.isNull(coursePlace.getPlace().getPhoneNumber()) ? null
+                : coursePlace.getPlace().getPhoneNumber().getNumber())
         .imageUrl(coursePlace.getImageUrl()).isRecommended(coursePlace.getRecommended())
         .isThumbnail(coursePlace.getThumbnailed()).category(coursePlace.getPlace().getCategory())
         .build();

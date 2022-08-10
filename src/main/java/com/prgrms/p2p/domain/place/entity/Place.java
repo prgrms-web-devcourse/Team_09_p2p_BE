@@ -3,6 +3,7 @@ package com.prgrms.p2p.domain.place.entity;
 import com.prgrms.p2p.domain.bookmark.entity.PlaceBookmark;
 import com.prgrms.p2p.domain.comment.entity.PlaceComment;
 import com.prgrms.p2p.domain.common.BaseEntity;
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.course.entity.CoursePlace;
 import com.prgrms.p2p.domain.like.entity.PlaceLike;
 import java.util.ArrayList;
@@ -133,28 +134,25 @@ public class Place extends BaseEntity {
 
   private void setName(String name) {
     if (name.isBlank()) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("장소 이름이 필요합니다.");
     }
     this.name = name;
   }
 
   private void setAddress(Address address) {
-    if (Objects.isNull(address)) {
-      throw new IllegalArgumentException();
-    }
     this.address = address;
   }
 
   private void setLatitude(String latitude) {
     if (latitude.isBlank()) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("장소 위도가 필요합니다.");
     }
     this.latitude = latitude;
   }
 
   private void setLongitude(String longitude) {
     if (longitude.isBlank()) {
-      throw new IllegalArgumentException();
+      throw new BadRequestException("장소 경도가 필요합니다.");
     }
     this.longitude = longitude;
   }
