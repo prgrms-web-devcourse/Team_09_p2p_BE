@@ -1,6 +1,6 @@
 package com.prgrms.p2p.domain.comment.repository;
 
-import static com.prgrms.p2p.domain.comment.util.CommentConverter.toMergeCommentResponse;
+import static org.assertj.core.api.Assertions.*;
 
 import com.prgrms.p2p.domain.comment.dto.CourseCommentForQueryDsl;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
@@ -48,7 +48,7 @@ class SearchTotalCommentRepositoryTest {
   PlaceCommentRepository placeCommentRepository;
 
   @Test
-  @DisplayName("=====================")
+  @DisplayName("findPlace(Course)CommentsByUserId 가 정상적으로 동작합니다.")
   public void findCourseComment() throws Exception {
 
     //course
@@ -132,41 +132,15 @@ class SearchTotalCommentRepositoryTest {
         new PlaceComment("place comment 4 입니다.", null, userId, place));
 
     // then
-//    PageRequest of = PageRequest.of(0, 199);
-//    List<CourseCommentForQueryDsl> temp = courseCommentRepository.temp(userId, of);
-//    System.out.println("temp.size() = " + temp.size());
-
-    List<CourseCommentForQueryDsl> courseCommentsByUserId = courseCommentRepository.findCourseCommentsByUserId(
-        userId);
-
-    System.out.println("courseCommentsByUserId.size() = " + courseCommentsByUserId.size());
-
-//    List<MergeCommentResponse> mergeCommentsByUser = new ArrayList<>();
-//    List<MergeCommentResponse> courseComments = courseCommentRepository.findCourseCommentsByUserId(
-//            userId).stream().map(comment -> toMergeCommentResponse(comment, "코스"))
-//        .collect(Collectors.toList());
-//    List<MergeCommentResponse> placeComments = placeCommentRepository.findPlaceCommentsByUserId(
-//            userId).stream().map(comment -> toMergeCommentResponse(comment, "장소"))
-//        .collect(Collectors.toList());
-//
-//    mergeCommentsByUser.addAll(courseComments);
-//    mergeCommentsByUser.addAll(placeComments);
-//
-//    mergeCommentsByUser.sort(Collections.reverseOrder());
-//
-//    for (MergeCommentResponse mergeCommentResponse : mergeCommentsByUser) {
-//      System.out.println(
-//          "mergeCommentResponse.getCreatedAt() = " + mergeCommentResponse.getCreatedAt());
-//      System.out.println(
-//          "mergeCommentResponse.getComment() = " + mergeCommentResponse.getComment());
-//      System.out.println("mergeCommentResponse.getSubCommentCount() = "
-//          + mergeCommentResponse.getSubCommentCount());
-//      System.out.println(
-//          "mergeCommentResponse.getContent().getTitle() = " + mergeCommentResponse.getContent()
-//              .getTitle());
-//      System.out.println(
-//          "mergeCommentResponse.getContent().getType() = " + mergeCommentResponse.getContent()
-//              .getType());
-//    }
+    List<CourseCommentForQueryDsl> courseCommentsByUserId
+        = courseCommentRepository.findCourseCommentsByUserId(userId);
+    for (CourseCommentForQueryDsl courseCommentForQueryDsl : courseCommentsByUserId) {
+      assertThat(courseCommentForQueryDsl.getUserId()).isEqualTo(userId);
+    }
+    List<CourseCommentForQueryDsl> placeCommentsByUserId
+        = placeCommentRepository.findPlaceCommentsByUserId(userId);
+    for (CourseCommentForQueryDsl placeCommentForQueryDsl : placeCommentsByUserId) {
+      assertThat(placeCommentForQueryDsl.getUserId()).isEqualTo(userId);
+    }
   }
 }

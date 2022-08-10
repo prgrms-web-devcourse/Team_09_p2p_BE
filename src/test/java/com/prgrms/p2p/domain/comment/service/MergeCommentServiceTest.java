@@ -1,6 +1,8 @@
 package com.prgrms.p2p.domain.comment.service;
 
 
+import static org.assertj.core.api.Assertions.*;
+
 import com.prgrms.p2p.domain.comment.dto.MergeCommentResponse;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
 import com.prgrms.p2p.domain.comment.entity.PlaceComment;
@@ -20,19 +22,13 @@ import com.prgrms.p2p.domain.place.repository.PlaceRepository;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -141,38 +137,28 @@ class MergeCommentServiceTest {
     PlaceComment placeComment4 = placeCommentRepository.save(
         new PlaceComment("place comment 4 입니다.", null, userId, place));
 
-    PageRequest pageable = PageRequest.of(1, 13);
 
-    System.out.println(pageable.getOffset());
+    Integer totalSize = courseCommentRepository.findCourseCommentsByUserId(userId).size()
+        + placeCommentRepository.findPlaceCommentsByUserId(userId).size();
     // then
-    Slice<MergeCommentResponse> commentsByUserId = mergeCommentService.findCommentsByUserId(
-        userId, pageable);
+    PageRequest pageable = PageRequest.of(0, 13);
+    Slice<MergeCommentResponse> commentsByUserId
+        = mergeCommentService.findCommentsByUserId(userId, pageable);
 
+    assertThat(commentsByUserId.getNumberOfElements()).isEqualTo(13);
+    assertThat(commentsByUserId.getSize()).isEqualTo(13);
+    assertThat(commentsByUserId.isFirst()).isTrue();
+    assertThat(commentsByUserId.hasNext()).isTrue();
+    assertThat(commentsByUserId.isLast()).isFalse();
 
-//    for (MergeCommentResponse mergeCommentResponse : commentsByUserId) {
-//      String comment = mergeCommentResponse.getComment();
-//      System.out.println("comment = " + comment);
-//    }
-    long offset = commentsByUserId.getPageable().getOffset();
-    System.out.println("offset = " + offset);
+    PageRequest pageable2 = PageRequest.of(1, 13);
+    Slice<MergeCommentResponse> commentsByUserId2
+        = mergeCommentService.findCommentsByUserId(userId, pageable2);
 
-    List<MergeCommentResponse> content = commentsByUserId.getContent();
-    for (MergeCommentResponse mergeCommentResponse : content) {
-      System.out.println(
-          "mergeCommentResponse.getComment() = " + mergeCommentResponse.getComment());
-    }
-    System.out.println("=========================================================");
-    int size = commentsByUserId.getSize();
-    System.out.println("size = " + size);
-    Pageable pageable1 = commentsByUserId.nextPageable();
-    System.out.println("pageable1 = " + pageable1);
-    boolean b = commentsByUserId.hasNext();
-    System.out.println("b = " + b);
-    boolean first = commentsByUserId.isFirst();
-    System.out.println("first = " + first);
-    boolean last = commentsByUserId.isLast();
-    System.out.println("last = " + last);
-
-
+    assertThat(commentsByUserId2.getNumberOfElements()).isEqualTo(totalSize - 13);
+    assertThat(commentsByUserId2.getSize()).isEqualTo(13);
+    assertThat(commentsByUserId2.isFirst()).isFalse();
+    assertThat(commentsByUserId2.hasNext()).isFalse();
+    assertThat(commentsByUserId2.isLast()).isTrue();
   }
 }
