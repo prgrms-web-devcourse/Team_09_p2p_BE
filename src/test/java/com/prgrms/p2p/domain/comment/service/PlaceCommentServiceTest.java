@@ -269,7 +269,7 @@ public class PlaceCommentServiceTest {
 
       assertThatThrownBy(() -> placeCommentService
           .updatePlaceComment(updateReq, placeId, rootCommentId1, user.getId()))
-          .isInstanceOf(UnAuthorizedException.class);
+          .isInstanceOf(NotFoundException.class);
     }
 
     @Test
@@ -351,7 +351,7 @@ public class PlaceCommentServiceTest {
     public void failWrongPlaceId() {
 
       assertThatThrownBy(()->placeCommentService.deletePlaceComment(100L, rootCommentId2, user.getId()))
-          .isInstanceOf(UnAuthorizedException.class);
+          .isInstanceOf(NotFoundException.class);
     }
 
     @Test

@@ -1,7 +1,6 @@
 package com.prgrms.p2p.domain.course.repository;
 
 import com.prgrms.p2p.domain.course.entity.Course;
-import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +13,6 @@ public interface CourseRepository extends JpaRepository<Course, Long>, CourseSea
   Slice<Course> findBookmarkedCourse(@Param("userId") Long userId, Pageable pageable);
 
   Long countByUserId(Long userId);
+
+  Slice<Course> findByUser_IdOrderByCreatedAtDesc(Long userId, Pageable pageable);
 }

@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.place.controller;
 
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
 import com.prgrms.p2p.domain.course.dto.CoursePlaceRequest;
 import com.prgrms.p2p.domain.course.entity.Region;
@@ -11,6 +12,9 @@ import com.prgrms.p2p.domain.place.service.PlaceService;
 import com.prgrms.p2p.domain.place.util.PlaceConverter;
 import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -37,10 +41,15 @@ public class PlaceController {
   public ResponseEntity<Long> savePlace(@RequestBody CoursePlaceRequest coursePlaceRequest,
       @CurrentUser CustomUserDetails user) {
     validateLoginUser(user);
-    Long placeId = placeService.save(coursePlaceRequest).getId();
+    Long placeId = placeService.saveWithoutKakaoMapId(coursePlaceRequest).getId();
     return ResponseEntity.ok(placeId);
   }
 
+  @Operation(summary = "장소 상세 조회", description = "누구나 장소의 상세 정보를 조회할 수 있습니다..")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "장소 상세 조회 성공"),
+      @ApiResponse(code = 404, message = "장소가 존재하지 않습니다.")
+  })
   @GetMapping("/{placeId}")
   public ResponseEntity<DetailPlaceResponse> getDetailPlace(@PathVariable("placeId") Long placeId,
       @CurrentUser CustomUserDetails user) {
@@ -49,6 +58,11 @@ public class PlaceController {
     return ResponseEntity.ok(response);
   }
 
+  @Operation(summary = "장소 목록 조회", description = "누구나 장소의 목록을 조건별로 조회할 수 있습니다..")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "장소 목록 조회 성공"),
+      @ApiResponse(code = 500, message = "잘못된 검색 조건 입력")
+  })
   @GetMapping
   public ResponseEntity<Slice<SummaryPlaceResponse>> getSummaryPlaceList(
       @RequestParam("keyword") Optional<String> keyword,
@@ -65,13 +79,25 @@ public class PlaceController {
     return ResponseEntity.ok(summaryList);
   }
 
+  @Operation(summary = "자신 혹은 타인의 북마크한 장소 목록 조회",
+      description = "북마크한 장소를 조회합니다. 파라미터가 있을 경우 그 유저를 없으면 로그인되어있는 유저의 북마크 목록을 조호합니다.")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "자신 혹은 타인의 북마크한 장소 목록 성공"),
+      @ApiResponse(code = 400, message = "잘못된 요청(로그인 or 조회하고싶은 유저의 아이디가 필요)"),
+  })
   @GetMapping("/bookmark")
   public ResponseEntity<Slice<SummaryPlaceResponse>> getBookmarkPlaceList(
-      @RequestParam("userId") Long targetUserId, Pageable pageable,
+      @RequestParam("userId") Optional<Long> userId,
+      @PageableDefault(page = 0, size = 15) Pageable pageable,
       @CurrentUser CustomUserDetails user) {
-    Long userId = Objects.isNull(user) ? null : user.getId();
-    Slice<SummaryPlaceResponse> bookmarkedPlaceList = placeService.findBookmarkedPlaceList(userId,
-        targetUserId, pageable);
+    if (Objects.isNull(user) && userId.isEmpty()) {
+      throw new BadRequestException("잘못된 요청(로그인 or 조회하고싶은 유저의 아이디가 필요)");
+    }
+    Long loginUserId = Objects.isNull(user) ? null : user.getId();
+    Long targetUserId = userId.isEmpty() ? user.getId() : userId.get();
+
+    Slice<SummaryPlaceResponse> bookmarkedPlaceList
+        = placeService.findBookmarkedPlaceList(loginUserId, targetUserId, pageable);
     return ResponseEntity.ok(bookmarkedPlaceList);
   }
 

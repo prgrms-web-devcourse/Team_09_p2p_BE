@@ -9,7 +9,7 @@ public interface SearchCourseCommentRepository {
 
   Long findSubCommentCount(Long commentId);
 
-  List<CourseCommentForQueryDsl> findCourseCommentListByUserId(Long userId);
+  List<CourseCommentForQueryDsl> findCourseCommentsByUserId(Long userId);
 
   Long countByUserId(Long userId);
 }

@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.place.entity;
 
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import java.util.Objects;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -30,8 +31,10 @@ public class PhoneNumber {
   }
 
   public void validationPhone(String number) {
-    if (Objects.isNull(number) || !number.matches("^\\d{2,3}-\\d{3,4}-\\d{4}$")) {
-      throw new IllegalArgumentException();
+    if (!Objects.isNull(number)) {
+      if (!number.matches("^\\d{2,3}-\\d{3,4}-\\d{4}$")) {
+        throw new BadRequestException("입력값이 전화번호 형식에 맞지 않습니다.");
+      }
     }
   }
 }
