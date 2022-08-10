@@ -49,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.PUT,"/api/v1/users/users", "/api/v1/users/users").hasRole("USER")
         .antMatchers(HttpMethod.DELETE,"/api/v1/users").hasRole("USER")
         //장소
-//        .antMatchers(HttpMethod.POST,"/api/v1/places").hasRole("ADMIN")
+        .antMatchers(HttpMethod.POST,"/api/v1/places").hasRole("USER")
         //코스
         .antMatchers(HttpMethod.POST,"/api/v1/courses").hasRole("USER")
         .antMatchers(HttpMethod.PUT,"/api/v1/courses").hasRole("USER")
