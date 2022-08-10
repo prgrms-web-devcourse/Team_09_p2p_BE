@@ -25,7 +25,7 @@ public class CourseCommentDto {
   public static class UserDto {
 
     private Long id;
-    private String NickName;
+    private String nickname;
     private String profileImage;
   }
 }

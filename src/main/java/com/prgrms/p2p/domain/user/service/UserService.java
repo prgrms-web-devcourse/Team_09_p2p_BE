@@ -92,7 +92,11 @@ public class UserService {
     User user = userRepository.findById(userId)
         .orElseThrow(UserNotFoundException::new);
 
-    validateNickname(nickname);
+    //TODO: 변경요청이 된 닉네임이 전과 동일하면 그대로 넣어달라는 그루님 요청
+    if(!user.getNickname().equals(nickname)){
+      validateNickname(nickname);
+    }
+
     user.changeNickname(nickname);
     user.changeBirth(birth);
     user.changeSex(sex);
