@@ -5,6 +5,7 @@ import static com.prgrms.p2p.domain.place.util.PlaceConverter.toDetailPlaceRespo
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSummaryPlaceResponse;
 
 import com.prgrms.p2p.domain.common.exception.BadRequestException;
+import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.course.dto.CoursePlaceRequest;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.SearchPlaceDto;
@@ -51,7 +52,8 @@ public class PlaceService {
   }
 
   public DetailPlaceResponse findDetail(Long placeId, Optional<Long> userId) {
-    Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
+    Place place = placeRepository.findById(placeId)
+        .orElseThrow(() -> new NotFoundException("해당 장소가 존재하지 않습니다."));
 
     return toDetailPlaceResponse(place, userId);
   }
