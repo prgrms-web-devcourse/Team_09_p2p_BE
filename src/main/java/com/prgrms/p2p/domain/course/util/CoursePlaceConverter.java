@@ -30,7 +30,7 @@ public class CoursePlaceConverter {
         .kakaoMapId(coursePlace.getPlace().getKakaoMapId()).name(coursePlace.getPlace().getName())
         .description(coursePlace.getDescription()).address(
             Objects.isNull(coursePlace.getPlace().getAddress()) ? null
-                : coursePlace.getPlace().getAddress().getRoadAddressName())
+                : coursePlace.getPlace().getAddress().getAddressName())
         .latitude(coursePlace.getPlace().getLatitude())
         .longitude(coursePlace.getPlace().getLongitude())
         .category(coursePlace.getPlace().getCategory()).phoneNumber(
