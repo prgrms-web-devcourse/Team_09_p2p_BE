@@ -27,7 +27,8 @@ public class CourseQueryService {
   private final CourseBookmarkRepository bookmarkRepository;
 
   public DetailCourseResponse findDetail(Long id, Long userId) {
-    Course course = courseRepository.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 코스입니다."));
+    Course course = courseRepository.findById(id)
+        .orElseThrow(() -> new NotFoundException("존재하지 않는 코스입니다."));
     Boolean isLiked = likeRepository.existsByUserIdAndCourse(userId, course);
     Boolean isBookmarked = bookmarkRepository.existsByUserIdAndCourse(userId, course);
     return CourseConverter.ofDetail(course, isLiked, isBookmarked);
@@ -36,9 +37,8 @@ public class CourseQueryService {
   public Slice<SummaryCourseResponse> findSummaryList(SearchCourseRequest searchCourseRequest,
       Pageable pageable, Long userId) {
     Slice<Course> courses = courseRepository.searchCourse(searchCourseRequest, pageable);
-    return courses.map(course -> ofSummary(
-        course, course.getCourseBookmarks().stream()
-            .anyMatch(courseBookmark -> courseBookmark.getUserId().equals(userId))));
+    return courses.map(course -> ofSummary(course, course.getCourseBookmarks().stream()
+        .anyMatch(courseBookmark -> courseBookmark.getUserId().equals(userId))));
   }
 
   public Slice<SummaryCourseResponse> findBookmarkedCourseList(Pageable pageable, Long userId) {
@@ -48,5 +48,19 @@ public class CourseQueryService {
 
   public Long countByUserId(Long userId) {
     return courseRepository.countByUserId(userId);
+  }
+
+  public Slice<SummaryCourseResponse> findMyCourseList(Pageable pageable, Long userId) {
+    Slice<Course> courses = courseRepository.findByUser_IdOrderByCreatedAtDesc(userId, pageable);
+    return courses.map(course -> ofSummary(course, course.getCourseBookmarks().stream()
+        .anyMatch(courseBookmark -> courseBookmark.getUserId().equals(userId))));
+  }
+
+  public Slice<SummaryCourseResponse> findOtherCourseList(Pageable pageable, Long userId,
+      Long otherUserId) {
+    Slice<Course> courses = courseRepository.findByUser_IdOrderByCreatedAtDesc(otherUserId,
+        pageable);
+    return courses.map(course -> ofSummary(course, course.getCourseBookmarks().stream()
+        .anyMatch(courseBookmark -> courseBookmark.getUserId().equals(userId))));
   }
 }
