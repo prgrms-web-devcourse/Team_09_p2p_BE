@@ -67,7 +67,8 @@ public class PlaceController {
 
   @GetMapping("/bookmark")
   public ResponseEntity<Slice<SummaryPlaceResponse>> getBookmarkPlaceList(
-      @RequestParam("userId") Long targetUserId, Pageable pageable,
+      @RequestParam("userId") Long targetUserId,
+      @PageableDefault(page = 0, size = 15) Pageable pageable,
       @CurrentUser CustomUserDetails user) {
     Long userId = Objects.isNull(user) ? null : user.getId();
     Slice<SummaryPlaceResponse> bookmarkedPlaceList = placeService.findBookmarkedPlaceList(userId,

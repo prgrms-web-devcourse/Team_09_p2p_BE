@@ -5,6 +5,8 @@ import com.prgrms.p2p.domain.comment.dto.CourseCommentDto;
 import com.prgrms.p2p.domain.comment.dto.CourseCommentDto.UserDto;
 import com.prgrms.p2p.domain.comment.dto.CourseCommentResponse;
 import com.prgrms.p2p.domain.comment.dto.CreateCommentRequest;
+import com.prgrms.p2p.domain.comment.dto.MergeCommentResponse;
+import com.prgrms.p2p.domain.comment.dto.MergeCommentResponse.Content;
 import com.prgrms.p2p.domain.comment.dto.PlaceCommentDto;
 import com.prgrms.p2p.domain.comment.dto.PlaceCommentForQueryDsl;
 import com.prgrms.p2p.domain.comment.dto.PlaceCommentResponse;
@@ -87,6 +89,25 @@ public class CommentConverter {
         .id(placeId)
         .totalCount((long) commentDtoList.size())
         .placeComments(commentDtoList)
+        .build();
+  }
+
+  public static MergeCommentResponse toMergeCommentResponse(CourseCommentForQueryDsl comment,
+      String type) {
+
+    return MergeCommentResponse.builder()
+        .id(comment.getId())
+        .rootCommentId(comment.getRootCommentId())
+        .comment(comment.getComment())
+        .createdAt(comment.getCreatedAt())
+        .updatedAt(comment.getUpdatedAt())
+        .subCommentCount(comment.getSubCommentCount())
+        .userId(comment.getUserId())
+        .content(new Content(
+            comment.getContentId(),
+            type,
+            comment.getContentTitle())
+        )
         .build();
   }
 
