@@ -2,6 +2,8 @@ package com.prgrms.p2p.domain.course.service;
 
 import static com.prgrms.p2p.domain.course.util.CourseConverter.toCourse;
 
+import com.prgrms.p2p.domain.common.exception.NotFoundException;
+import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
 import com.prgrms.p2p.domain.common.service.UploadService;
 import com.prgrms.p2p.domain.course.dto.CreateCourseRequest;
 import com.prgrms.p2p.domain.course.dto.UpdateCourseRequest;
@@ -31,21 +33,21 @@ public class CourseService {
   @Transactional
   public Long save(CreateCourseRequest createCourseRequest, List<MultipartFile> images,
       Long userId) {
-    User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
     Course course = courseRepository.save(toCourse(createCourseRequest, user));
     saveCoursePlaces(createCourseRequest, images, course);
     return course.getId();
   }
 
-  public Long countByUserId(Long userId) {
-    return courseRepository.countByUserId(userId);
-  }
 
   @Transactional
   public Long modify(Long courseId, UpdateCourseRequest updateCourseRequest,
       List<MultipartFile> newImages, Long userId) {
-    User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
-    Course course = courseRepository.findById(courseId).orElseThrow(IllegalArgumentException::new);
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
+    Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotFoundException("존재하지 않는 코스입니다."));
+    validateAuthorization(userId, course);
     updateCourse(course, updateCourseRequest);
     updateCoursePlaces(updateCourseRequest, newImages, course);
     return courseId;
@@ -72,11 +74,16 @@ public class CourseService {
   }
 
   public void deleteCourse(Long courseId, Long userId) {
-    Course course = courseRepository.findById(courseId).orElseThrow(IllegalArgumentException::new);
-    if (!course.getUser().getId().equals(userId)) {
-      throw new IllegalArgumentException();
-    }
+    Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotFoundException("존재하지 않는 코가입니다."));
+    validateAuthorization(userId, course);
     courseRepository.delete(course);
+
+  }
+
+  private void validateAuthorization(Long userId, Course course) {
+    if (!course.getUser().getId().equals(userId)) {
+      throw new UnAuthorizedException("권한이 없습니다.");
+    }
   }
 
   private void updateCourse(Course course, UpdateCourseRequest updateCourseRequest) {

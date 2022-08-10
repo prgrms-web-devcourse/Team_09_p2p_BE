@@ -201,6 +201,26 @@ class CourseCommentServiceTest {
       assertThrows(RuntimeException.class,
           () -> courseCommentService.save(createCommentReq, courseId, userId));
     }
+
+    @Test
+    @DisplayName("실패: 대댓글에 대댓글을 작성하지 못합니다.")
+    public void failCreateSubSubComment() throws Exception {
+
+      //given
+      String comment = "이것은 실패할 대댓글입니다.";
+      Long rootCommentId = lastSubComment.getId();
+      Long userId = user.getId();
+      Long courseId = course.getId();
+
+      CreateCommentRequest createCommentReq = CreateCommentRequest.builder()
+          .comment(comment)
+          .rootCommentId(rootCommentId)
+          .build();
+
+      //then
+      assertThrows(RuntimeException.class,
+          () -> courseCommentService.save(createCommentReq, courseId, userId));
+    }
   }
 
   @Nested

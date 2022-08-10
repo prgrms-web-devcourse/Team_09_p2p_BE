@@ -3,13 +3,14 @@ package com.prgrms.p2p.domain.course.entity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
+import com.prgrms.p2p.domain.course.exception.LessThanZeroSeqBadRequestException;
 import com.prgrms.p2p.domain.place.entity.Address;
 import com.prgrms.p2p.domain.place.entity.Category;
 import com.prgrms.p2p.domain.place.entity.PhoneNumber;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
-import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -63,8 +64,8 @@ class CoursePlaceTest {
 
     //when
     place = new Place(kakaoMapId, name, address, latitude, logitude, category, phoneNumber);
-    coursePlace = new CoursePlace(0, description, imageUrl, true,true, course, place);
-    coursePlace2 = new CoursePlace(1, description, imageUrl, false,true, course, place);
+    coursePlace = new CoursePlace(0, description, imageUrl, true, true, course, place);
+    coursePlace2 = new CoursePlace(1, description, imageUrl, false, true, course, place);
   }
 
   @Nested
@@ -86,8 +87,8 @@ class CoursePlaceTest {
       //when
       //then
       assertThatThrownBy(
-          () -> new CoursePlace(0, null, imageUrl, true,true, course, place)).isInstanceOf(
-          IllegalArgumentException.class);
+          () -> new CoursePlace(0, null, imageUrl, true, true, course, place)).isInstanceOf(
+          BadRequestException.class);
     }
 
     @Test
@@ -96,18 +97,38 @@ class CoursePlaceTest {
       //when
       //then
       assertThatThrownBy(
-          () -> new CoursePlace(0, description, null, true,true, course, place)).isInstanceOf(
-          IllegalArgumentException.class);
+          () -> new CoursePlace(0, description, null, true, true, course, place)).isInstanceOf(
+          BadRequestException.class);
     }
 
     @Test
-    @DisplayName("실패: 유저 객체가 비었을때.")
-    public void failAsUserIsNull() {
+    @DisplayName("실패: 코스 객체가 비었을때.")
+    public void failAsCourseIsNull() {
       //when
       //then
       assertThatThrownBy(
-          () -> new Course(title, period, region, new HashSet<>(), new HashSet<>(),
-              null)).isInstanceOf(IllegalArgumentException.class);
+          () -> new CoursePlace(0, description, null, true, true, null, place)).isInstanceOf(
+          BadRequestException.class);
+    }
+
+    @Test
+    @DisplayName("실패: 장소 객체가 비었을때.")
+    public void failAsPlaceIsNull() {
+      //when
+      //then
+      assertThatThrownBy(
+          () -> new CoursePlace(0, description, null, true, true, course, null)).isInstanceOf(
+          BadRequestException.class);
+    }
+
+    @Test
+    @DisplayName("실패: 코스 장소 순서가 0 미만일때.")
+    public void failAsSeqMinus() {
+      //when
+      //then
+      assertThatThrownBy(
+          () -> new CoursePlace(-1, description, null, true, true, course, null)).isInstanceOf(
+          LessThanZeroSeqBadRequestException.class);
     }
   }
 }
