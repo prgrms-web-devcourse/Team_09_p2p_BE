@@ -4,7 +4,7 @@ import static com.prgrms.p2p.domain.course.util.CoursePlaceConverter.*;
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toDetailPlaceResponse;
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSummaryPlaceResponse;
 
-import com.prgrms.p2p.domain.common.exception.BadRequestException;
+import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.course.dto.CoursePlaceRequest;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.SearchPlaceDto;
@@ -12,7 +12,6 @@ import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Address;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.place.repository.PlaceRepository;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -42,6 +41,11 @@ public class PlaceService {
   }
 
   @Transactional
+  public Place saveWithoutKakaoMapId(CoursePlaceRequest createPlaceReq) {
+    return placeRepository.save(toPlace(createPlaceReq));
+  }
+
+  @Transactional
   public Optional<Place> findAndUpdateExistPlace(
       CoursePlaceRequest coursePlaceRequest) {
     Optional<Place> place = placeRepository.findByKakaoMapId(
@@ -51,7 +55,8 @@ public class PlaceService {
   }
 
   public DetailPlaceResponse findDetail(Long placeId, Optional<Long> userId) {
-    Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
+    Place place = placeRepository.findById(placeId)
+        .orElseThrow(() -> new NotFoundException("장소가 존재하지 않습니다."));
 
     return toDetailPlaceResponse(place, userId);
   }
@@ -66,9 +71,6 @@ public class PlaceService {
 
   public Slice<SummaryPlaceResponse> findBookmarkedPlaceList(Long userId, Long targetUserId,
       Pageable pageable) {
-    if (Objects.isNull(targetUserId)) {
-      throw new BadRequestException("입력값을 확인해주세요.");
-    }
     Slice<Place> bookmarkedPlace = placeRepository.findBookmarkedPlace(targetUserId, pageable);
     return bookmarkedPlace.map(place -> toSummaryPlaceResponse(place, Optional.ofNullable(userId)));
   }
