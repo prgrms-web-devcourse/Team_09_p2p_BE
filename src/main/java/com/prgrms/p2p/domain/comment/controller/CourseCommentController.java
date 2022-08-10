@@ -91,7 +91,7 @@ public class CourseCommentController {
 
   @Operation(summary = "댓글 삭제 기능", description = "인증된 사용자는 코스에 본인이 작성한 댓글을 삭제할 수 있습니다.")
   @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "댓글 수정 성공"),
+      @ApiResponse(code = 204, message = "댓글 삭제 성공"),
       @ApiResponse(code = 400, message = "삭제된 댓글 재시도"),
       @ApiResponse(code = 401, message = "인증 받지 않은 사용자"),
       @ApiResponse(code = 404, message = "존재하지 않은 코스, 댓글 아이디")
