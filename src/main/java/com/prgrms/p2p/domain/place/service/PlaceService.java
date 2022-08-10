@@ -5,6 +5,7 @@ import static com.prgrms.p2p.domain.place.util.PlaceConverter.toDetailPlaceRespo
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSummaryPlaceResponse;
 
 import com.prgrms.p2p.domain.common.exception.BadRequestException;
+import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.course.dto.CoursePlaceRequest;
 import com.prgrms.p2p.domain.place.dto.DetailPlaceResponse;
 import com.prgrms.p2p.domain.place.dto.SearchPlaceDto;
