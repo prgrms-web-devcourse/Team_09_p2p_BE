@@ -1,10 +1,11 @@
-package com.prgrms.p2p.domain.comment.repository;
+package com.prgrms.p2p.domain.comment.service;
 
-import static com.prgrms.p2p.domain.comment.util.CommentConverter.toMergeCommentResponse;
 
-import com.prgrms.p2p.domain.comment.dto.CourseCommentForQueryDsl;
+import com.prgrms.p2p.domain.comment.dto.MergeCommentResponse;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
 import com.prgrms.p2p.domain.comment.entity.PlaceComment;
+import com.prgrms.p2p.domain.comment.repository.CourseCommentRepository;
+import com.prgrms.p2p.domain.comment.repository.PlaceCommentRepository;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.Period;
 import com.prgrms.p2p.domain.course.entity.Region;
@@ -19,18 +20,24 @@ import com.prgrms.p2p.domain.place.repository.PlaceRepository;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.transaction.annotation.Transactional;
-
 
 @SpringBootTest
 @Transactional
-class SearchTotalCommentRepositoryTest {
+class MergeCommentServiceTest {
 
   @Autowired
   UserRepository userRepository;
@@ -47,8 +54,11 @@ class SearchTotalCommentRepositoryTest {
   @Autowired
   PlaceCommentRepository placeCommentRepository;
 
+  @Autowired
+  MergeCommentService mergeCommentService;
+
   @Test
-  @DisplayName("=====================")
+  @DisplayName("머지 코멘트 서비스 테스트.")
   public void findCourseComment() throws Exception {
 
     //course
@@ -131,42 +141,38 @@ class SearchTotalCommentRepositoryTest {
     PlaceComment placeComment4 = placeCommentRepository.save(
         new PlaceComment("place comment 4 입니다.", null, userId, place));
 
+    PageRequest pageable = PageRequest.of(1, 13);
+
+    System.out.println(pageable.getOffset());
     // then
-//    PageRequest of = PageRequest.of(0, 199);
-//    List<CourseCommentForQueryDsl> temp = courseCommentRepository.temp(userId, of);
-//    System.out.println("temp.size() = " + temp.size());
+    Slice<MergeCommentResponse> commentsByUserId = mergeCommentService.findCommentsByUserId(
+        userId, pageable);
 
-    List<CourseCommentForQueryDsl> courseCommentsByUserId = courseCommentRepository.findCourseCommentsByUserId(
-        userId);
 
-    System.out.println("courseCommentsByUserId.size() = " + courseCommentsByUserId.size());
-
-//    List<MergeCommentResponse> mergeCommentsByUser = new ArrayList<>();
-//    List<MergeCommentResponse> courseComments = courseCommentRepository.findCourseCommentsByUserId(
-//            userId).stream().map(comment -> toMergeCommentResponse(comment, "코스"))
-//        .collect(Collectors.toList());
-//    List<MergeCommentResponse> placeComments = placeCommentRepository.findPlaceCommentsByUserId(
-//            userId).stream().map(comment -> toMergeCommentResponse(comment, "장소"))
-//        .collect(Collectors.toList());
-//
-//    mergeCommentsByUser.addAll(courseComments);
-//    mergeCommentsByUser.addAll(placeComments);
-//
-//    mergeCommentsByUser.sort(Collections.reverseOrder());
-//
-//    for (MergeCommentResponse mergeCommentResponse : mergeCommentsByUser) {
-//      System.out.println(
-//          "mergeCommentResponse.getCreatedAt() = " + mergeCommentResponse.getCreatedAt());
-//      System.out.println(
-//          "mergeCommentResponse.getComment() = " + mergeCommentResponse.getComment());
-//      System.out.println("mergeCommentResponse.getSubCommentCount() = "
-//          + mergeCommentResponse.getSubCommentCount());
-//      System.out.println(
-//          "mergeCommentResponse.getContent().getTitle() = " + mergeCommentResponse.getContent()
-//              .getTitle());
-//      System.out.println(
-//          "mergeCommentResponse.getContent().getType() = " + mergeCommentResponse.getContent()
-//              .getType());
+//    for (MergeCommentResponse mergeCommentResponse : commentsByUserId) {
+//      String comment = mergeCommentResponse.getComment();
+//      System.out.println("comment = " + comment);
 //    }
+    long offset = commentsByUserId.getPageable().getOffset();
+    System.out.println("offset = " + offset);
+
+    List<MergeCommentResponse> content = commentsByUserId.getContent();
+    for (MergeCommentResponse mergeCommentResponse : content) {
+      System.out.println(
+          "mergeCommentResponse.getComment() = " + mergeCommentResponse.getComment());
+    }
+    System.out.println("=========================================================");
+    int size = commentsByUserId.getSize();
+    System.out.println("size = " + size);
+    Pageable pageable1 = commentsByUserId.nextPageable();
+    System.out.println("pageable1 = " + pageable1);
+    boolean b = commentsByUserId.hasNext();
+    System.out.println("b = " + b);
+    boolean first = commentsByUserId.isFirst();
+    System.out.println("first = " + first);
+    boolean last = commentsByUserId.isLast();
+    System.out.println("last = " + last);
+
+
   }
 }
