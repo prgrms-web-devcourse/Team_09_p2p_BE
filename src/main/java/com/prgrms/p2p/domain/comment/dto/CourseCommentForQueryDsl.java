@@ -12,14 +12,17 @@ public class CourseCommentForQueryDsl {
   private Long id;
   private String comment;
   private Long rootCommentId;
-  private Long courseId;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private Visibility visibility;
+  private Long subCommentCount;
 
   private Long userId;
   private String userNickName;
   private String userProfileImage;
+
+  private Long contentId;
+  private String contentTitle;
 
   public CourseCommentForQueryDsl(Long id, String comment, Long rootCommentId,
       LocalDateTime createdAt, LocalDateTime updatedAt, Visibility visibility,
@@ -33,6 +36,21 @@ public class CourseCommentForQueryDsl {
     this.userId = userId;
     this.userNickName = userNickName;
     this.userProfileImage = userProfileImage;
+  }
+
+  public CourseCommentForQueryDsl(Long id, String comment, Long rootCommentId,
+      LocalDateTime createdAt, LocalDateTime updatedAt, Long subCommentCount, Long contentId,
+      String contentTitle, Long userId) {
+
+    this.id = id;
+    this.comment = comment;
+    this.rootCommentId = rootCommentId;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+    this.contentId = contentId;
+    this.contentTitle = contentTitle;
+    this.subCommentCount = subCommentCount;
+    this.userId = userId;
   }
 
   public void isDeletedComment() {

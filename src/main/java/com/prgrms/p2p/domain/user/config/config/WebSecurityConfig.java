@@ -49,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.PUT,"/api/v1/users/users", "/api/v1/users/users").hasRole("USER")
         .antMatchers(HttpMethod.DELETE,"/api/v1/users").hasRole("USER")
         //장소
-        .antMatchers(HttpMethod.POST,"/api/v1/places").hasRole("ADMIN")
+        .antMatchers(HttpMethod.POST,"/api/v1/places").hasRole("USER")
         //코스
         .antMatchers(HttpMethod.POST,"/api/v1/courses").hasRole("USER")
         .antMatchers(HttpMethod.PUT,"/api/v1/courses").hasRole("USER")
@@ -58,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.POST,"/api/v1/courses/**/comments","/api/v1/places/**/comments").hasRole("USER")
         .antMatchers(HttpMethod.PUT,"/api/v1/courses/**/comments/**","/api/v1/places/**/comments/**").hasRole("USER")
         .antMatchers(HttpMethod.DELETE,"/api/v1/courses/**/comments/**","/api/v1/places/**/comments/**").hasRole("USER")
-        .antMatchers(HttpMethod.GET,"/api/v1/comments").hasRole("USER")
+//        .antMatchers(HttpMethod.GET,"/api/v1/comments").hasRole("USER")
         //좋아요
         .antMatchers(HttpMethod.GET,"/api/v1/likes/places/**","/api/v1/likes/courses/**").hasRole("USER")
         //북마크

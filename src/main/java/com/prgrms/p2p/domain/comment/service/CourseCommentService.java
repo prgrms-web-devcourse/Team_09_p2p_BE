@@ -1,7 +1,7 @@
 package com.prgrms.p2p.domain.comment.service;
 
-import static com.prgrms.p2p.domain.comment.entity.Visibility.*;
 import static com.prgrms.p2p.domain.comment.entity.Visibility.DELETED_INFORMATION;
+import static com.prgrms.p2p.domain.comment.entity.Visibility.FALSE;
 import static com.prgrms.p2p.domain.comment.util.CommentConverter.toCourseComment;
 
 import com.prgrms.p2p.domain.comment.dto.CreateCommentRequest;

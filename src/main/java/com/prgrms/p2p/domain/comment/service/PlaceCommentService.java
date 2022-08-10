@@ -51,7 +51,9 @@ public class PlaceCommentService {
 
   public Long updatePlaceComment(UpdateCommentRequest updateCommentRequest, Long placeId,
       Long placeCommentId, Long userId) {
-    validateAuth(!placeRepository.existsById(placeId), "존재하지 않는 장소 입니다.");
+    if(!placeRepository.existsById(placeId)){
+      throw new NotFoundException("존재하지 않는 장소 입니다.");
+    }
 
     PlaceComment placeComment = placeCommentRepository.findById(placeCommentId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글입니다."));
@@ -63,7 +65,9 @@ public class PlaceCommentService {
   }
 
   public void deletePlaceComment(Long placeId, Long placeCommentId, Long userId) {
-    validateAuth(!placeRepository.existsById(placeId), "존재하지 않는 장소 입니다.");
+    if(!placeRepository.existsById(placeId)){
+      throw new NotFoundException("존재하지 않는 장소 입니다.");
+    }
 
     PlaceComment placeComment = placeCommentRepository.findById(placeCommentId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글입니다."));
@@ -99,6 +103,4 @@ public class PlaceCommentService {
       throw new UnAuthorizedException(message);
     }
   }
-
-
 }
