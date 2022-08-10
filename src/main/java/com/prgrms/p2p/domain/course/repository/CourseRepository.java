@@ -14,5 +14,5 @@ public interface CourseRepository extends JpaRepository<Course, Long>, CourseSea
 
   Long countByUserId(Long userId);
 
-  Slice<Course> findByUser_IdOrderByCreatedAtDesc(@Param("userId") Long userId, Pageable pageable);
+  Slice<Course> findByUser_IdOrderByCreatedAtDesc(Long userId, Pageable pageable);
 }

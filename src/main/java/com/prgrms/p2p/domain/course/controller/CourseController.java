@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.course.controller;
 
+import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
 import com.prgrms.p2p.domain.course.dto.CreateCourseRequest;
 import com.prgrms.p2p.domain.course.dto.DetailCourseResponse;
 import com.prgrms.p2p.domain.course.dto.SearchCourseRequest;
@@ -45,8 +46,8 @@ public class CourseController {
   public ResponseEntity<Long> register(
       @RequestPart("course") CreateCourseRequest createCourseRequest,
       @RequestPart("images") List<MultipartFile> images, @CurrentUser CustomUserDetails user) {
-    Long userId = Objects.isNull(user) ? null : user.getId();
-    Long courseId = courseService.save(createCourseRequest, images, userId);
+    validateLoginUser(user);
+    Long courseId = courseService.save(createCourseRequest, images, user.getId());
     return ResponseEntity.created(URI.create("/" + courseId)).body(courseId);
   }
 
@@ -92,9 +93,9 @@ public class CourseController {
   public ResponseEntity<Slice<SummaryCourseResponse>> getMyCoursesList(
       @PageableDefault(page = 0, size = 15) Pageable pageable,
       @CurrentUser CustomUserDetails user) {
-    Long userId = Objects.isNull(user) ? null : user.getId();
+    validateLoginUser(user);
     Slice<SummaryCourseResponse> bookmarkedPlaceList = courseQueryService.findMyCourseList(pageable,
-        userId);
+        user.getId());
 
     return ResponseEntity.ok(bookmarkedPlaceList);
   }
@@ -105,8 +106,8 @@ public class CourseController {
       @PageableDefault(page = 0, size = 15) Pageable pageable,
       @CurrentUser CustomUserDetails user) {
     Long userId = Objects.isNull(user) ? null : user.getId();
-    Slice<SummaryCourseResponse> bookmarkedPlaceList = courseQueryService.findOtherCourseList(pageable,
-        userId,otherUserId);
+    Slice<SummaryCourseResponse> bookmarkedPlaceList = courseQueryService.findOtherCourseList(
+        pageable, userId, otherUserId);
 
     return ResponseEntity.ok(bookmarkedPlaceList);
   }
@@ -115,8 +116,8 @@ public class CourseController {
   public ResponseEntity<Long> modify(@PathVariable("courseId") Long courseId,
       @RequestPart("course") UpdateCourseRequest updateCourseRequest,
       @RequestPart("images") List<MultipartFile> images, @CurrentUser CustomUserDetails user) {
-    Long userId = Objects.isNull(user) ? null : user.getId();
-    Long id = courseService.modify(courseId, updateCourseRequest, images, userId);
+    validateLoginUser(user);
+    Long id = courseService.modify(courseId, updateCourseRequest, images, user.getId());
     return ResponseEntity.created(URI.create("/" + id)).body(courseId);
   }
 
@@ -126,5 +127,11 @@ public class CourseController {
     Long userId = Objects.isNull(user) ? null : user.getId();
     courseService.deleteCourse(courseId, userId);
     return ResponseEntity.noContent().build();
+  }
+
+  private void validateLoginUser(CustomUserDetails user) {
+    if (Objects.isNull(user)) {
+      throw new UnAuthorizedException("로그인이 필요합니다.");
+    }
   }
 }
