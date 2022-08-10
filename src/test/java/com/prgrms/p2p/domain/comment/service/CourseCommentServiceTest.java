@@ -1,7 +1,7 @@
 package com.prgrms.p2p.domain.comment.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.prgrms.p2p.domain.comment.dto.CreateCommentRequest;
 import com.prgrms.p2p.domain.comment.dto.UpdateCommentRequest;
@@ -20,7 +20,6 @@ import com.prgrms.p2p.domain.user.repository.UserRepository;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -189,6 +188,26 @@ class CourseCommentServiceTest {
       //given
       String comment = "이것은 실패할 대댓글입니다.";
       Long rootCommentId = -1L;
+      Long userId = user.getId();
+      Long courseId = course.getId();
+
+      CreateCommentRequest createCommentReq = CreateCommentRequest.builder()
+          .comment(comment)
+          .rootCommentId(rootCommentId)
+          .build();
+
+      //then
+      assertThrows(RuntimeException.class,
+          () -> courseCommentService.save(createCommentReq, courseId, userId));
+    }
+
+    @Test
+    @DisplayName("실패: 대댓글에 대댓글을 작성하지 못합니다.")
+    public void failCreateSubSubComment() throws Exception {
+
+      //given
+      String comment = "이것은 실패할 대댓글입니다.";
+      Long rootCommentId = lastSubComment.getId();
       Long userId = user.getId();
       Long courseId = course.getId();
 

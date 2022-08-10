@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.course.service;
 
+import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.course.dto.CoursePlaceRequest;
 import com.prgrms.p2p.domain.course.dto.UpdateCoursePlaceRequest;
 import com.prgrms.p2p.domain.course.entity.Course;
@@ -8,6 +9,7 @@ import com.prgrms.p2p.domain.course.repository.CoursePlaceRepository;
 import com.prgrms.p2p.domain.course.util.CoursePlaceConverter;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.place.service.PlaceService;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,11 +38,14 @@ public class CoursePlaceService {
       String imageUrl, Course course) {
     Place place = placeService.findAndUpdateExistPlace(updateCoursePlaceRequest)
         .orElseGet(() -> placeService.save(updateCoursePlaceRequest));
-    CoursePlace coursePlace = coursePlaceRepository.findById(
-        updateCoursePlaceRequest.getCoursePlaceId()).orElseGet(() -> coursePlaceRepository.save(
-        CoursePlaceConverter.toCoursePlace(updateCoursePlaceRequest, index, imageUrl, course,
-            place)));
+    CoursePlace coursePlace =
+        Objects.isNull(updateCoursePlaceRequest.getCoursePlaceId()) ? coursePlaceRepository.save(
+            CoursePlaceConverter.toCoursePlace(updateCoursePlaceRequest, index, imageUrl, course,
+                place))
+            : coursePlaceRepository.findById(updateCoursePlaceRequest.getCoursePlaceId())
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 코스 장소입니다."));
     updateCoursePlaces(updateCoursePlaceRequest, index, imageUrl, coursePlace);
+
   }
 
   private void updateCoursePlaces(UpdateCoursePlaceRequest updateCoursePlaceRequest, Integer index,

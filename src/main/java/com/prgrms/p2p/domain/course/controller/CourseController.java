@@ -88,6 +88,29 @@ public class CourseController {
     return ResponseEntity.ok(bookmarkedPlaceList);
   }
 
+  @GetMapping("/users")
+  public ResponseEntity<Slice<SummaryCourseResponse>> getMyCoursesList(
+      @PageableDefault(page = 0, size = 15) Pageable pageable,
+      @CurrentUser CustomUserDetails user) {
+    Long userId = Objects.isNull(user) ? null : user.getId();
+    Slice<SummaryCourseResponse> bookmarkedPlaceList = courseQueryService.findMyCourseList(pageable,
+        userId);
+
+    return ResponseEntity.ok(bookmarkedPlaceList);
+  }
+
+  @GetMapping("/users/{userId}")
+  public ResponseEntity<Slice<SummaryCourseResponse>> getOtherCoursesList(
+      @PathVariable("userId") Long otherUserId,
+      @PageableDefault(page = 0, size = 15) Pageable pageable,
+      @CurrentUser CustomUserDetails user) {
+    Long userId = Objects.isNull(user) ? null : user.getId();
+    Slice<SummaryCourseResponse> bookmarkedPlaceList = courseQueryService.findOtherCourseList(pageable,
+        userId,otherUserId);
+
+    return ResponseEntity.ok(bookmarkedPlaceList);
+  }
+
   @PutMapping("/{courseId}")
   public ResponseEntity<Long> modify(@PathVariable("courseId") Long courseId,
       @RequestPart("course") UpdateCourseRequest updateCourseRequest,

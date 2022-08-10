@@ -2,17 +2,12 @@ package com.prgrms.p2p.domain.user.service;
 
 import static com.prgrms.p2p.domain.user.config.security.JwtExpirationEnum.BAN_EXPIRATION_TIME;
 
-import com.prgrms.p2p.domain.bookmark.service.CourseBookmarkService;
-import com.prgrms.p2p.domain.bookmark.service.PlaceBookmarkService;
-import com.prgrms.p2p.domain.like.service.CourseLikeService;
-import com.prgrms.p2p.domain.like.service.PlaceLikeService;
 import com.prgrms.p2p.domain.user.config.security.JwtTokenProvider;
 import com.prgrms.p2p.domain.user.dto.ChangeProfileResponse;
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
 import com.prgrms.p2p.domain.user.dto.OtherUserDetailResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
-import com.prgrms.p2p.domain.user.dto.UserLikeResponse;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.exception.EmailConflictException;
@@ -22,6 +17,7 @@ import com.prgrms.p2p.domain.user.exception.PwdConflictException;
 import com.prgrms.p2p.domain.user.exception.UserNotFoundException;
 import com.prgrms.p2p.domain.user.exception.WrongInfoException;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
+import com.prgrms.p2p.domain.user.util.PasswordEncrypter;
 import com.prgrms.p2p.domain.user.util.UserConverter;
 import com.prgrms.p2p.domain.user.util.Validation;
 import java.util.Date;
@@ -92,7 +88,11 @@ public class UserService {
     User user = userRepository.findById(userId)
         .orElseThrow(UserNotFoundException::new);
 
-    validateNickname(nickname);
+    //TODO: 변경요청이 된 닉네임이 전과 동일하면 그대로 넣어달라는 그루님 요청
+    if(!user.getNickname().equals(nickname)){
+      validateNickname(nickname);
+    }
+
     user.changeNickname(nickname);
     user.changeBirth(birth);
     user.changeSex(sex);
@@ -108,7 +108,7 @@ public class UserService {
     Validation.validatePassword(newPassword);
     if(!user.matchPassword(oldPassword)) throw new WrongInfoException();
     if(user.matchPassword(newPassword)) throw new PwdConflictException();
-    user.changePassword(newPassword);
+    user.changePassword(PasswordEncrypter.encrypt(newPassword));
 
     userRepository.save(user);
   }
