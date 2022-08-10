@@ -43,7 +43,7 @@ public class CoursePlaceService {
             CoursePlaceConverter.toCoursePlace(updateCoursePlaceRequest, index, imageUrl, course,
                 place))
             : coursePlaceRepository.findById(updateCoursePlaceRequest.getCoursePlaceId())
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 코스입니다."));
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 코스 장소입니다."));
     updateCoursePlaces(updateCoursePlaceRequest, index, imageUrl, coursePlace);
 
   }
