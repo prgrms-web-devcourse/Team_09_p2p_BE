@@ -140,9 +140,6 @@ public class Place extends BaseEntity {
   }
 
   private void setAddress(Address address) {
-    if (Objects.isNull(address)) {
-      throw new BadRequestException("장소 주소가 필요합니다.");
-    }
     this.address = address;
   }
 
