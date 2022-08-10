@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.place.entity;
 
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import java.util.Objects;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
