@@ -164,7 +164,7 @@ public class SearchCourseCommentServiceTest {
     for (CourseCommentDto courseCommentResponse : response.getCourseComments()) {
       System.out.println(
           "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
-              .getNickName());
+              .getNickname());
     }
   }
 
@@ -198,7 +198,7 @@ public class SearchCourseCommentServiceTest {
     for (CourseCommentDto courseCommentResponse : responseAfter.getCourseComments()) {
       System.out.println(
           "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
-              .getNickName());
+              .getNickname());
     }
   }
 
@@ -227,7 +227,7 @@ public class SearchCourseCommentServiceTest {
         .collect(Collectors.toList());
     assertThat(afterList.size()).isEqualTo(1);
     assertThat(afterList.get(0).getComment()).isEqualTo("삭제된 댓글입니다.");
-    assertThat(afterList.get(0).getUser().getNickName()).isNull();
+    assertThat(afterList.get(0).getUser().getNickname()).isNull();
     assertThat(afterList.get(0).getUser().getProfileImage()).isNull();
     assertThat(afterList.get(0).getCreatedAt()).isNull();
     assertThat(afterList.get(0).getUpdatedAt()).isNull();
@@ -236,13 +236,13 @@ public class SearchCourseCommentServiceTest {
     for (CourseCommentDto courseCommentResponse : responseAfter.getCourseComments()) {
       System.out.println(
           "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
-              .getNickName());
+              .getNickname());
     }
   }
 
   @Test
-  @DisplayName("대댓글을 삭제했을 때 부모의 댓글에 더이상 대댓글이 존재하지 않는다면(삭제한 대댓글이 마지막 대댓글이었다면) 부모 댓글도 더 이상 표시되지 않습니다.")
-  public void deleteLastSubComment() throws Exception {
+  @DisplayName("대댓글을 삭제했을 때 삭제된 부모의 댓글에 더이상 대댓글이 존재하지 않는다면(삭제한 대댓글이 마지막 대댓글이었다면) 부모 댓글도 더 이상 표시되지 않습니다.")
+  public void deleteLastSubCommentForDeletedParentComment() throws Exception {
 
     // given
     CourseCommentResponse responseBefore
@@ -270,7 +270,40 @@ public class SearchCourseCommentServiceTest {
     for (CourseCommentDto courseCommentResponse : responseAfter.getCourseComments()) {
       System.out.println(
           "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
-              .getNickName());
+              .getNickname());
+    }
+  }
+
+  @Test
+  @DisplayName("마지막 대댓글을 삭제했을 때 부모댓글이 삭제 상태가 아니라면 부모 댓글도 더 이상 표시되지 않습니다.")
+  public void deleteLastSubCommentForVisibilityTrueComment() throws Exception {
+
+    // given
+    CourseCommentResponse responseBefore
+        = searchCourseCommentService.findCourseComment(course.getId());
+    List<CourseCommentDto> beforeList = responseBefore.getCourseComments().stream()
+        .filter(bl -> bl.getId().equals(parentComment4.getId()))
+        .collect(Collectors.toList());
+
+    assertThat(beforeList.size()).isEqualTo(1);
+
+    // when
+    courseCommentService.deleteCourseComment(lastSubComment.getId(), course.getId(), user.getId());
+
+    // then
+    CourseCommentResponse responseAfter
+        = searchCourseCommentService.findCourseComment(course.getId());
+
+    List<CourseCommentDto> afterList = responseAfter.getCourseComments().stream()
+        .filter(al -> al.getId().equals(parentComment4.getId()))
+        .collect(Collectors.toList());
+    assertThat(afterList.size()).isEqualTo(1);
+
+    // 결과 확인용
+    for (CourseCommentDto courseCommentResponse : responseAfter.getCourseComments()) {
+      System.out.println(
+          "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
+              .getNickname());
     }
   }
 
@@ -305,7 +338,7 @@ public class SearchCourseCommentServiceTest {
     for (CourseCommentDto courseCommentResponse : responseAfter.getCourseComments()) {
       System.out.println(
           "" + courseCommentResponse.getComment() + " / 작성자 = " + courseCommentResponse.getUser()
-              .getNickName());
+              .getNickname());
     }
   }
 }
