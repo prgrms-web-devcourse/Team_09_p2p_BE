@@ -7,6 +7,7 @@ import com.prgrms.p2p.domain.comment.dto.UpdateCommentRequest;
 import com.prgrms.p2p.domain.comment.entity.PlaceComment;
 import com.prgrms.p2p.domain.comment.entity.Visibility;
 import com.prgrms.p2p.domain.comment.repository.PlaceCommentRepository;
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
 import com.prgrms.p2p.domain.place.entity.Place;
@@ -34,16 +35,23 @@ public class PlaceCommentService {
         .orElseThrow(() -> new NotFoundException("장소가 존재하지 않습니다."));
 
     Long rootCommentId = createCommentRequest.getRootCommentId();
-    validateAuth(
-        !Objects.isNull(rootCommentId) && !placeCommentRepository.existsById(rootCommentId),
-        "존재하지 않는 댓글에 하위 댓글을 작성할 수 없습니다.");
+
+    if (!Objects.isNull(rootCommentId)) {
+      PlaceComment parentComment = placeCommentRepository.findById(rootCommentId)
+          .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글에 하위 댓글을 작성할 수 없습니다."));
+
+      if (!Objects.isNull(parentComment)) {
+        throw new BadRequestException("대댓글에 대댓글을 작성할 수 없습니다.");
+      }
+    }
 
     PlaceComment placeComment = toPlaceComment(createCommentRequest, place, userId);
     return placeCommentRepository.save(placeComment).getId();
   }
 
-  public Long updatePlaceComment(UpdateCommentRequest updateCommentRequest, Long placeId, Long placeCommentId, Long userId) {
-    validateAuth(!placeRepository.existsById(placeId),"존재하지 않는 장소 입니다.");
+  public Long updatePlaceComment(UpdateCommentRequest updateCommentRequest, Long placeId,
+      Long placeCommentId, Long userId) {
+    validateAuth(!placeRepository.existsById(placeId), "존재하지 않는 장소 입니다.");
 
     PlaceComment placeComment = placeCommentRepository.findById(placeCommentId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글입니다."));
@@ -54,21 +62,21 @@ public class PlaceCommentService {
     return placeComment.getId();
   }
 
-  public void deletePlaceComment(Long placeId, Long placeCommentId, Long userId){
-    validateAuth(!placeRepository.existsById(placeId),"존재하지 않는 장소 입니다.");
+  public void deletePlaceComment(Long placeId, Long placeCommentId, Long userId) {
+    validateAuth(!placeRepository.existsById(placeId), "존재하지 않는 장소 입니다.");
 
     PlaceComment placeComment = placeCommentRepository.findById(placeCommentId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글입니다."));
 
     validateAuth(!placeComment.getUserId().equals(userId), "댓글의 수정 권한이 없습니다.");
 
-    if(!Objects.isNull(placeComment.getRootCommentId())){
+    if (!Objects.isNull(placeComment.getRootCommentId())) {
       checkDeleteParentComment(placeComment);
       placeComment.changeVisibility(Visibility.FALSE);
       return;
     }
 
-    if(placeCommentRepository.findSubCommentCount(placeComment.getId()) == 0){
+    if (placeCommentRepository.findSubCommentCount(placeComment.getId()) == 0) {
       placeComment.changeVisibility(Visibility.FALSE);
       return;
     }
@@ -76,10 +84,12 @@ public class PlaceCommentService {
     placeComment.changeVisibility(Visibility.DELETED_INFORMATION);
   }
 
-  private void checkDeleteParentComment(PlaceComment placeComment){
-    if(placeCommentRepository.findSubCommentCount(placeComment.getRootCommentId()) == 1){
-      PlaceComment parentComment = placeCommentRepository.findById(placeComment.getRootCommentId())
-          .orElseThrow(() -> new NotFoundException("부모 댓글이 존재하지 않습니다."));
+  private void checkDeleteParentComment(PlaceComment placeComment) {
+    PlaceComment parentComment = placeCommentRepository.findById(placeComment.getRootCommentId())
+        .orElseThrow(() -> new NotFoundException("부모 댓글이 존재하지 않습니다"));
+
+    if (placeCommentRepository.findSubCommentCount(placeComment.getRootCommentId()) == 1
+        && parentComment.getVisibility().equals(Visibility.DELETED_INFORMATION)) {
       parentComment.changeVisibility(Visibility.FALSE);
     }
   }
