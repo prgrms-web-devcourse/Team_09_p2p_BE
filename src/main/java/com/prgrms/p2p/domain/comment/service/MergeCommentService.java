@@ -39,15 +39,15 @@ public class MergeCommentService {
     mergeCommentsByUser.sort(Collections.reverseOrder());
 
     boolean hasNext = false;
-    Integer lastIndex;
+    Integer lastIndex = mergeCommentsByUser.size();
+
     if (mergeCommentsByUser.size() > (pageable.getPageNumber() + 1) * pageable.getPageSize()) {
       hasNext = true;
       lastIndex = (pageable.getPageNumber() + 1) * pageable.getPageSize();
-    } else {
-      lastIndex = mergeCommentsByUser.size();
     }
-    List<MergeCommentResponse> mergeCommentResponses = mergeCommentsByUser.subList(
-        pageable.getPageNumber() * pageable.getPageSize(), lastIndex);
+
+    List<MergeCommentResponse> mergeCommentResponses =
+        mergeCommentsByUser.subList(pageable.getPageNumber() * pageable.getPageSize(), lastIndex);
 
     return new SliceImpl<>(mergeCommentResponses, pageable, hasNext);
   }
