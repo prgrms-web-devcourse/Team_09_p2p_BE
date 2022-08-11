@@ -59,9 +59,10 @@ class CourseQueryServiceTest {
   CourseBookmarkRepository bookmarkRepository;
 
   private Course course;
-  private CoursePlace coursePlace1, coursePlac2;
+  private CoursePlace coursePlace1, coursePlace2;
   private User user;
   private Place place;
+  private SliceImpl<Course> courses;
 
   @BeforeEach
   void setUp() {
@@ -72,13 +73,13 @@ class CourseQueryServiceTest {
         new PhoneNumber("010-1234-2345"));
     course.addCoursePlace(new CoursePlace(0, "aa", "s3...", true, false, course, place));
     course.addCoursePlace(new CoursePlace(1, "aa", "s3...", true, false, course, place));
+    Pageable pageable = mock(Pageable.class);
+    courses = new SliceImpl<>(List.of(course), pageable, false);
   }
 
   @Test
   @DisplayName("성공: 코스 목록 조회")
   void successFindSummary() {
-    Pageable pageable = mock(Pageable.class);
-    SliceImpl<Course> courses = new SliceImpl<>(List.of(course), pageable, false);
     when(courseRepository.searchCourse(any(), any())).thenReturn(courses);
     Slice<SummaryCourseResponse> summaryList = courseQueryService.findSummaryList(any(), any(),
         10L);
@@ -109,12 +110,50 @@ class CourseQueryServiceTest {
     }
 
     @Test
-    @DisplayName("실패: 존재하지 않 코스로 조회")
+    @DisplayName("실패: 존재하지 않는 코스로 조회")
     void failAsNotFoundCourse() {
       when(courseRepository.findById(10L)).thenThrow(new NotFoundException("존재하지 않는 코스입니다."));
       Assertions.assertThatThrownBy(() -> courseQueryService.findDetail(10L, any(Long.class)))
           .isInstanceOf(NotFoundException.class);
       verify(courseRepository, times(1)).findById(any(Long.class));
+    }
+  }
+
+  @Nested
+  @DisplayName("유저가 북마크한 코스 조회")
+  class findBookmarkedCourseList {
+
+    @Test
+    @DisplayName("성공: 북마크한 코스 조회")
+    void successFindBookmarkedCourseList() {
+      when(courseRepository.findBookmarkedCourse(any(Long.class), any())).thenReturn(courses);
+      Slice<SummaryCourseResponse> summaryList = courseQueryService.findBookmarkedCourseList(any(),
+          any(Long.class));
+      verify(courseRepository, times(1)).findBookmarkedCourse(any(Long.class), any());
+
+      Assertions.assertThat(summaryList.getContent().size()).isEqualTo(1);
+      Assertions.assertThatObject(summaryList.getContent().get(0).getClass())
+          .isEqualTo(SummaryCourseResponse.class);
+      Assertions.assertThat(summaryList.getContent().get(0).getIsBookmarked()).isTrue();
+    }
+  }
+
+  @Nested
+  @DisplayName("유저가 등록한 코스 조회")
+  class findMyCourseList {
+
+    @Test
+    @DisplayName("성공: 북마크한 코스 조회")
+    void successFindMyCourseList() {
+      when(courseRepository.findByUser_IdOrderByCreatedAtDesc(any(Long.class), any())).thenReturn(courses);
+      Slice<SummaryCourseResponse> summaryList = courseQueryService.findMyCourseList(any(),
+          any(Long.class));
+      verify(courseRepository, times(1)).findByUser_IdOrderByCreatedAtDesc(any(Long.class), any());
+
+      Assertions.assertThat(summaryList.getContent().size()).isEqualTo(1);
+      Assertions.assertThatObject(summaryList.getContent().get(0).getClass())
+          .isEqualTo(SummaryCourseResponse.class);
+      Assertions.assertThat(summaryList.getContent().get(0).getIsBookmarked()).isTrue();
     }
   }
 
