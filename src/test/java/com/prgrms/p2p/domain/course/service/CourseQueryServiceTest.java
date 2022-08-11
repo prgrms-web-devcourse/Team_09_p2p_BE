@@ -138,23 +138,4 @@ class CourseQueryServiceTest {
     }
   }
 
-  @Nested
-  @DisplayName("유저가 등록한 코스 조회")
-  class findMyCourseList {
-
-    @Test
-    @DisplayName("성공: 북마크한 코스 조회")
-    void successFindMyCourseList() {
-      when(courseRepository.findByUser_IdOrderByCreatedAtDesc(any(Long.class), any())).thenReturn(courses);
-      Slice<SummaryCourseResponse> summaryList = courseQueryService.findMyCourseList(any(),
-          any(Long.class));
-      verify(courseRepository, times(1)).findByUser_IdOrderByCreatedAtDesc(any(Long.class), any());
-
-      Assertions.assertThat(summaryList.getContent().size()).isEqualTo(1);
-      Assertions.assertThatObject(summaryList.getContent().get(0).getClass())
-          .isEqualTo(SummaryCourseResponse.class);
-      Assertions.assertThat(summaryList.getContent().get(0).getIsBookmarked()).isTrue();
-    }
-  }
-
 }

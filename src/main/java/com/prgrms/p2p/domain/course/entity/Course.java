@@ -125,7 +125,7 @@ public class Course extends BaseEntity {
 
   public void addUser(User user) {
     if (Objects.isNull(user)) {
-      throw new BadRequestException("유저에 값을 받을 수 없습니다.");
+      throw new BadRequestException("유저에 빈 값을 받을 수 없습니다.");
     }
     if (this.user != null) {
       this.user.getCourses().remove(this);
@@ -178,10 +178,16 @@ public class Course extends BaseEntity {
   }
 
   private void setPeriod(Period period) {
+    if (Objects.isNull(period)) {
+      throw new BadRequestException("기간에 값을 받을 수 없습니다.");
+    }
     this.period = period;
   }
 
   private void setRegion(Region region) {
+    if (Objects.isNull(region)) {
+      throw new BadRequestException("지역에 값을 받을 수 없습니다.");
+    }
     this.region = region;
   }
 
