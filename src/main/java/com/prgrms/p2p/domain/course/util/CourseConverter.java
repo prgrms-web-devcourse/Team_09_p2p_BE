@@ -7,6 +7,7 @@ import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.CoursePlace;
 import com.prgrms.p2p.domain.user.entity.User;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,19 +33,30 @@ public class CourseConverter {
   }
 
   public static SummaryCourseResponse ofSummary(Course course, Boolean isBookmarked) {
-    return SummaryCourseResponse.builder().id(course.getId()).title(course.getTitle())
-        .thumbnail(pickThumbnail(course)).region(course.getRegion()).period(course.getPeriod())
-        .themes(List.copyOf(course.getThemes())).spots(List.copyOf(course.getSpots())).places(
+    return SummaryCourseResponse.builder()
+        .id(course.getId())
+        .title(course.getTitle())
+        .thumbnail(pickThumbnail(course))
+        .region(course.getRegion())
+        .period(course.getPeriod())
+        .themes(List.copyOf(course.getThemes()))
+        .spots(List.copyOf(course.getSpots()))
+        .places(
             course.getCoursePlaces().stream().map(coursePlace -> coursePlace.getPlace().getName())
-                .collect(Collectors.toList())).likes(course.getCourseLikes().size())
-        .isBookmarked(isBookmarked).nickname(course.getUser().getNickname())
+                .collect(Collectors.toList()))
+        .likes(course.getCourseLikes().size())
+        .isBookmarked(isBookmarked)
+        .nickname(course.getUser().getNickname())
         .profileImage(course.getUser().getProfileUrl().orElse(null)).build();
   }
 
   public static String pickThumbnail(Course course) {
-    return course.getCoursePlaces().stream().filter(CoursePlace::getThumbnailed).findFirst()
-        .map(coursePlace -> coursePlace.getImageUrl())
-        .orElseGet(() -> course.getCoursePlaces().get(0).getImageUrl());
+    Optional<String> imageUrl = course.getCoursePlaces().stream()
+        .filter(CoursePlace::getThumbnailed)
+        .map(CoursePlace::getImageUrl)
+        .findFirst();
+
+    return imageUrl.isEmpty() ? null : imageUrl.get();
   }
 
 }
