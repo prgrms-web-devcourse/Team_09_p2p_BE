@@ -169,3 +169,5 @@ p2p.iml
 
 src/main/resources/application.yaml
 src/main/resources/application.yml
+
+src/main/resources/*.p12
