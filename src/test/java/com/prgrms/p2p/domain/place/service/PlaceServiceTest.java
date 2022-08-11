@@ -86,7 +86,7 @@ class PlaceServiceTest {
 
     Place place = new Place(kakaoMapId, name, new Address(addressName, roadAddressName), latitude,
         longitude, category, phoneNumber);
-    Place savedPlace = placeRepository.save(place);
+    savedPlace = placeRepository.save(place);
     placeId = savedPlace.getId();
 
     //user
@@ -125,6 +125,7 @@ class PlaceServiceTest {
 
   }
 
+  Place savedPlace;
   Long placeId;
   Long userId;
 
@@ -198,6 +199,89 @@ class PlaceServiceTest {
       Category category = Category.MT1;
       String number = "010-1234-1234";
       PhoneNumber phoneNumber = new PhoneNumber(number);
+
+      CoursePlaceRequest createPlaceReq = CoursePlaceRequest.builder()
+          .kakaoMapId(kakaoMapId)
+          .name(name)
+          .addressName(addressName)
+          .roadAddressName(roadAddressName)
+          .latitude(latitude)
+          .longitude(longitude)
+          .category(category)
+          .phoneNumber(phoneNumber)
+          .build();
+
+      //when
+      Long placeId = placeService.save(createPlaceReq).getId();
+
+      Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
+
+      //then
+      assertThat(createPlaceReq).usingRecursiveComparison()
+          .ignoringFields("addressName", "roadAddressName", "isRecommended", "description",
+              "isThumbnail")
+          .isEqualTo(place);
+
+      assertThat(createPlaceReq.getAddressName()).isEqualTo(place.getAddress().getAddressName());
+      assertThat(createPlaceReq.getRoadAddressName()).isEqualTo(
+          place.getAddress().getRoadAddressName());
+    }
+
+    @Test
+    @DisplayName("성공: address가 둘다 null 일 떄 장소 저장에 성공")
+    public void savePlaceWhenAddressIsNull() throws Exception {
+
+      //given
+      String kakaoMapId = "kakaoMapId";
+      String name = "name";
+      String addressName = null;
+      String roadAddressName = null;
+      String latitude = "latitude";
+      String longitude = "longitude";
+      Category category = Category.MT1;
+      String number = "010-1234-1234";
+      PhoneNumber phoneNumber = new PhoneNumber(number);
+
+      CoursePlaceRequest createPlaceReq = CoursePlaceRequest.builder()
+          .kakaoMapId(kakaoMapId)
+          .name(name)
+          .addressName(addressName)
+          .roadAddressName(roadAddressName)
+          .latitude(latitude)
+          .longitude(longitude)
+          .category(category)
+          .phoneNumber(phoneNumber)
+          .build();
+
+      //when
+      Long placeId = placeService.save(createPlaceReq).getId();
+
+      Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
+
+      //then
+      assertThat(createPlaceReq).usingRecursiveComparison()
+          .ignoringFields("addressName", "roadAddressName", "isRecommended", "description",
+              "isThumbnail")
+          .isEqualTo(place);
+
+      assertThat(createPlaceReq.getAddressName()).isEqualTo(place.getAddress().getAddressName());
+      assertThat(createPlaceReq.getRoadAddressName()).isEqualTo(
+          place.getAddress().getRoadAddressName());
+    }
+
+    @Test
+    @DisplayName("성공: 전화번호가 null 일 떄 장소 저장에 성공")
+    public void savePlaceWhenPhoneNumberIsNull() throws Exception {
+
+      //given
+      String kakaoMapId = null;
+      String name = "name";
+      String addressName = "addressName";
+      String roadAddressName = "roadAddressName";
+      String latitude = "latitude";
+      String longitude = "longitude";
+      Category category = Category.MT1;
+      PhoneNumber phoneNumber = null;
 
       CoursePlaceRequest createPlaceReq = CoursePlaceRequest.builder()
           .kakaoMapId(kakaoMapId)
@@ -344,42 +428,40 @@ class PlaceServiceTest {
   class findSummaryList {
 
     @Test
-    @DisplayName("성공: 요약 리스트 조회 성공, 비로그인")
+    @DisplayName("성공: 요약 리스트 조회 성공, 검색조건 없음")
     public void findSummaryList() throws Exception {
 
-      //given
-      Optional<String> keyword = Optional.ofNullable("na");
-      Optional<Sorting> orderByFamous = Optional.ofNullable(Sorting.인기순);
-      SearchPlaceDto searchPlaceDto = toSearchPlaceDto(keyword, Optional.empty(), orderByFamous);
+      int size = 10;
+      for (int i = 0; i < size; i++) {
 
-      Pageable pageable = PageRequest.of(0, 10);
+        String kakaoMapId = "kakaoMapId" + i;
+        String name = "name" + i;
+        String addressName = "addressName" + i;
+        String roadAddressName = "roadAddressName" + i;
+        String latitude = "latitude" + i;
+        String longitude = "longitude" + i;
+        Category category = Category.MT1;
+        String number = "010-114-123" + i;
+        PhoneNumber phoneNumber = new PhoneNumber(number);
+
+        Place place = new Place(kakaoMapId, name, new Address(addressName, roadAddressName),
+            latitude, longitude, category, phoneNumber);
+        placeRepository.save(place);
+      }
+
+      //given
+      Optional<String> keyword = Optional.empty();
+      Optional<Region> region = Optional.empty();
+      Optional<Sorting> sorting = Optional.empty();
+      SearchPlaceDto searchPlaceDto = toSearchPlaceDto(keyword, region, sorting);
+
+      Pageable pageable = PageRequest.of(0, 100);
 
       //when
       Slice<SummaryPlaceResponse> summaryList
           = placeService.findSummaryList(searchPlaceDto, pageable, null);
 
-      //then
-      for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
-        assertThat(summaryPlaceResponse.getTitle()).contains("na");
-        assertThat(summaryPlaceResponse.getBookmarked()).isFalse();
-      }
-    }
-
-    @Test
-    @DisplayName("성공: 요약 리스트 조회 성공, 로그인 북마크 안했음")
-    public void findSummaryListByLoginUserNonBookmark() throws Exception {
-
-      //given
-
-      Optional<String> keyword = Optional.ofNullable("");
-      Pageable pageable = PageRequest.of(0, 10);
-      Optional<Sorting> orderByFamous = Optional.ofNullable(Sorting.인기순);
-      SearchPlaceDto searchPlaceDto = toSearchPlaceDto(keyword, Optional.empty(), orderByFamous);
-
-      //when
-      Slice<SummaryPlaceResponse> summaryList
-          = placeService.findSummaryList(searchPlaceDto, pageable, userId);
-
+      assertThat(summaryList.getNumberOfElements()).isEqualTo(size + 1);
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
         assertThat(summaryPlaceResponse.getTitle()).contains("");
@@ -388,29 +470,132 @@ class PlaceServiceTest {
     }
 
     @Test
-    @DisplayName("성공: 요약 리스트 조회 성공, 로그인 북마크 했음")
-    public void findSummaryListByLoginAndBookmarkUser() throws Exception {
+    @DisplayName("성공: 요약 리스트 조회 성공, 검색어만 입력")
+    public void findSummaryListByKeywordOnly() throws Exception {
 
       //given
-      Optional<String> keyword = Optional.ofNullable("");
-      Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
-      PlaceBookmark placeBookmark = new PlaceBookmark(userId, place);
-      placeBookmarkRepository.save(placeBookmark);
-      Optional<Sorting> orderByFamous = Optional.ofNullable(Sorting.인기순);
-      SearchPlaceDto searchPlaceDto = toSearchPlaceDto(keyword, Optional.empty(), orderByFamous);
+      int size = 10;
+      for (int i = 0; i < size; i++) {
 
+        String kakaoMapId = "kakaoMapId" + i;
+        String name = "name" + i;
+        String addressName = "addressName" + i;
+        String roadAddressName = "roadAddressName" + i;
+        String latitude = "latitude" + i;
+        String longitude = "longitude" + i;
+        Category category = Category.MT1;
+        String number = "010-114-123" + i;
+        PhoneNumber phoneNumber = new PhoneNumber(number);
 
-      Pageable pageable = PageRequest.of(0, 10);
+        Place place = new Place(kakaoMapId, name, new Address(addressName, roadAddressName),
+            latitude, longitude, category, phoneNumber);
+        placeRepository.save(place);
+      }
+
+      String searchString = "1";
+      Optional<String> keyword = Optional.ofNullable(searchString);
+      Optional<Region> region = Optional.empty();
+      Optional<Sorting> sorting = Optional.empty();
+      SearchPlaceDto searchPlaceDto = toSearchPlaceDto(keyword, region, sorting);
+
+      Pageable pageable = PageRequest.of(0, 100);
 
       //when
       Slice<SummaryPlaceResponse> summaryList
           = placeService.findSummaryList(searchPlaceDto, pageable, userId);
 
       //then
+      assertThat(summaryList.getNumberOfElements()).isEqualTo(1);
+
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
-        assertThat(summaryPlaceResponse.getTitle()).contains("");
-        assertThat(summaryPlaceResponse.getBookmarked()).isTrue();
+        assertThat(summaryPlaceResponse.getTitle()).contains(searchString);
+        assertThat(summaryPlaceResponse.getBookmarked()).isFalse();
       }
+    }
+
+    @Test
+    @DisplayName("성공: 요약 리스트 조회 성공, 지역만 입력 -> 코스에 등록된 장소만 코스의 지역을 기반으로 가져옴"
+        + " -> 등록되지 않은 장소는 지역 검색에서 나타나지 않음 ")
+    public void findSummaryListByRegionOnly() throws Exception {
+
+      //given
+      int size = 10;
+      for (int i = 0; i < size; i++) {
+
+        String kakaoMapId = "kakaoMapId" + i;
+        String name = "name" + i;
+        String addressName = "addressName" + i;
+        String roadAddressName = "roadAddressName" + i;
+        String latitude = "latitude" + i;
+        String longitude = "longitude" + i;
+        Category category = Category.MT1;
+        String number = "010-114-123" + i;
+        PhoneNumber phoneNumber = new PhoneNumber(number);
+
+        Place place = new Place(kakaoMapId, name, new Address(addressName, roadAddressName),
+            latitude, longitude, category, phoneNumber);
+        placeRepository.save(place);
+      }
+
+      Optional<String> keyword = Optional.empty();
+      Optional<Region> region = Optional.ofNullable(Region.서울);
+
+      Optional<Sorting> sorting = Optional.empty();
+      SearchPlaceDto searchPlaceDto = toSearchPlaceDto(keyword, region, sorting);
+
+      Pageable pageable = PageRequest.of(0, 100);
+
+      //when
+      Slice<SummaryPlaceResponse> summaryList
+          = placeService.findSummaryList(searchPlaceDto, pageable, userId);
+
+      //then
+      assertThat(summaryList.getNumberOfElements()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("성공: 요약 리스트 조회 성공, sorting(인기순) 만 입력, 좋아요가 되어있는 장소는 1개밖에 없으므로 제일 앞에 오게됌 ")
+    public void findSummaryListBySortingOnly() throws Exception {
+
+      //given
+      int size = 10;
+      for (int i = 0; i < size; i++) {
+
+        String kakaoMapId = "kakaoMapId" + i;
+        String name = "name" + i;
+        String addressName = "addressName" + i;
+        String roadAddressName = "roadAddressName" + i;
+        String latitude = "latitude" + i;
+        String longitude = "longitude" + i;
+        Category category = Category.MT1;
+        String number = "010-114-123" + i;
+        PhoneNumber phoneNumber = new PhoneNumber(number);
+
+        Place place = new Place(kakaoMapId, name, new Address(addressName, roadAddressName),
+            latitude, longitude, category, phoneNumber);
+        placeRepository.save(place);
+      }
+
+      PlaceLike placeLike = new PlaceLike(userId, savedPlace);
+
+      Optional<String> keyword = Optional.empty();
+      Optional<Region> region = Optional.empty();
+      Optional<Sorting> sorting = Optional.ofNullable(Sorting.인기순);
+      SearchPlaceDto searchPlaceDto = toSearchPlaceDto(keyword, region, sorting);
+
+      Pageable pageable = PageRequest.of(0, 100);
+
+      //when
+      Slice<SummaryPlaceResponse> summaryList
+          = placeService.findSummaryList(searchPlaceDto, pageable, userId);
+
+      //then
+      assertThat(summaryList.getContent().get(0))
+          .usingRecursiveComparison()
+          .ignoringFields("thumbnail", "bookmarked", "likeCount", "title", "usedCount")
+          .isEqualTo(savedPlace);
+
+      assertThat(summaryList.getNumberOfElements()).isEqualTo(size + 1);
     }
   }
 

@@ -8,6 +8,7 @@ import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import java.util.HashSet;
 import java.util.Set;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -66,6 +67,22 @@ class CourseTest {
       //then
       assertThatThrownBy(
           () -> new Course(null, period, region, new HashSet<>(), new HashSet<>(),
+              user)).isInstanceOf(BadRequestException.class);
+    }
+
+    @Test
+    @DisplayName("실패: 기간이 없을때")
+    void failAsPeriodIsNull() {
+      Assertions.assertThatThrownBy(
+          () -> new Course("null", null, Region.서울, Set.of(Theme.가족여행), Set.of(Spot.바다),
+              user)).isInstanceOf(BadRequestException.class);
+    }
+
+    @Test
+    @DisplayName("실패: 지역이 없을때")
+    void failAsRegionIsNull() {
+      Assertions.assertThatThrownBy(
+          () -> new Course("null", Period.ONE_DAY, null, Set.of(Theme.가족여행), Set.of(Spot.바다),
               user)).isInstanceOf(BadRequestException.class);
     }
 

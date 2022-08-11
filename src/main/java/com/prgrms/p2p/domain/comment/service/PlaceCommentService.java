@@ -51,12 +51,16 @@ public class PlaceCommentService {
 
   public Long updatePlaceComment(UpdateCommentRequest updateCommentRequest, Long placeId,
       Long placeCommentId, Long userId) {
-    if(!placeRepository.existsById(placeId)){
-      throw new NotFoundException("존재하지 않는 장소 입니다.");
-    }
+
+    Place place = placeRepository.findById(placeId)
+        .orElseThrow(() -> new NotFoundException("존재하지 않는 장소입니다."));
 
     PlaceComment placeComment = placeCommentRepository.findById(placeCommentId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글입니다."));
+
+    if(!placeComment.getPlace().equals(place)){
+      throw new NotFoundException("해당 장소에 존재하지 않는 댓글 입니다.");
+    }
 
     validateAuth(!placeComment.getUserId().equals(userId), "댓글의 수정 권한이 없습니다.");
 
@@ -65,12 +69,18 @@ public class PlaceCommentService {
   }
 
   public void deletePlaceComment(Long placeId, Long placeCommentId, Long userId) {
-    if(!placeRepository.existsById(placeId)){
-      throw new NotFoundException("존재하지 않는 장소 입니다.");
-    }
+
+    Place place = placeRepository.findById(placeId)
+        .orElseThrow(() -> new NotFoundException("존재하지 않는 장소입니다."));
+
 
     PlaceComment placeComment = placeCommentRepository.findById(placeCommentId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글입니다."));
+
+    if(!placeComment.getPlace().equals(place)){
+      throw new NotFoundException("해당 장소에 존재하지 않는 댓글 입니다.");
+    }
+
 
     if (!placeComment.getVisibility().equals(Visibility.TRUE)) {
       throw new BadRequestException("이미 삭제된 댓글은 삭제할 수 없습니다.");

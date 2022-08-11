@@ -10,6 +10,7 @@ import com.prgrms.p2p.domain.place.dto.SearchPlaceDto;
 import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.service.PlaceService;
 import com.prgrms.p2p.domain.place.util.PlaceConverter;
+import com.prgrms.p2p.domain.user.aop.annotation.Auth;
 import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
 import io.swagger.annotations.ApiResponse;
@@ -37,6 +38,13 @@ public class PlaceController {
 
   private final PlaceService placeService;
 
+  @Operation(summary = "장소 등록", description = "인증된 사용자는 장소를 등록할 수 있습니다.")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "댓글 등록 성공"),
+      @ApiResponse(code = 401, message = "인증 받지 않은 사용자 or 댓글 수정 권한 없음"),
+      @ApiResponse(code = 500, message = "옳바르지 않은 입력 형식에 대한 Json 오류")
+  })
+  @Auth
   @PostMapping
   public ResponseEntity<Long> savePlace(@RequestBody CoursePlaceRequest coursePlaceRequest,
       @CurrentUser CustomUserDetails user) {

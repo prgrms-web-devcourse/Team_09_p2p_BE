@@ -21,7 +21,7 @@ public class CourseCommentForQueryDsl {
   private String userNickName;
   private String userProfileImage;
 
-  private Long contentId;
+  private Long contentId; //place id or course id
   private String contentTitle;
 
   public CourseCommentForQueryDsl(Long id, String comment, Long rootCommentId,

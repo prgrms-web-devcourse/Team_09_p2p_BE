@@ -8,6 +8,7 @@ import com.prgrms.p2p.domain.common.service.UploadService;
 import com.prgrms.p2p.domain.course.dto.CreateCourseRequest;
 import com.prgrms.p2p.domain.course.dto.UpdateCourseRequest;
 import com.prgrms.p2p.domain.course.entity.Course;
+import com.prgrms.p2p.domain.course.exception.CoursePlaceAndImageSizeNotEqualException;
 import com.prgrms.p2p.domain.course.repository.CourseRepository;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
@@ -46,7 +47,8 @@ public class CourseService {
       List<MultipartFile> newImages, Long userId) {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
-    Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotFoundException("존재하지 않는 코스입니다."));
+    Course course = courseRepository.findById(courseId)
+        .orElseThrow(() -> new NotFoundException("존재하지 않는 코스입니다."));
     validateAuthorization(userId, course);
     updateCourse(course, updateCourseRequest);
     updateCoursePlaces(updateCourseRequest, newImages, course);
@@ -55,6 +57,7 @@ public class CourseService {
 
   private void saveCoursePlaces(CreateCourseRequest createCourseRequest, List<MultipartFile> images,
       Course course) {
+    validationSize(createCourseRequest.getPlaces().size(), images.size());
     IntStream.range(0, createCourseRequest.getPlaces().size()).forEach(index -> {
       String url = uploadService.uploadImg(images.get(index));
       coursePlaceService.save(createCourseRequest.getPlaces().get(index), index, url, course);
@@ -63,6 +66,9 @@ public class CourseService {
 
   private void updateCoursePlaces(UpdateCourseRequest updateCourseRequest,
       List<MultipartFile> images, Course course) {
+    validationSize((int) updateCourseRequest.getPlaces().stream()
+        .filter(updateCoursePlaceRequest -> Objects.isNull(updateCoursePlaceRequest.getImageUrl()))
+        .count(), images.size());
     AtomicInteger imageOrder = new AtomicInteger();
     IntStream.range(0, updateCourseRequest.getPlaces().size()).forEach(index -> {
       String imageUrl = Objects.isNull(updateCourseRequest.getPlaces().get(index).getImageUrl())
@@ -74,7 +80,8 @@ public class CourseService {
   }
 
   public void deleteCourse(Long courseId, Long userId) {
-    Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotFoundException("존재하지 않는 코가입니다."));
+    Course course = courseRepository.findById(courseId)
+        .orElseThrow(() -> new NotFoundException("존재하지 않는 코가입니다."));
     validateAuthorization(userId, course);
     courseRepository.delete(course);
 
@@ -83,6 +90,12 @@ public class CourseService {
   private void validateAuthorization(Long userId, Course course) {
     if (!course.getUser().getId().equals(userId)) {
       throw new UnAuthorizedException("권한이 없습니다.");
+    }
+  }
+
+  private void validationSize(int courseplaceSize, int imageSize) {
+    if (courseplaceSize != imageSize) {
+      throw new CoursePlaceAndImageSizeNotEqualException("저장하려는 코스 장소와 이미지 크기가 맞지 않습니다.");
     }
   }
 
