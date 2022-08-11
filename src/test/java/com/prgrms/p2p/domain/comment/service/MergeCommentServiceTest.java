@@ -23,6 +23,7 @@ import com.prgrms.p2p.domain.user.entity.Sex;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,38 @@ class MergeCommentServiceTest {
   @Autowired
   MergeCommentService mergeCommentService;
 
+  @BeforeEach
+  void setup() {
+
+    //course
+    String title = "another course";
+    Period oneThreeDays = Period.ONE_THREE_DAYS;
+    Region region = Region.서울;
+    Set<Theme> themes = null;
+    Set<Spot> spots = null;
+
+    String email = "e222@mail.com";
+    String password = "password222";
+    String nick = "ban";
+    String birth = "2009-01-01";
+    Sex male = Sex.FEMALE;
+
+    User basicUser = userRepository.save(new User(email, password, nick, birth, male));
+
+    Course basicCourse = courseRepository.save(
+        new Course(title, oneThreeDays, region, themes, spots, basicUser));
+
+    Place basicPlace = placeRepository.save(
+        new Place("kakao2", "post title2", new Address("A2", "b2"), "kla2", "lo2", Category.AC5,
+            new PhoneNumber("010-121-2222")));
+
+    courseCommentRepository.save(
+        new CourseComment("basic course comment", null, basicUser.getId(), basicCourse));
+
+
+    placeCommentRepository.save(
+        new PlaceComment("place comment 4 입니다.", null, basicUser.getId(), basicPlace));
+  }
   @Test
   @DisplayName("머지 코멘트 서비스 테스트.")
   public void findCourseComment() throws Exception {
@@ -61,7 +94,6 @@ class MergeCommentServiceTest {
     String title = "title";
     Period oneDay = Period.ONE_DAY;
     Region region = Region.경기;
-    String description = "description";
     Set<Theme> themes = null;
     Set<Spot> spots = null;
     String email = "e@mail.com";
