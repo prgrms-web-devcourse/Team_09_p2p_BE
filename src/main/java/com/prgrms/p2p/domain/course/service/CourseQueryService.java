@@ -52,15 +52,13 @@ public class CourseQueryService {
 
   public Slice<SummaryCourseResponse> findMyCourseList(Pageable pageable, Long userId) {
     Slice<Course> courses = courseRepository.findByUser_IdOrderByCreatedAtDesc(userId, pageable);
-    return courses.map(course -> ofSummary(course, course.getCourseBookmarks().stream()
-        .anyMatch(courseBookmark -> courseBookmark.getUserId().equals(userId))));
+    return courses.map(course -> ofSummary(course, course.getUser().getId().equals(userId)));
   }
 
   public Slice<SummaryCourseResponse> findOtherCourseList(Pageable pageable, Long userId,
       Long otherUserId) {
     Slice<Course> courses = courseRepository.findByUser_IdOrderByCreatedAtDesc(otherUserId,
         pageable);
-    return courses.map(course -> ofSummary(course, course.getCourseBookmarks().stream()
-        .anyMatch(courseBookmark -> courseBookmark.getUserId().equals(userId))));
+    return courses.map(course -> ofSummary(course, course.getUser().getId().equals(userId)));
   }
 }
