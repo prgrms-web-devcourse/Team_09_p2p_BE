@@ -72,6 +72,9 @@ public class PlaceCommentService {
     PlaceComment placeComment = placeCommentRepository.findById(placeCommentId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글입니다."));
 
+    if (!placeComment.getVisibility().equals(Visibility.TRUE)) {
+      throw new BadRequestException("이미 삭제된 댓글은 삭제할 수 없습니다.");
+    }
     validateAuth(!placeComment.getUserId().equals(userId), "댓글의 수정 권한이 없습니다.");
 
     if (!Objects.isNull(placeComment.getRootCommentId())) {
