@@ -126,7 +126,7 @@ public class CommentConverter {
         .updatedAt(placeCommentForQueryDsl.getUpdatedAt())
         .user(
             new PlaceCommentDto.UserDto(
-                placeCommentForQueryDsl.getId(),
+                placeCommentForQueryDsl.getUserId(),
                 placeCommentForQueryDsl.getUserNickName(),
                 placeCommentForQueryDsl.getUserProfileImage()
             )

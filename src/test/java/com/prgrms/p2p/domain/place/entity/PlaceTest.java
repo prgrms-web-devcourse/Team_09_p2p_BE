@@ -128,7 +128,7 @@ class PlaceTest {
       String name = " ";
 
       //then
-      Assertions.assertThrows(IllegalArgumentException.class,
+      Assertions.assertThrows(RuntimeException.class,
           () -> new Place(
               kakaoMapId,
               name,
@@ -141,23 +141,37 @@ class PlaceTest {
     }
 
     @Test
-    @DisplayName("실패: 주소가 null일 때")
+    @DisplayName("성공: 주소가 null일 때")
     public void failAsAddressIsNull() throws Exception {
 
       //given
       Address address = null;
 
+      //when
+      Place place = new Place(
+          kakaoMapId,
+          name,
+          address,
+          latitude,
+          logitude,
+          category,
+          phoneNumber
+      );
+
       //then
-      Assertions.assertThrows(IllegalArgumentException.class,
-          () -> new Place(
-              kakaoMapId,
-              name,
-              address,
-              latitude,
-              logitude,
-              category,
-              phoneNumber
-          ));
+      assertThat(place.getKakaoMapId()).isEqualTo(kakaoMapId);
+      assertThat(place.getName()).isEqualTo(name);
+      assertThat(place.getLatitude()).isEqualTo(latitude);
+      assertThat(place.getLongitude()).isEqualTo(logitude);
+      assertThat(place.getCategory()).isEqualTo(category);
+
+      assertThat(place.getAddress())
+          .usingRecursiveComparison()
+          .isEqualTo(address);
+
+      assertThat(place.getPhoneNumber())
+          .usingRecursiveComparison()
+          .isEqualTo(phoneNumber);
     }
 
     @Test
@@ -168,7 +182,7 @@ class PlaceTest {
       String latitude = " ";
 
       //then
-      Assertions.assertThrows(IllegalArgumentException.class,
+      Assertions.assertThrows(RuntimeException.class,
           () -> new Place(
               kakaoMapId,
               name,
@@ -188,7 +202,7 @@ class PlaceTest {
       String logitude = " ";
 
       //then
-      Assertions.assertThrows(IllegalArgumentException.class,
+      Assertions.assertThrows(RuntimeException.class,
           () -> new Place(
               kakaoMapId,
               name,
@@ -329,7 +343,7 @@ class PlaceTest {
       String newName = " ";
 
       //then
-      Assertions.assertThrows(IllegalArgumentException.class,
+      Assertions.assertThrows(RuntimeException.class,
           () -> place.changeName(newName));
     }
 
@@ -348,15 +362,17 @@ class PlaceTest {
     }
 
     @Test
-    @DisplayName("실패: 변경할 주소가 null")
+    @DisplayName("성공: 변경할 주소가 null")
     public void failAsAddressIsNull() throws Exception {
+
 
       //given
       Address newAddress = null;
 
+      place.changeAddress(newAddress);
+
       //then
-      Assertions.assertThrows(IllegalArgumentException.class,
-          () -> place.changeAddress(newAddress));
+      assertThat(place.getAddress()).isEqualTo(newAddress);
     }
 
     @Test
