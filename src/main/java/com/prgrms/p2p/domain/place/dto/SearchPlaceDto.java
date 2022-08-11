@@ -2,6 +2,7 @@ package com.prgrms.p2p.domain.place.dto;
 
 import com.prgrms.p2p.domain.course.entity.Region;
 import com.prgrms.p2p.domain.course.entity.Sorting;
+import io.swagger.annotations.ApiParam;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

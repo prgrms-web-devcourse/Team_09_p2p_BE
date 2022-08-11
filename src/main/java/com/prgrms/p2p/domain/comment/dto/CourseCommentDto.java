@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CourseCommentDto {
 
-  @ApiParam(value = "댓글 ID")
+  @ApiParam(value = "댓글 ID", example = "21")
   private Long id;
 
-  @ApiParam(value = "댓글 내용")
+  @ApiParam(value = "댓글 내용", example = "게시글 잘 봤습니다.")
   private String comment;
 
-  @ApiParam(value = "부모 댓글 ID")
+  @ApiParam(value = "부모 댓글 ID", example = "19")
   private Long rootCommentId;
 
   @ApiParam(value = "댓글 작성 시간")
@@ -36,10 +36,10 @@ public class CourseCommentDto {
   @AllArgsConstructor
   public static class UserDto {
 
-    @ApiParam(value = "댓글 작성자 ID")
+    @ApiParam(value = "댓글 작성자 ID", example = "3")
     private Long id;
 
-    @ApiParam(value = "댓글 작성자 닉네임")
+    @ApiParam(value = "댓글 작성자 닉네임", example = "코범석")
     private String nickname;
 
     @ApiParam(value = "댓글 작성자 프로필 이미지")
