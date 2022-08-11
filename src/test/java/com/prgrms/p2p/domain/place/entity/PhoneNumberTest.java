@@ -53,12 +53,12 @@ class PhoneNumberTest {
       String number_2_4_5 = "02-2354-56789";
 
       //then
-      Assertions.assertThrows(IllegalArgumentException.class, () -> new PhoneNumber(number_1_4_4));
-      Assertions.assertThrows(IllegalArgumentException.class, () -> new PhoneNumber(number_4_4_4));
-      Assertions.assertThrows(IllegalArgumentException.class, () -> new PhoneNumber(number_2_2_4));
-      Assertions.assertThrows(IllegalArgumentException.class, () -> new PhoneNumber(number_2_5_4));
-      Assertions.assertThrows(IllegalArgumentException.class, () -> new PhoneNumber(number_2_4_3));
-      Assertions.assertThrows(IllegalArgumentException.class, () -> new PhoneNumber(number_2_4_5));
+      Assertions.assertThrows(RuntimeException.class, () -> new PhoneNumber(number_1_4_4));
+      Assertions.assertThrows(RuntimeException.class, () -> new PhoneNumber(number_4_4_4));
+      Assertions.assertThrows(RuntimeException.class, () -> new PhoneNumber(number_2_2_4));
+      Assertions.assertThrows(RuntimeException.class, () -> new PhoneNumber(number_2_5_4));
+      Assertions.assertThrows(RuntimeException.class, () -> new PhoneNumber(number_2_4_3));
+      Assertions.assertThrows(RuntimeException.class, () -> new PhoneNumber(number_2_4_5));
     }
 
     @Test
@@ -69,7 +69,7 @@ class PhoneNumberTest {
       String number = " ";
 
       //then
-      Assertions.assertThrows(IllegalArgumentException.class, () -> new PhoneNumber(number));
+      Assertions.assertThrows(RuntimeException.class, () -> new PhoneNumber(number));
     }
   }
 }
