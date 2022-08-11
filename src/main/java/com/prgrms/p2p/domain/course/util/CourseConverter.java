@@ -7,7 +7,6 @@ import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.CoursePlace;
 import com.prgrms.p2p.domain.user.entity.User;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,11 +42,9 @@ public class CourseConverter {
   }
 
   public static String pickThumbnail(Course course) {
-    Optional<String> imageUrl = course.getCoursePlaces().stream()
-        .filter(CoursePlace::getThumbnailed)
+    return course.getCoursePlaces().stream().filter(CoursePlace::getThumbnailed).findFirst()
         .map(CoursePlace::getImageUrl)
-        .findFirst();
-
-    return imageUrl.isEmpty() ? null : imageUrl.get();
+        .orElseGet(() -> course.getCoursePlaces().size() > 0 ?
+            course.getCoursePlaces().get(0).getImageUrl() : null);
   }
 }
