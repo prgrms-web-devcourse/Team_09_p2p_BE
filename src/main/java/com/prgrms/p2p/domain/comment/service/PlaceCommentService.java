@@ -40,7 +40,7 @@ public class PlaceCommentService {
       PlaceComment parentComment = placeCommentRepository.findById(rootCommentId)
           .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글에 하위 댓글을 작성할 수 없습니다."));
 
-      if (!Objects.isNull(parentComment)) {
+      if (!Objects.isNull(parentComment.getRootCommentId())) {
         throw new BadRequestException("대댓글에 대댓글을 작성할 수 없습니다.");
       }
     }
