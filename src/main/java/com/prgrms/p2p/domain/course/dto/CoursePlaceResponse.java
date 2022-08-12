@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class CoursePlaceResponse {
 
   private Long id;
+  private Long placeId;
   private String kakaoMapId;
   private String name;
   private String description;
