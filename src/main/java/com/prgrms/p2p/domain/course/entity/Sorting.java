@@ -1,28 +1,30 @@
 package com.prgrms.p2p.domain.course.entity;
 
-import com.prgrms.p2p.domain.place.entity.QPlace;
+import static com.prgrms.p2p.domain.course.entity.QCourse.*;
+import static com.prgrms.p2p.domain.place.entity.QPlace.*;
+
 import com.querydsl.core.types.OrderSpecifier;
 
 public enum Sorting {
   최신순 {
     @Override
     public OrderSpecifier<?> expression() {
-      return QCourse.course.createdAt.desc();
+      return course.createdAt.desc();
     }
 
     @Override
     public OrderSpecifier<?> expressionForPlace() {
-      return QPlace.place.createdAt.desc();
+      return place.createdAt.desc();
     }
   }, 인기순 {
     @Override
     public OrderSpecifier<?> expression() {
-      return QCourse.course.courseLikes.size().desc();
+      return course.courseLikes.size().desc();
     }
 
     @Override
     public OrderSpecifier<?> expressionForPlace() {
-      return QPlace.place.placeLikes.size().desc();
+      return place.placeLikes.size().desc();
     }
   };
 
