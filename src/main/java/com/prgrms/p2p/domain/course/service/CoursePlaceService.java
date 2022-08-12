@@ -39,13 +39,20 @@ public class CoursePlaceService {
     Place place = placeService.findAndUpdateExistPlace(updateCoursePlaceRequest)
         .orElseGet(() -> placeService.save(updateCoursePlaceRequest));
     CoursePlace coursePlace =
-        Objects.isNull(updateCoursePlaceRequest.getCoursePlaceId()) ? coursePlaceRepository.save(
-            CoursePlaceConverter.toCoursePlace(updateCoursePlaceRequest, index, imageUrl, course,
-                place))
+        Objects.isNull(updateCoursePlaceRequest.getCoursePlaceId()) ? deleteAndSave(
+            updateCoursePlaceRequest, index, imageUrl, course, place)
             : coursePlaceRepository.findById(updateCoursePlaceRequest.getCoursePlaceId())
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 코스 장소입니다."));
     updateCoursePlaces(updateCoursePlaceRequest, index, imageUrl, coursePlace);
 
+  }
+
+  private CoursePlace deleteAndSave(UpdateCoursePlaceRequest updateCoursePlaceRequest,
+      Integer index, String imageUrl, Course course, Place place) {
+    coursePlaceRepository.deleteBySeqAndCourseAndPlace(index, course, place);
+    return coursePlaceRepository.save(
+        CoursePlaceConverter.toCoursePlace(updateCoursePlaceRequest, index, imageUrl, course,
+            place));
   }
 
   private void updateCoursePlaces(UpdateCoursePlaceRequest updateCoursePlaceRequest, Integer index,
@@ -56,4 +63,5 @@ public class CoursePlaceService {
     coursePlace.changeRecommended(updateCoursePlaceRequest.getIsRecommended());
     coursePlace.changeThumbnailed(updateCoursePlaceRequest.getIsThumbnail());
   }
+
 }
