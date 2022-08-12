@@ -109,7 +109,7 @@ public class PlaceSearchRepositoryTest {
     CoursePlace coursePlace = new CoursePlace(index, description, imageUrl, recommended, false,
         course, savedPlace);
 
-    CoursePlace savedCoursePlace = coursePlaceRepository.save(coursePlace);
+    coursePlaceRepository.save(coursePlace);
   }
 
   Long placeId;
