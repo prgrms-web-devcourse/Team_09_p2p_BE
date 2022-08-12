@@ -57,7 +57,10 @@ public class CourseService {
 
   private void saveCoursePlaces(CreateCourseRequest createCourseRequest, List<MultipartFile> images,
       Course course) {
-    validationSize(createCourseRequest.getPlaces().size(), images.size());
+    if (createCourseRequest.getPlaces().size() == 0 || images.size() == 0
+        || createCourseRequest.getPlaces().size() != images.size()) {
+      throw new CoursePlaceAndImageSizeNotEqualException("저장하려는 코스 장소와 이미지 크기가 맞지 않습니다.");
+    }
     IntStream.range(0, createCourseRequest.getPlaces().size()).forEach(index -> {
       String url = uploadService.uploadImg(images.get(index));
       coursePlaceService.save(createCourseRequest.getPlaces().get(index), index, url, course);
@@ -66,9 +69,12 @@ public class CourseService {
 
   private void updateCoursePlaces(UpdateCourseRequest updateCourseRequest,
       List<MultipartFile> images, Course course) {
-    validationSize((int) updateCourseRequest.getPlaces().stream()
+    int coursePlaceSize = (int) updateCourseRequest.getPlaces().stream()
         .filter(updateCoursePlaceRequest -> Objects.isNull(updateCoursePlaceRequest.getImageUrl()))
-        .count(), images.size());
+        .count();
+    if (coursePlaceSize != images.size()) {
+      throw new CoursePlaceAndImageSizeNotEqualException("저장하려는 코스 장소와 이미지 크기가 맞지 않습니다.");
+    }
     AtomicInteger imageOrder = new AtomicInteger();
     IntStream.range(0, updateCourseRequest.getPlaces().size()).forEach(index -> {
       String imageUrl = Objects.isNull(updateCourseRequest.getPlaces().get(index).getImageUrl())
