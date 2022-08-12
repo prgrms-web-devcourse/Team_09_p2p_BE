@@ -36,6 +36,7 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
         .from(course)
         .where(
             keywordListContains(request.getKeyword()),
+            placeNameContainKeyword(request.getKeyword()),
             regionEq(request.getRegion()),
             themeEq(request.getThemes()),
             spotEq(request.getSpots()),
@@ -44,11 +45,6 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
         ).orderBy(sortingEq(request.getSorting()))
         .offset(pageable.getOffset()).limit(pageable.getPageSize() + 1);
 
-//    for (Sort.Order o : pageable.getSort()) {
-//      PathBuilder pathBuilder = new PathBuilder<>(course.getType(), course.getMetadata());
-//      courseJPAQuery.orderBy(new OrderSpecifier(o.isAscending() ? Order.ASC : Order.DESC,
-//          pathBuilder.get(o.getProperty())));
-//    }
     List<Course> courses = courseJPAQuery.fetch();
 
     boolean hasNext = false;
@@ -68,10 +64,14 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
     BooleanBuilder builder = new BooleanBuilder();
     String[] splitedKeyword = keyword.split(" ");
     for (String value : splitedKeyword) {
-      builder.or(course.title.containsIgnoreCase(value));
-      builder.or(course.coursePlaces.any().place.name.containsIgnoreCase(value));
+      builder.and(course.title.containsIgnoreCase(value));
     }
     return builder;
+  }
+
+  private BooleanExpression placeNameContainKeyword(String keyword) {
+    return ObjectUtils.isEmpty(keyword) ? null
+        : course.coursePlaces.any().place.name.containsIgnoreCase(keyword);
   }
 
   private BooleanExpression regionEq(Region region) {
