@@ -316,7 +316,7 @@ public class PlaceCommentServiceTest {
 
       assertThatThrownBy(() -> placeCommentService.updatePlaceComment(
           updateReq, commentId, place.getId(), user.getId()))
-          .isInstanceOf(RuntimeException.class);
+          .isInstanceOf(NotFoundException.class);
     }
   }
 
@@ -411,7 +411,7 @@ public class PlaceCommentServiceTest {
 
       assertThatThrownBy(() -> placeCommentService.deletePlaceComment(
           commentId, place.getId(), user.getId()))
-          .isInstanceOf(RuntimeException.class);
+          .isInstanceOf(NotFoundException.class);
     }
   }
 }
