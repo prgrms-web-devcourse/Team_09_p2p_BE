@@ -8,6 +8,9 @@ import com.prgrms.p2p.domain.comment.dto.CreateCommentRequest;
 import com.prgrms.p2p.domain.comment.dto.UpdateCommentRequest;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
 import com.prgrms.p2p.domain.comment.repository.CourseCommentRepository;
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
+import com.prgrms.p2p.domain.common.exception.NotFoundException;
+import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.Period;
 import com.prgrms.p2p.domain.course.entity.Region;
@@ -144,7 +147,7 @@ class CourseCommentServiceTest {
           .build();
 
       //then
-      assertThrows(RuntimeException.class,
+      assertThrows(NotFoundException.class,
           () -> courseCommentService.save(createCommentReq, courseId, userId));
     }
 
@@ -164,7 +167,7 @@ class CourseCommentServiceTest {
           .build();
 
       //then
-      assertThrows(RuntimeException.class,
+      assertThrows(NotFoundException.class,
           () -> courseCommentService.save(createCommentReq, courseId, userId));
     }
 
@@ -210,7 +213,7 @@ class CourseCommentServiceTest {
           .build();
 
       //then
-      assertThrows(RuntimeException.class,
+      assertThrows(NotFoundException.class,
           () -> courseCommentService.save(createCommentReq, courseId, userId));
     }
 
@@ -230,7 +233,7 @@ class CourseCommentServiceTest {
           .build();
 
       //then
-      assertThrows(RuntimeException.class,
+      assertThrows(BadRequestException.class,
           () -> courseCommentService.save(createCommentReq, courseId, userId));
     }
   }
@@ -254,10 +257,10 @@ class CourseCommentServiceTest {
           = courseCommentService.updateCourseComment(
           updateReq, rootCommentId1, course.getId(), user.getId());
 
-      //then
       CourseComment courseComment = courseCommentRepository.findById(changedCommentId)
           .orElseThrow(RuntimeException::new);
 
+      //then
       assertThat(courseComment.getComment()).isEqualTo(newComment);
     }
 
@@ -275,7 +278,7 @@ class CourseCommentServiceTest {
       Long userId = -1L;
 
       //then
-      assertThrows(RuntimeException.class,
+      assertThrows(UnAuthorizedException.class,
           () -> courseCommentService.updateCourseComment(
               updateReq, rootCommentId1, course.getId(), userId));
     }
@@ -294,7 +297,7 @@ class CourseCommentServiceTest {
       Long courseId = -1L;
 
       //then
-      assertThrows(RuntimeException.class,
+      assertThrows(NotFoundException.class,
           () -> courseCommentService.updateCourseComment(
               updateReq, rootCommentId1, courseId, user.getId()));
     }
@@ -313,7 +316,7 @@ class CourseCommentServiceTest {
       Long commentId = -1L;
 
       //then
-      assertThrows(RuntimeException.class, () -> courseCommentService.updateCourseComment(
+      assertThrows(NotFoundException.class, () -> courseCommentService.updateCourseComment(
           updateReq, commentId, course.getId(), user.getId()));
     }
 
@@ -331,7 +334,7 @@ class CourseCommentServiceTest {
       Long commentId = basicCourse.getId();
 
       //then
-      assertThrows(RuntimeException.class, () -> courseCommentService.updateCourseComment(
+      assertThrows(NotFoundException.class, () -> courseCommentService.updateCourseComment(
           updateReq, commentId, course.getId(), user.getId()));
     }
   }
@@ -421,7 +424,7 @@ class CourseCommentServiceTest {
     public void failAsWrongUserId() throws Exception {
 
       //then
-      assertThrows(RuntimeException.class,
+      assertThrows(UnAuthorizedException.class,
           () -> courseCommentService.deleteCourseComment(rootCommentId1, course.getId(), -1L));
     }
 
@@ -430,7 +433,7 @@ class CourseCommentServiceTest {
     public void failAsWrongCourseId() throws Exception {
 
       //then
-      assertThrows(RuntimeException.class,
+      assertThrows(NotFoundException.class,
           () -> courseCommentService.deleteCourseComment(rootCommentId1, -1L, user.getId()));
     }
 
@@ -439,7 +442,7 @@ class CourseCommentServiceTest {
     public void failAsWrongCommentId() throws Exception {
 
       //then
-      assertThrows(RuntimeException.class,
+      assertThrows(NotFoundException.class,
           () -> courseCommentService.deleteCourseComment(-1L, course.getId(), user.getId()));
     }
 
@@ -457,7 +460,7 @@ class CourseCommentServiceTest {
       Long commentId = basicCourse.getId();
 
       //then
-      assertThrows(RuntimeException.class, () -> courseCommentService.deleteCourseComment(
+      assertThrows(NotFoundException.class, () -> courseCommentService.deleteCourseComment(
           commentId, course.getId(), user.getId()));
     }
   }
