@@ -45,6 +45,9 @@ public class PlaceCommentServiceTest {
 
   private Place place;
   private User user;
+  private Place basicPlace;
+  private User basicUser;
+
 
   private Long rootCommentId1;
   private Long rootCommentId2;
@@ -86,6 +89,23 @@ public class PlaceCommentServiceTest {
 
     user = userRepository.save(new User(email, password, nick, birth, male));
     Long userId = user.getId();
+
+    basicUser = userRepository.save(
+        new User("e222@mail.com", "password222", "ban", "2009-01-01", Sex.FEMALE));
+
+    basicPlace = placeRepository.save(
+        new Place("kakaoMapId2",
+            "또 다른 장소",
+            new Address(addressName, roadAddressName),
+            latitude,
+            logitude,
+            category,
+            phoneNumber)
+    );
+
+    placeCommentRepository.save(
+        new PlaceComment("basic place comment", null, basicUser.getId(), basicPlace));
+
 
     comment = "범석님 아프지마요.";
     newComment = "범석님 약드세요.";
@@ -211,7 +231,7 @@ public class PlaceCommentServiceTest {
           .build();
 
       assertThatThrownBy( () -> placeCommentService.save(createReq, placeId, userId))
-          .isInstanceOf(UnAuthorizedException.class);
+          .isInstanceOf(NotFoundException.class);
     }
 
     @Test
@@ -280,6 +300,22 @@ public class PlaceCommentServiceTest {
 
       assertThatThrownBy(() -> placeCommentService
           .updatePlaceComment(updateReq, place.getId(), commentId, user.getId()))
+          .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("실패: 수정하려는 댓글이 그 코스에 존재하지 않습니다.")
+    public void failNotMatchComment() {
+
+      String newComment = "new Comment";
+      UpdateCommentRequest updateReq = UpdateCommentRequest.builder()
+          .comment(newComment)
+          .build();
+
+      Long commentId = basicPlace.getId();
+
+      assertThatThrownBy(() -> placeCommentService.updatePlaceComment(
+          updateReq, commentId, place.getId(), user.getId()))
           .isInstanceOf(NotFoundException.class);
     }
   }
@@ -359,6 +395,22 @@ public class PlaceCommentServiceTest {
     public void failWrongCommentId() {
 
       assertThatThrownBy(()->placeCommentService.deletePlaceComment(place.getId(), 100L, user.getId()))
+          .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("실패: 삭제하려는 댓글이 그 코스에 존재하지 않습니다.")
+    public void failNotMatchComment() {
+
+      String newComment = "new Comment";
+      UpdateCommentRequest updateReq = UpdateCommentRequest.builder()
+          .comment(newComment)
+          .build();
+
+      Long commentId = basicPlace.getId();
+
+      assertThatThrownBy(() -> placeCommentService.deletePlaceComment(
+          commentId, place.getId(), user.getId()))
           .isInstanceOf(NotFoundException.class);
     }
   }
