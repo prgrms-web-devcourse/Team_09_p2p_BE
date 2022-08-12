@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.prgrms.p2p.domain.comment.dto.PlaceCommentForQueryDsl;
 import com.prgrms.p2p.domain.comment.entity.PlaceComment;
-import com.prgrms.p2p.domain.comment.service.PlaceCommentService;
 import com.prgrms.p2p.domain.place.entity.Address;
 import com.prgrms.p2p.domain.place.entity.Category;
 import com.prgrms.p2p.domain.place.entity.PhoneNumber;
@@ -28,9 +27,6 @@ public class SearchPlaceCommentRepositoryImplTest {
 
   @Autowired
   private PlaceCommentRepository placeCommentRepository;
-
-  @Autowired
-  private PlaceCommentService placeCommentService;
 
   @Autowired
   private UserRepository userRepository;
