@@ -1,8 +1,9 @@
 package com.prgrms.p2p.domain.place.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.jupiter.api.Assertions;
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -53,12 +54,12 @@ class PhoneNumberTest {
       String number_2_4_5 = "02-2354-56789";
 
       //then
-      Assertions.assertThrows(RuntimeException.class, () -> new PhoneNumber(number_1_4_4));
-      Assertions.assertThrows(RuntimeException.class, () -> new PhoneNumber(number_4_4_4));
-      Assertions.assertThrows(RuntimeException.class, () -> new PhoneNumber(number_2_2_4));
-      Assertions.assertThrows(RuntimeException.class, () -> new PhoneNumber(number_2_5_4));
-      Assertions.assertThrows(RuntimeException.class, () -> new PhoneNumber(number_2_4_3));
-      Assertions.assertThrows(RuntimeException.class, () -> new PhoneNumber(number_2_4_5));
+      assertThrows(BadRequestException.class, () -> new PhoneNumber(number_1_4_4));
+      assertThrows(BadRequestException.class, () -> new PhoneNumber(number_4_4_4));
+      assertThrows(BadRequestException.class, () -> new PhoneNumber(number_2_2_4));
+      assertThrows(BadRequestException.class, () -> new PhoneNumber(number_2_5_4));
+      assertThrows(BadRequestException.class, () -> new PhoneNumber(number_2_4_3));
+      assertThrows(BadRequestException.class, () -> new PhoneNumber(number_2_4_5));
     }
 
     @Test
@@ -69,7 +70,7 @@ class PhoneNumberTest {
       String number = " ";
 
       //then
-      Assertions.assertThrows(RuntimeException.class, () -> new PhoneNumber(number));
+      assertThrows(BadRequestException.class, () -> new PhoneNumber(number));
     }
   }
 }
