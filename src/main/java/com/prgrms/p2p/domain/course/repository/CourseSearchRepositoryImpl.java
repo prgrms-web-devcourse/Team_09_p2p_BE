@@ -68,7 +68,8 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
     BooleanBuilder builder = new BooleanBuilder();
     String[] splitedKeyword = keyword.split(" ");
     for (String value : splitedKeyword) {
-      builder.and(course.title.containsIgnoreCase(value));
+      builder.or(course.title.containsIgnoreCase(value));
+      builder.or(course.coursePlaces.any().place.name.containsIgnoreCase(value));
     }
     return builder;
   }
