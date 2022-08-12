@@ -36,7 +36,6 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
         .from(course)
         .where(
             keywordListContains(request.getKeyword()),
-            placeNameContainKeyword(request.getKeyword()),
             regionEq(request.getRegion()),
             themeEq(request.getThemes()),
             spotEq(request.getSpots()),
@@ -64,14 +63,10 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
     BooleanBuilder builder = new BooleanBuilder();
     String[] splitedKeyword = keyword.split(" ");
     for (String value : splitedKeyword) {
-      builder.and(course.title.containsIgnoreCase(value));
+      builder.and(course.title.contains(value));
     }
     builder.or(course.coursePlaces.any().place.name.contains(keyword));
     return builder;
-  }
-
-  private BooleanExpression placeNameContainKeyword(String keyword) {
-    return ObjectUtils.isEmpty(keyword) ? null : course.coursePlaces.any().place.name.contains(keyword);
   }
 
   private BooleanExpression regionEq(Region region) {
