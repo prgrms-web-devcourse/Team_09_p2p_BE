@@ -35,8 +35,7 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
         .select(course)
         .from(course)
         .where(
-            keywordListContains(request.getKeyword())
-                .or(placeNameContainKeyword(request.getKeyword())),
+            keywordListContains(request.getKeyword()),
             placeNameContainKeyword(request.getKeyword()),
             regionEq(request.getRegion()),
             themeEq(request.getThemes()),
@@ -67,6 +66,7 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
     for (String value : splitedKeyword) {
       builder.and(course.title.containsIgnoreCase(value));
     }
+    builder.or(course.coursePlaces.any().place.name.contains(keyword));
     return builder;
   }
 
