@@ -94,7 +94,7 @@ public class CourseService {
   }
 
   private void validationSize(int courseplaceSize, int imageSize) {
-    if (courseplaceSize != imageSize || courseplaceSize == 0) {
+    if (courseplaceSize == 0 || imageSize == 0 || courseplaceSize != imageSize) {
       throw new CoursePlaceAndImageSizeNotEqualException("저장하려는 코스 장소와 이미지 크기가 맞지 않습니다.");
     }
   }
