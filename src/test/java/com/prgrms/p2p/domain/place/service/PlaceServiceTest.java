@@ -2,9 +2,11 @@ package com.prgrms.p2p.domain.place.service;
 
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSearchPlaceDto;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.prgrms.p2p.domain.bookmark.entity.PlaceBookmark;
 import com.prgrms.p2p.domain.bookmark.repository.PlaceBookmarkRepository;
+import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.course.dto.CoursePlaceRequest;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.entity.CoursePlace;
@@ -34,6 +36,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -74,14 +77,14 @@ class PlaceServiceTest {
   void setup() {
 
     //place
-    String kakaoMapId = "kakaoMapId";
-    String name = "name";
-    String addressName = "addressName";
-    String roadAddressName = "roadAddressName";
-    String latitude = "latitude";
-    String longitude = "longitude";
+    String kakaoMapId = "basic kakaoMapId";
+    String name = "basic name";
+    String addressName = "basic addressName";
+    String roadAddressName = "basic roadAddressName";
+    String latitude = "basic latitude";
+    String longitude = "basic longitude";
     Category category = Category.MT1;
-    String number = "010-114-1234";
+    String number = "010-999-9999";
     PhoneNumber phoneNumber = new PhoneNumber(number);
 
     Place place = new Place(kakaoMapId, name, new Address(addressName, roadAddressName), latitude,
@@ -106,11 +109,10 @@ class PlaceServiceTest {
     String title = "title";
     Period period = Period.ONE_DAY;
     Region region = Region.서울;
-    String courseDescription = "description";
-    List<Spot> spotList = new ArrayList<>();
+    Set<Spot> spotList = new HashSet<>();
     spotList.add(Spot.바다);
 
-    Course course = new Course(title, period, region, themes, null, user);
+    Course course = new Course(title, period, region, themes, spotList, user);
     courseRepository.save(course);
 
     //coursePlace
@@ -121,8 +123,7 @@ class PlaceServiceTest {
     CoursePlace coursePlace = new CoursePlace(index, description, imageUrl, recommended, false,
         course, savedPlace);
 
-    CoursePlace savedCoursePlace = coursePlaceRepository.save(coursePlace);
-
+    coursePlaceRepository.save(coursePlace);
   }
 
   Place savedPlace;
@@ -139,6 +140,16 @@ class PlaceServiceTest {
     placeBookmarkRepository.deleteAll();
   }
 
+  String kakaoMapId = "kakaoMapId";
+  String name = "name";
+  String addressName = "addressName";
+  String roadAddressName = "roadAddressName";
+  String latitude = "latitude";
+  String longitude = "longitude";
+  Category category = Category.MT1;
+  String number = "010-1234-1234";
+  PhoneNumber phoneNumber = new PhoneNumber(number);
+
   @Nested
   @DisplayName("저장")
   class save {
@@ -148,16 +159,6 @@ class PlaceServiceTest {
     public void savePlace() throws Exception {
 
       //given
-      String kakaoMapId = "kakaoMapId";
-      String name = "name";
-      String addressName = "addressName";
-      String roadAddressName = "roadAddressName";
-      String latitude = "latitude";
-      String longitude = "longitude";
-      Category category = Category.MT1;
-      String number = "010-1234-1234";
-      PhoneNumber phoneNumber = new PhoneNumber(number);
-
       CoursePlaceRequest createPlaceReq = CoursePlaceRequest.builder()
           .kakaoMapId(kakaoMapId)
           .name(name)
@@ -191,14 +192,6 @@ class PlaceServiceTest {
 
       //given
       String kakaoMapId = null;
-      String name = "name";
-      String addressName = "addressName";
-      String roadAddressName = "roadAddressName";
-      String latitude = "latitude";
-      String longitude = "longitude";
-      Category category = Category.MT1;
-      String number = "010-1234-1234";
-      PhoneNumber phoneNumber = new PhoneNumber(number);
 
       CoursePlaceRequest createPlaceReq = CoursePlaceRequest.builder()
           .kakaoMapId(kakaoMapId)
@@ -232,15 +225,8 @@ class PlaceServiceTest {
     public void savePlaceWhenAddressIsNull() throws Exception {
 
       //given
-      String kakaoMapId = "kakaoMapId";
-      String name = "name";
       String addressName = null;
       String roadAddressName = null;
-      String latitude = "latitude";
-      String longitude = "longitude";
-      Category category = Category.MT1;
-      String number = "010-1234-1234";
-      PhoneNumber phoneNumber = new PhoneNumber(number);
 
       CoursePlaceRequest createPlaceReq = CoursePlaceRequest.builder()
           .kakaoMapId(kakaoMapId)
@@ -274,13 +260,6 @@ class PlaceServiceTest {
     public void savePlaceWhenPhoneNumberIsNull() throws Exception {
 
       //given
-      String kakaoMapId = null;
-      String name = "name";
-      String addressName = "addressName";
-      String roadAddressName = "roadAddressName";
-      String latitude = "latitude";
-      String longitude = "longitude";
-      Category category = Category.MT1;
       PhoneNumber phoneNumber = null;
 
       CoursePlaceRequest createPlaceReq = CoursePlaceRequest.builder()
@@ -342,6 +321,15 @@ class PlaceServiceTest {
 
       assertThat(detailPlaceResp.getUsedCount()).isEqualTo(1);
       assertThat(detailPlaceResp.getLikeCount()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("실패: 존재하지 않는 장소 id")
+    public void failFindDetailPlaceAsNotExistPlaceId() throws Exception {
+
+      //then
+      assertThrows(NotFoundException.class,
+          () -> placeService.findDetail(-1L, Optional.empty()));
     }
 
     @Test
@@ -462,6 +450,7 @@ class PlaceServiceTest {
           = placeService.findSummaryList(searchPlaceDto, pageable, null);
 
       assertThat(summaryList.getNumberOfElements()).isEqualTo(size + 1);
+
       //then
       for (SummaryPlaceResponse summaryPlaceResponse : summaryList) {
         assertThat(summaryPlaceResponse.getTitle()).contains("");
@@ -620,6 +609,7 @@ class PlaceServiceTest {
     @Test
     @DisplayName("성공: 북마크 1개 했으므로 조회 개수 1")
     public void findBookmarkedPlaceListResult1() throws Exception {
+
       //given
       Place place = placeRepository.findById(placeId).orElseThrow(RuntimeException::new);
       PlaceBookmark placeBookmark = new PlaceBookmark(userId, place);

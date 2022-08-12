@@ -2,6 +2,7 @@ package com.prgrms.p2p.domain.place.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,7 +55,6 @@ class PlaceTest {
   Category category;
   String number;
   PhoneNumber phoneNumber;
-  String imageUrl;
   Place place;
 
   @Nested
@@ -182,7 +182,7 @@ class PlaceTest {
       String latitude = " ";
 
       //then
-      Assertions.assertThrows(RuntimeException.class,
+      Assertions.assertThrows(BadRequestException.class,
           () -> new Place(
               kakaoMapId,
               name,
@@ -202,7 +202,7 @@ class PlaceTest {
       String logitude = " ";
 
       //then
-      Assertions.assertThrows(RuntimeException.class,
+      Assertions.assertThrows(BadRequestException.class,
           () -> new Place(
               kakaoMapId,
               name,
@@ -343,7 +343,7 @@ class PlaceTest {
       String newName = " ";
 
       //then
-      Assertions.assertThrows(RuntimeException.class,
+      Assertions.assertThrows(BadRequestException.class,
           () -> place.changeName(newName));
     }
 
