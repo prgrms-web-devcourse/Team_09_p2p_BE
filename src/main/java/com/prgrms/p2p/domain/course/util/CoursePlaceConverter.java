@@ -10,25 +10,23 @@ import java.util.Objects;
 
 public class CoursePlaceConverter {
 
-  public static CoursePlace toCoursePlace(CoursePlaceRequest coursePlaceRequest,
-      Integer index, String imageUrl, Course course, Place place) {
+  public static CoursePlace toCoursePlace(CoursePlaceRequest coursePlaceRequest, Integer index,
+      String imageUrl, Course course, Place place) {
     return new CoursePlace(index, coursePlaceRequest.getDescription(), imageUrl,
-        coursePlaceRequest.getIsRecommended(), coursePlaceRequest.getIsThumbnail(),
-        course, place);
+        coursePlaceRequest.getIsRecommended(), coursePlaceRequest.getIsThumbnail(), course, place);
   }
 
   public static Place toPlace(CoursePlaceRequest coursePlaceRequest) {
     return new Place(coursePlaceRequest.getKakaoMapId(), coursePlaceRequest.getName(),
-        new Address(coursePlaceRequest.getAddressName(),
-            coursePlaceRequest.getRoadAddressName()), coursePlaceRequest.getLatitude(),
-        coursePlaceRequest.getLongitude(), coursePlaceRequest.getCategory(),
-        coursePlaceRequest.getPhoneNumber());
+        new Address(coursePlaceRequest.getAddressName(), coursePlaceRequest.getRoadAddressName()),
+        coursePlaceRequest.getLatitude(), coursePlaceRequest.getLongitude(),
+        coursePlaceRequest.getCategory(), coursePlaceRequest.getPhoneNumber());
   }
 
   public static CoursePlaceResponse of(CoursePlace coursePlace) {
     return CoursePlaceResponse.builder().id(coursePlace.getId())
-        .kakaoMapId(coursePlace.getPlace().getKakaoMapId()).name(coursePlace.getPlace().getName())
-        .description(coursePlace.getDescription()).address(
+        .placeId(coursePlace.getPlace().getId()).kakaoMapId(coursePlace.getPlace().getKakaoMapId())
+        .name(coursePlace.getPlace().getName()).description(coursePlace.getDescription()).address(
             Objects.isNull(coursePlace.getPlace().getAddress()) ? null
                 : coursePlace.getPlace().getAddress().getAddressName())
         .latitude(coursePlace.getPlace().getLatitude())
