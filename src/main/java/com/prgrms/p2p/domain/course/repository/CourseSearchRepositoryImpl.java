@@ -41,7 +41,7 @@ public class CourseSearchRepositoryImpl implements CourseSearchRepository {
             spotEq(request.getSpots()),
             periodEq(request.getPeriod()),
             placeIdEq(request.getPlaceId())
-        ).orderBy(sortingEq(request.getSorting()))
+        ).orderBy(sortingEq(request.getSorting()),course.createdAt.desc())
         .offset(pageable.getOffset()).limit(pageable.getPageSize() + 1);
 
     List<Course> courses = courseJPAQuery.fetch();
