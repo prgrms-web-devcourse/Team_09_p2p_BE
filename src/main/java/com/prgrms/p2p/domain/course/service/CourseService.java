@@ -14,7 +14,6 @@ import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -69,16 +68,16 @@ public class CourseService {
 
   private void updateCoursePlaces(UpdateCourseRequest updateCourseRequest,
       List<MultipartFile> images, Course course) {
-    int coursePlaceSize = (int) updateCourseRequest.getPlaces().stream()
+    long coursePlaceSize = updateCourseRequest.getPlaces().stream()
         .filter(updateCoursePlaceRequest -> Objects.isNull(updateCoursePlaceRequest.getImageUrl()))
         .count();
-    if (coursePlaceSize != images.size()) {
+    long imagesSize = images.stream().filter(multipartFile -> !multipartFile.isEmpty()).count();
+    if (coursePlaceSize != imagesSize) {
       throw new CoursePlaceAndImageSizeNotEqualException("저장하려는 코스 장소와 이미지 크기가 맞지 않습니다.");
     }
-    AtomicInteger imageOrder = new AtomicInteger();
     IntStream.range(0, updateCourseRequest.getPlaces().size()).forEach(index -> {
       String imageUrl = Objects.isNull(updateCourseRequest.getPlaces().get(index).getImageUrl())
-          ? uploadService.uploadImg(images.get(imageOrder.getAndIncrement()))
+          ? uploadService.uploadImg(images.get(index))
           : updateCourseRequest.getPlaces().get(index).getImageUrl();
       coursePlaceService.modify(updateCourseRequest.getPlaces().get(index), index, imageUrl,
           course);
