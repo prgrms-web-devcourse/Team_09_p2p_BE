@@ -19,15 +19,16 @@ public class CourseConverter {
         Set.copyOf(createCourseRequest.getSpots()), user);
   }
 
-  public static DetailCourseResponse ofDetail(Course course, Boolean isLiked,
-      Boolean isBookmarked) {
+  public static DetailCourseResponse ofDetail(Course course, Boolean isLiked, Boolean isBookmarked,
+      Integer comments) {
     return DetailCourseResponse.builder().id(course.getId()).title(course.getTitle())
         .thumbnail(pickThumbnail(course)).region(course.getRegion()).period(course.getPeriod())
         .themes(List.copyOf(course.getThemes())).spots(List.copyOf(course.getSpots())).places(
             course.getCoursePlaces().stream().sorted(Comparator.comparing(CoursePlace::getSeq))
                 .map(CoursePlaceConverter::of).collect(Collectors.toList()))
-        .likes(course.getCourseLikes().size()).isLiked(isLiked).isBookmarked(isBookmarked)
-        .userId(course.getUser().getId()).nickname(course.getUser().getNickname())
+        .likes(course.getCourseLikes().size()).comments(comments).isLiked(isLiked)
+        .isBookmarked(isBookmarked).userId(course.getUser().getId())
+        .nickname(course.getUser().getNickname())
         .profileImage(course.getUser().getProfileUrl().orElse(null))
         .createdAt(course.getCreatedAt()).updatedAt(course.getUpdatedAt()).build();
   }

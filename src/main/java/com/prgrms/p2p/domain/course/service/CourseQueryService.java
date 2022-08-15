@@ -3,6 +3,7 @@ package com.prgrms.p2p.domain.course.service;
 import static com.prgrms.p2p.domain.course.util.CourseConverter.ofSummary;
 
 import com.prgrms.p2p.domain.bookmark.repository.CourseBookmarkRepository;
+import com.prgrms.p2p.domain.comment.repository.CourseCommentRepository;
 import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.course.dto.DetailCourseResponse;
 import com.prgrms.p2p.domain.course.dto.SearchCourseRequest;
@@ -25,13 +26,15 @@ public class CourseQueryService {
   private final CourseRepository courseRepository;
   private final CourseLikeRepository likeRepository;
   private final CourseBookmarkRepository bookmarkRepository;
+  private final CourseCommentRepository courseCommentRepository;
 
   public DetailCourseResponse findDetail(Long id, Long userId) {
     Course course = courseRepository.findById(id)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 코스입니다."));
     Boolean isLiked = likeRepository.existsByUserIdAndCourse(userId, course);
     Boolean isBookmarked = bookmarkRepository.existsByUserIdAndCourse(userId, course);
-    return CourseConverter.ofDetail(course, isLiked, isBookmarked);
+    Integer comments = courseCommentRepository.countByCourse(course);
+    return CourseConverter.ofDetail(course, isLiked, isBookmarked,comments);
   }
 
   public Slice<SummaryCourseResponse> findSummaryList(SearchCourseRequest searchCourseRequest,
