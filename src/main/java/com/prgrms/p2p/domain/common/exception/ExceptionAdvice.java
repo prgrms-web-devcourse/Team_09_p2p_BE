@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionAdvice {
 
   @ExceptionHandler(NotFoundException.class)
-  public ResponseEntity<Void> handleNotFoundException(Exception e) {
+  public ResponseEntity<Void> handleNotFoundException(NotFoundException e) {
     return ResponseEntity.notFound().build();
   }
 
@@ -26,8 +26,8 @@ public class ExceptionAdvice {
     return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
   }
 
-  @ExceptionHandler(RuntimeException.class)
-  public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException e) {
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ErrorResponse> handleRuntimeException(Exception e) {
     return ResponseEntity.internalServerError().body(new ErrorResponse(e.getMessage()));
   }
 
