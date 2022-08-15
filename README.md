@@ -1,21 +1,46 @@
-# 이곳저곳 💨 
+![header](https://capsule-render.vercel.app/api?type=waving&color=509FFB&height=250&section=header&text=여행할%20땐%20💙이곳저곳💙&fontSize=50&animation=fadeIn&fontAlignY=40)
 
-프로젝트 💙 이곳저곳 💙 BE의 Repository 입니다.
+프로젝트 💙 이곳저곳 💙 BE Team의 Repository 입니다 💨
 
-### 팀 : 오프와 에프 BE
-
-| Product Owner                      | Scrum Master                          | Developer                           | Developer                         | Developer                              |
-|------------------------------------|---------------------------------------|-------------------------------------|-----------------------------------|----------------------------------------|
-| [고범석](https://github.com/qjatjr29) | [송무송](https://github.com/moosongsong) | [강완수](https://github.com/dhkstnaos) | [김기현](https://github.com/unnokid) | [박형근](https://github.com/Hyunggeun447) |
+[FE Repository](https://github.com/prgrms-web-devcourse/Team_09_p2p_FE)는 👈 여기로
 
 ## 프로젝트 개요
 
-### 프로젝트 목적
+### ⌛️ 프로젝트 기간
 
-- 백엔드 시스템의 도메인 전반을 이해하고 구현해보자.
-- 페어 프로그래밍을 함으로서 **활발한 지식 공유**와 **깊은 사고**를 하는 태도를 체화하자.
+`2022/07/18(月)` ~ `2022/08/15(月)`
 
-### 사용 기술
+### 🍳 팀원 소개
+
+| [Kevin](https://github.com/qjatjr29)                                             | [Kate](https://github.com/moosongsong)                                                                                            | [Charlie](https://github.com/Hyunggeun447)                                                                                        | [Frank](https://github.com/dhkstnaos)                                                                                             | [Kid](https://github.com/unnokid)                                                                                                 | 
+|----------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| <img src = "https://avatars.githubusercontent.com/u/74031333?v=4" width = "200"> | <img src = "https://user-images.githubusercontent.com/50647845/184600278-0411f51c-48ae-4c63-aa24-7c4cd674c19c.png" width = "200"> | <img src = "https://user-images.githubusercontent.com/50647845/184652712-64628b36-8b87-4e76-b11f-3aebe75cca73.png" width = "200"> | <img src = "https://user-images.githubusercontent.com/50647845/184600042-1cee5e00-c1ff-4ce3-acc5-9deffccc3ca4.png" width = "200"> | <img src = "https://user-images.githubusercontent.com/50647845/184599960-7b6d996e-093c-4030-9586-224e58965ed2.png" width = "200"> |
+| Product Owner                                                                    | Scrum Master                                                                                                                      | Developer                                                                                                                         | Developer                                                                                                                         | Developer                                                                                                                         |
+
+### 🛠 프로젝트 구조
+
+```
+    ┌─────────────────────┐            
+    ├─────────────────────┤  Request!  ┌───────────────┐           ┌──────────────┐        
+    │                     ├───────────>│    Route 53   │           │    GitHub    │
+    │      Front-end      │<───────────┤     (DNS)     │           └──────┬───────┘ 
+    │                     │  Response! └─────┬───┬─────┘                  │ Push!
+    └─────────────────────┘                  │   │                        │
+                                       ┌─────┴───┴─────┐           ┌──────┴───────┐
+    ┌───── Data Store ────┐            │ Application   │           │    Jenkis    │
+    │   ┌──── RDS ────┐   │            │ Load Balancer │           │   (CI / CD)  │
+    │   │    MySQL    │   │            └─────┬───┬─────┘           └────┬────┬────┘    
+    │   └─────────────┘   │                  │   │                      │    │ Upload!
+    │   ┌──── EC2 ────┐   │  Response! ┌─────┴───┴─────┐       Deploy!  │    └──────────────┐
+    │   │    Redis    │   ├───────────>│  Spring Boot  │      ┌─────────┴─────┐      ┌──────┴──────┐
+    │   └─────────────┘   │            │  Application  │<─────┤  Code Deploy  │<─────┤  S3 Bucket  │
+    │   ┌──── S3 ─────┐   │<───────────┤     (EC2)     │      └───────────────┘      └─────────────┘
+    │   │   Images    │   │  Request!  └───────────────┘
+    │   └─────────────┘   │ 
+    └─────────────────────┘
+```
+
+### 🔧 사용 기술
 
 ![Java](https://img.shields.io/badge/-Java%2011-007396?style=plastic&logo=java&logoColor=white)
 ![SpringBoot](https://img.shields.io/badge/-Spring%20Boot%202.7.0-6DB33F?style=plastic&logo=Spring%20Boot&logoColor=white)
@@ -23,7 +48,7 @@
 ![Querydsl](https://img.shields.io/badge/-Querydsl%205.0.0-7D933F?style=plastic&logo=Spring&logoColor=white)
 ![SpringSecurity](https://img.shields.io/badge/-Spring%20Security-6DB33F?style=plastic&logo=SpringSecurity&logoColor=white)
 
-### 인프라
+### 🧱 인프라
 
 ![Gradle](https://img.shields.io/badge/-Gradle%207.2-02303A?style=plastic&logo=Gradle&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL%208.028-4479A1?style=plastic&logo=MySQL&logoColor=white)
@@ -31,7 +56,7 @@
 ![AmazonAWS](https://img.shields.io/badge/AWS%20RDS-232F6E?style=plastic&logo=AmazonAWS&logoColor=white)
 ![AmazonAWS](https://img.shields.io/badge/AWS%20EC2-232F8E?style=plastic&logo=AmazonAWS&logoColor=white)
 
-### 협업툴
+### 📠 협업툴
 
 ![GitHub](https://img.shields.io/badge/-GitHub-181717?style=plastic&logo=GitHub&logoColor=white)
 ![Jira](https://img.shields.io/badge/-Jira-0052CC?style=plastic&logo=JiraSoftware&logoColor=white)
@@ -39,14 +64,6 @@
 ![Slack](https://img.shields.io/badge/-Slack-4A154B?style=plastic&logo=Slack&logoColor=white)
 
 ## 프로젝트 진행
-
-### 페어 프로그래밍
-
-- (1주차) 5인 페어 프로그래밍
-    - 1시간 단위로 `driver`와 `navigator` 변경하여 진행
-- (2주차) 2인, 3인 페어 프로그래밍
-    - Task 단위로 `driver`와 `navigator` 변경하여 진행
-- (3주차) 1인 프로그래밍
 
 ### Branch Convention
 
