@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.place.repository;
 
+import static com.prgrms.p2p.domain.course.entity.QCourse.course;
 import static com.prgrms.p2p.domain.place.entity.QPlace.place;
 
 import com.prgrms.p2p.domain.course.entity.Region;
@@ -35,7 +36,8 @@ public class PlaceSearchRepositoryImpl implements PlaceSearchRepository {
             regionEq(searchPlaceDto.getRegion()),
             place.kakaoMapId.isNotNull()
         )
-        .orderBy(sortingEq(searchPlaceDto.getSorting()))
+        .orderBy(sortingEq(searchPlaceDto.getSorting()),
+            place.createdAt.desc())
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize() + 1);
 
