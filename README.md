@@ -1,6 +1,8 @@
 ![header](https://capsule-render.vercel.app/api?type=waving&color=509FFB&height=250&section=header&text=여행할%20땐%20💙이곳저곳💙&fontSize=50&animation=fadeIn&fontAlignY=40)
 
-프로젝트 💙 이곳저곳 💙 BE Team의 Repository 입니다💨
+프로젝트 💙 이곳저곳 💙 BE Team의 Repository 입니다 💨
+
+[FE Repository](https://github.com/prgrms-web-devcourse/Team_09_p2p_FE)는 👈 여기로
 
 ## 프로젝트 개요
 
