@@ -30,6 +30,7 @@ public class DetailCourseResponse {
   @Builder.Default
   private List<CoursePlaceResponse> places = new ArrayList<>();
   private Integer likes;
+  private Integer comments;
   private Boolean isLiked;
   private Boolean isBookmarked;
   private Long userId;
