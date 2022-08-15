@@ -17,7 +17,7 @@ public class PhoneNumber {
   private String number;
 
   public PhoneNumber(String number) {
-    validationPhone(number);
+//    validationPhone(number);
     this.number = number;
   }
 
@@ -30,7 +30,7 @@ public class PhoneNumber {
   }
 
   public void validationPhone(String number) {
-    if (!number.matches("^\\d{2,3}-\\d{3,4}-\\d{4}$")) {
+    if (!number.matches("^\\d{2,4}-\\d{3,4}-\\d{4}$")) {
       throw new BadRequestException("입력값이 전화번호 형식에 맞지 않습니다.");
     }
   }
