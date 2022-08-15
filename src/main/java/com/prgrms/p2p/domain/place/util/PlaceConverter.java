@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class PlaceConverter {
 
-  public static DetailPlaceResponse toDetailPlaceResponse(Place place, Optional<Long> userId) {
+  public static DetailPlaceResponse toDetailPlaceResponse(Place place, Optional<Long> userId, Integer commentCount) {
 
     Integer likeCount = place.getPlaceLikes().size();
     Integer usedCount = place.getCoursePlaces().size();
@@ -36,6 +36,8 @@ public class PlaceConverter {
         .bookmarked(bookmarked)
         .likeCount(likeCount)
         .usedCount(usedCount)
+        .kakaoMapId(place.getKakaoMapId())
+        .comments(commentCount)
         .build();
   }
 
