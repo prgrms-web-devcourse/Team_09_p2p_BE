@@ -10,14 +10,14 @@
 
 `2022/07/18(月)` ~ `2022/08/15(月)`
 
-### 팀원 소개
+### 🍳 팀원 소개
 
-| [Kevin](https://github.com/qjatjr29)                        | [Kate](https://github.com/moosongsong)                                                                       | [Charlie](https://github.com/Hyunggeun447)                                                                   | [Frank](https://github.com/dhkstnaos)                                                                        | [Kid](https://github.com/unnokid)                                                                            | 
-|-------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| ![범석](https://avatars.githubusercontent.com/u/74031333?v=4) | ![무송](https://user-images.githubusercontent.com/50647845/184600278-0411f51c-48ae-4c63-aa24-7c4cd674c19c.png) | ![형근](https://user-images.githubusercontent.com/50647845/184652712-64628b36-8b87-4e76-b11f-3aebe75cca73.png) | ![완수](https://user-images.githubusercontent.com/50647845/184600042-1cee5e00-c1ff-4ce3-acc5-9deffccc3ca4.png) | ![기현](https://user-images.githubusercontent.com/50647845/184599960-7b6d996e-093c-4030-9586-224e58965ed2.png) |
-| Product Owner                                               | Scrum Master                                                                                                 | Developer                                                                                                    | Developer                                                                                                    | Developer                                                                                                    |
+| [Kevin](https://github.com/qjatjr29)                                             | [Kate](https://github.com/moosongsong)                                                                                            | [Charlie](https://github.com/Hyunggeun447)                                                                                        | [Frank](https://github.com/dhkstnaos)                                                                                             | [Kid](https://github.com/unnokid)                                                                                                 | 
+|----------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| <img src = "https://avatars.githubusercontent.com/u/74031333?v=4" width = "200"> | <img src = "https://user-images.githubusercontent.com/50647845/184600278-0411f51c-48ae-4c63-aa24-7c4cd674c19c.png" width = "200"> | <img src = "https://user-images.githubusercontent.com/50647845/184652712-64628b36-8b87-4e76-b11f-3aebe75cca73.png" width = "200"> | <img src = "https://user-images.githubusercontent.com/50647845/184600042-1cee5e00-c1ff-4ce3-acc5-9deffccc3ca4.png" width = "200"> | <img src = "https://user-images.githubusercontent.com/50647845/184599960-7b6d996e-093c-4030-9586-224e58965ed2.png" width = "200"> |
+| Product Owner                                                                    | Scrum Master                                                                                                                      | Developer                                                                                                                         | Developer                                                                                                                         | Developer                                                                                                                         |
 
-### 프로젝트 구조
+### 🛠 프로젝트 구조
 
 ```
     ┌─────────────────────┐            
@@ -40,7 +40,7 @@
     └─────────────────────┘
 ```
 
-### 사용 기술
+### 🔧 사용 기술
 
 ![Java](https://img.shields.io/badge/-Java%2011-007396?style=plastic&logo=java&logoColor=white)
 ![SpringBoot](https://img.shields.io/badge/-Spring%20Boot%202.7.0-6DB33F?style=plastic&logo=Spring%20Boot&logoColor=white)
@@ -48,7 +48,7 @@
 ![Querydsl](https://img.shields.io/badge/-Querydsl%205.0.0-7D933F?style=plastic&logo=Spring&logoColor=white)
 ![SpringSecurity](https://img.shields.io/badge/-Spring%20Security-6DB33F?style=plastic&logo=SpringSecurity&logoColor=white)
 
-### 인프라
+### 🧱 인프라
 
 ![Gradle](https://img.shields.io/badge/-Gradle%207.2-02303A?style=plastic&logo=Gradle&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL%208.028-4479A1?style=plastic&logo=MySQL&logoColor=white)
@@ -56,7 +56,7 @@
 ![AmazonAWS](https://img.shields.io/badge/AWS%20RDS-232F6E?style=plastic&logo=AmazonAWS&logoColor=white)
 ![AmazonAWS](https://img.shields.io/badge/AWS%20EC2-232F8E?style=plastic&logo=AmazonAWS&logoColor=white)
 
-### 협업툴
+### 📠 협업툴
 
 ![GitHub](https://img.shields.io/badge/-GitHub-181717?style=plastic&logo=GitHub&logoColor=white)
 ![Jira](https://img.shields.io/badge/-Jira-0052CC?style=plastic&logo=JiraSoftware&logoColor=white)
