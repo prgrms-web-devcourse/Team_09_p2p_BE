@@ -52,4 +52,10 @@ public class DetailPlaceResponse {
 
   @ApiParam(value = "코스 게시글 작성에 사용된 빈도", example = "1")
   private Integer usedCount;
+
+  @ApiParam(value = "카카오 맵 아이디", example = "11231422")
+  private String kakaoMapId;
+
+  @ApiParam(value = "댓글 개수", example = "0")
+  private Integer comments;
 }
