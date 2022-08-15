@@ -15,7 +15,7 @@
       <onMismatch>DENY</onMismatch>
     </filter>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>logs/log-%d{yyyy-MM-dd}.log</fileNamePattern>
+      <fileNamePattern>log-%d{yyyy-MM-dd}.log</fileNamePattern>
     </rollingPolicy>
   </appender>
   <conversionRule
