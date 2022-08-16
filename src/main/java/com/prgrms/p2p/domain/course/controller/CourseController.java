@@ -46,12 +46,10 @@ public class CourseController {
   private final CourseQueryService courseQueryService;
 
   @Operation(summary = "코스 등록", description = "인증된 사용자는 코스를 등록할 수 있습니다.")
-  @ApiResponses(value = {
-      @ApiResponse(code = 201, message = "코스 등록 성공"),
+  @ApiResponses(value = {@ApiResponse(code = 201, message = "코스 등록 성공"),
       @ApiResponse(code = 401, message = "인증 받지 않은 사용자 권한 없음"),
       @ApiResponse(code = 404, message = "존재하지 않는 유저인 경우"),
-      @ApiResponse(code = 500, message = "옳바르지 않은 입력 형식에 대한 Json 오류 또는 S3 업로드 오류인 경우")
-  })
+      @ApiResponse(code = 500, message = "옳바르지 않은 입력 형식에 대한 Json 오류 또는 S3 업로드 오류인 경우")})
   @PostMapping
   public ResponseEntity<Long> register(
       @RequestPart("course") CreateCourseRequest createCourseRequest,
@@ -62,11 +60,9 @@ public class CourseController {
   }
 
   @Operation(summary = "코스 상세", description = "모든 사용자는 코스 상세 조회를 할 수 있습니다.")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "코스 조회 성공"),
+  @ApiResponses(value = {@ApiResponse(code = 200, message = "코스 조회 성공"),
       @ApiResponse(code = 401, message = "인증 받지 않은 사용자 권한 없음"),
-      @ApiResponse(code = 404, message = "존재하지 않는 코스인 경우")
-  })
+      @ApiResponse(code = 404, message = "존재하지 않는 코스인 경우")})
   @GetMapping("/{courseId}")
   public ResponseEntity<DetailCourseResponse> getDetailCourse(
       @PathVariable("courseId") Long courseId, @CurrentUser CustomUserDetails user) {
@@ -76,10 +72,8 @@ public class CourseController {
   }
 
   @Operation(summary = "코스 목록", description = "모든 사용자는 코스 목록을 조회를 할 수 있습니다.")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "코스 조회 성공"),
-      @ApiResponse(code = 401, message = "인증 받지 않은 사용자 권한 없음"),
-  })
+  @ApiResponses(value = {@ApiResponse(code = 200, message = "코스 조회 성공"),
+      @ApiResponse(code = 401, message = "인증 받지 않은 사용자 권한 없음"),})
   @GetMapping
   public ResponseEntity<Slice<SummaryCourseResponse>> getSummaryCourseList(
       @RequestParam(required = false) String keyword, @RequestParam(required = false) Region region,
@@ -101,25 +95,22 @@ public class CourseController {
   }
 
   @Operation(summary = "유저의 북마크한 코스 목록", description = "인증된 사용자는 북마크한 코스 목록을 조회를 할 수 있습니다.")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "코스 조회 성공"),
-      @ApiResponse(code = 401, message = "인증 받지 않은 사용자 권한 없음"),
-  })
+  @ApiResponses(value = {@ApiResponse(code = 200, message = "코스 조회 성공"),
+      @ApiResponse(code = 401, message = "인증 받지 않은 사용자 권한 없음"),})
   @GetMapping("/bookmark")
   public ResponseEntity<Slice<SummaryCourseResponse>> getBookmarkPlaceList(
-      @RequestParam("userId") Long userId,
-      @PageableDefault(page = 0, size = 15) Pageable pageable) {
+      @RequestParam("userId") Long userId, @PageableDefault(page = 0, size = 15) Pageable pageable,
+      @CurrentUser CustomUserDetails user) {
+    Long currentUserId = Objects.isNull(user) ? null : user.getId();
     Slice<SummaryCourseResponse> bookmarkedPlaceList = courseQueryService.findBookmarkedCourseList(
-        pageable, userId);
+        pageable, userId, currentUserId);
 
     return ResponseEntity.ok(bookmarkedPlaceList);
   }
 
   @Operation(summary = "유저의  코스 목록", description = "인증된 사용자는 자신이 등록한 코스 목록을 조회를 할 수 있습니다.")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "코스 조회 성공"),
-      @ApiResponse(code = 401, message = "인증 받지 않은 사용자 권한 없음"),
-  })
+  @ApiResponses(value = {@ApiResponse(code = 200, message = "코스 조회 성공"),
+      @ApiResponse(code = 401, message = "인증 받지 않은 사용자 권한 없음"),})
   @GetMapping("/users")
   public ResponseEntity<Slice<SummaryCourseResponse>> getMyCoursesList(
       @PageableDefault(page = 0, size = 15) Pageable pageable,
@@ -132,9 +123,7 @@ public class CourseController {
   }
 
   @Operation(summary = "타 유저의 코스 목록", description = "모든 사용자는 타인이 등록한 코스 목록을 조회를 할 수 있습니다.")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "코스 조회 성공")
-  })
+  @ApiResponses(value = {@ApiResponse(code = 200, message = "코스 조회 성공")})
   @GetMapping("/users/{userId}")
   public ResponseEntity<Slice<SummaryCourseResponse>> getOtherCoursesList(
       @PathVariable("userId") Long otherUserId,
@@ -148,12 +137,10 @@ public class CourseController {
   }
 
   @Operation(summary = "코스 수정", description = "인증된 사용자는 코스를 수정할 수 있습니다.")
-  @ApiResponses(value = {
-      @ApiResponse(code = 201, message = "코스 수정 성공"),
+  @ApiResponses(value = {@ApiResponse(code = 201, message = "코스 수정 성공"),
       @ApiResponse(code = 401, message = "인증 받지 않은 사용자 권한 없음"),
       @ApiResponse(code = 404, message = "존재하지 않는 유저 또는 코스인 경우"),
-      @ApiResponse(code = 500, message = "옳바르지 않은 입력 형식에 대한 Json 오류 또는 S3 업로드 오류인 경우")
-  })
+      @ApiResponse(code = 500, message = "옳바르지 않은 입력 형식에 대한 Json 오류 또는 S3 업로드 오류인 경우")})
   @PutMapping("/{courseId}")
   public ResponseEntity<Long> modify(@PathVariable("courseId") Long courseId,
       @RequestPart("course") UpdateCourseRequest updateCourseRequest,
@@ -164,10 +151,8 @@ public class CourseController {
   }
 
   @Operation(summary = "코스 삭제", description = "인증된 사용자는 코스를 삭제할 수 있습니다.")
-  @ApiResponses(value = {
-      @ApiResponse(code = 204, message = "코스 삭제 성공"),
-      @ApiResponse(code = 401, message = "인증 받지 않은 사용자 권한 없음")
-  })
+  @ApiResponses(value = {@ApiResponse(code = 204, message = "코스 삭제 성공"),
+      @ApiResponse(code = 401, message = "인증 받지 않은 사용자 권한 없음")})
   @DeleteMapping("/{courseId}")
   public ResponseEntity deleteCourse(@PathVariable("courseId") Long courseId,
       @CurrentUser CustomUserDetails user) {
