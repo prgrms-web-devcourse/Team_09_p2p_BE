@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface CourseRepository extends JpaRepository<Course, Long>, CourseSearchRepository {
 
-  @Query("select c from Course c left join fetch c.courseBookmarks cb where (:userId is null or cb.userId = :userId)")
+  @Query("select c from Course c left join c.courseBookmarks cb where cb.userId = :userId")
   Slice<Course> findBookmarkedCourse(@Param("userId") Long userId, Pageable pageable);
 
   Long countByUserId(Long userId);
