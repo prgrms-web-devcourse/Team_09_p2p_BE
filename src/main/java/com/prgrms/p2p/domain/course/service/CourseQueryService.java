@@ -44,11 +44,11 @@ public class CourseQueryService {
         .anyMatch(courseBookmark -> courseBookmark.getUserId().equals(userId))));
   }
 
-  public Slice<SummaryCourseResponse> findBookmarkedCourseList(Pageable pageable, Long userId,
-      Long currentUserId) {
-    Slice<Course> courses = courseRepository.findBookmarkedCourse(userId, pageable);
+  public Slice<SummaryCourseResponse> findBookmarkedCourseList(Pageable pageable, Long targetUserId,
+      Long loginId) {
+    Slice<Course> courses = courseRepository.findBookmarkedCourse(targetUserId, pageable);
     return courses.map(course -> ofSummary(course, course.getCourseBookmarks().stream()
-        .anyMatch(courseBookmark -> courseBookmark.getUserId().equals(currentUserId))));
+        .anyMatch(courseBookmark -> courseBookmark.getUserId().equals(loginId))));
   }
 
   public Long countByUserId(Long userId) {
@@ -64,6 +64,7 @@ public class CourseQueryService {
       Long otherUserId) {
     Slice<Course> courses = courseRepository.findByUser_IdOrderByCreatedAtDesc(otherUserId,
         pageable);
-    return courses.map(course -> ofSummary(course, course.getUser().getId().equals(userId)));
+    return courses.map(course -> ofSummary(course, course.getCourseBookmarks().stream()
+        .anyMatch(courseBookmark -> courseBookmark.getUserId().equals(userId))));
   }
 }
