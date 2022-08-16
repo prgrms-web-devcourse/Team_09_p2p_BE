@@ -34,7 +34,7 @@ public class CourseQueryService {
     Boolean isLiked = likeRepository.existsByUserIdAndCourse(userId, course);
     Boolean isBookmarked = bookmarkRepository.existsByUserIdAndCourse(userId, course);
     Integer comments = courseCommentRepository.countByCourse(course);
-    return CourseConverter.ofDetail(course, isLiked, isBookmarked,comments);
+    return CourseConverter.ofDetail(course, isLiked, isBookmarked, comments);
   }
 
   public Slice<SummaryCourseResponse> findSummaryList(SearchCourseRequest searchCourseRequest,
@@ -44,9 +44,11 @@ public class CourseQueryService {
         .anyMatch(courseBookmark -> courseBookmark.getUserId().equals(userId))));
   }
 
-  public Slice<SummaryCourseResponse> findBookmarkedCourseList(Pageable pageable, Long userId) {
+  public Slice<SummaryCourseResponse> findBookmarkedCourseList(Pageable pageable, Long userId,
+      Long currentUserId) {
     Slice<Course> courses = courseRepository.findBookmarkedCourse(userId, pageable);
-    return courses.map(course -> ofSummary(course, true));
+    return courses.map(course -> ofSummary(course, course.getCourseBookmarks().stream()
+        .anyMatch(courseBookmark -> courseBookmark.getUserId().equals(currentUserId))));
   }
 
   public Long countByUserId(Long userId) {

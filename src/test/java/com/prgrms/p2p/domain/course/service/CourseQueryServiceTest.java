@@ -128,7 +128,7 @@ class CourseQueryServiceTest {
     void successFindBookmarkedCourseList() {
       when(courseRepository.findBookmarkedCourse(any(Long.class), any())).thenReturn(courses);
       Slice<SummaryCourseResponse> summaryList = courseQueryService.findBookmarkedCourseList(any(),
-          any(Long.class));
+          any(Long.class), any(Long.class));
       verify(courseRepository, times(1)).findBookmarkedCourse(any(Long.class), any());
 
       Assertions.assertThat(summaryList.getContent().size()).isEqualTo(1);
