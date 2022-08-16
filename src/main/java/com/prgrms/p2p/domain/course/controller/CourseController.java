@@ -99,11 +99,11 @@ public class CourseController {
       @ApiResponse(code = 401, message = "인증 받지 않은 사용자 권한 없음"),})
   @GetMapping("/bookmark")
   public ResponseEntity<Slice<SummaryCourseResponse>> getBookmarkPlaceList(
-      @RequestParam("userId") Long userId, @PageableDefault(page = 0, size = 15) Pageable pageable,
+      @RequestParam("userId") Long targetUserId, @PageableDefault(page = 0, size = 15) Pageable pageable,
       @CurrentUser CustomUserDetails user) {
-    Long currentUserId = Objects.isNull(user) ? null : user.getId();
+    Long loginId = Objects.isNull(user) ? null : user.getId();
     Slice<SummaryCourseResponse> bookmarkedPlaceList = courseQueryService.findBookmarkedCourseList(
-        pageable, userId, currentUserId);
+        pageable, targetUserId, loginId);
 
     return ResponseEntity.ok(bookmarkedPlaceList);
   }

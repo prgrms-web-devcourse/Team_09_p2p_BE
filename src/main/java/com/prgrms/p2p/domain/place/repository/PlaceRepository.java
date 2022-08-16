@@ -12,6 +12,6 @@ public interface PlaceRepository extends JpaRepository<Place, Long>, PlaceSearch
 
   Optional<Place> findByKakaoMapId(String kakaoMapId);
 
-  @Query("select p from Place p left join fetch p.placeBookmarks pb where pb.userId = :userId")
+  @Query("select p from Place p left join p.placeBookmarks pb where pb.userId = :userId")
   Slice<Place> findBookmarkedPlace(@Param("userId") Long userId, Pageable pageable);
 }
