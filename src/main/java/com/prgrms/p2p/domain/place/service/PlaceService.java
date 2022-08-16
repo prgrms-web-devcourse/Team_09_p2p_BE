@@ -4,6 +4,7 @@ import static com.prgrms.p2p.domain.course.util.CoursePlaceConverter.*;
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toDetailPlaceResponse;
 import static com.prgrms.p2p.domain.place.util.PlaceConverter.toSummaryPlaceResponse;
 
+import com.prgrms.p2p.domain.comment.repository.PlaceCommentRepository;
 import com.prgrms.p2p.domain.common.exception.BadRequestException;
 import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.course.dto.CoursePlaceRequest;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PlaceService {
 
   private final PlaceRepository placeRepository;
+  private final PlaceCommentRepository placeCommentRepository;
 
   @Transactional
   public Place save(CoursePlaceRequest createPlaceReq) {
@@ -60,7 +62,9 @@ public class PlaceService {
     Place place = placeRepository.findById(placeId)
         .orElseThrow(() -> new NotFoundException("장소가 존재하지 않습니다."));
 
-    return toDetailPlaceResponse(place, userId);
+    Integer commentCount = placeCommentRepository.countByPlace(place);
+
+    return toDetailPlaceResponse(place, userId, commentCount);
   }
 
   public Slice<SummaryPlaceResponse> findSummaryList(
