@@ -208,7 +208,7 @@ public class SearchPlaceCommentServiceTest {
 
     assertThat(afterList.size()).isEqualTo(1);
     assertThat(afterList.get(0).getComment()).isEqualTo("삭제된 댓글입니다.");
-    assertThat(afterList.get(0).getUser().getNickName()).isNull();
+    assertThat(afterList.get(0).getUser().getNickname()).isNull();
     assertThat(afterList.get(0).getUser().getProfileImage()).isNull();
     assertThat(afterList.get(0).getCreatedAt()).isNull();
     assertThat(afterList.get(0).getUpdatedAt()).isNull();
