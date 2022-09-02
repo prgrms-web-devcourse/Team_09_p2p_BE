@@ -57,5 +57,5 @@ public class DetailPlaceResponse {
   private String kakaoMapId;
 
   @ApiParam(value = "댓글 개수", example = "0")
-  private Integer comments;
+  private Long comments;
 }
