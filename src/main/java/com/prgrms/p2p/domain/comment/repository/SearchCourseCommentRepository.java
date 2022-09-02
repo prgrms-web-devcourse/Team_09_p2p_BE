@@ -1,6 +1,7 @@
 package com.prgrms.p2p.domain.comment.repository;
 
 import com.prgrms.p2p.domain.comment.dto.CourseCommentForQueryDsl;
+import com.prgrms.p2p.domain.course.entity.Course;
 import java.util.List;
 
 public interface SearchCourseCommentRepository {
@@ -12,4 +13,6 @@ public interface SearchCourseCommentRepository {
   List<CourseCommentForQueryDsl> findCourseCommentsByUserId(Long userId);
 
   Long countByUserId(Long userId);
+
+  Long countByCourse(Course course);
 }

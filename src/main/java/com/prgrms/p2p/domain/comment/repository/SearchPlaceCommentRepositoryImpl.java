@@ -7,6 +7,7 @@ import com.prgrms.p2p.domain.comment.dto.CourseCommentForQueryDsl;
 import com.prgrms.p2p.domain.comment.dto.PlaceCommentForQueryDsl;
 import com.prgrms.p2p.domain.comment.entity.QPlaceComment;
 import com.prgrms.p2p.domain.comment.entity.Visibility;
+import com.prgrms.p2p.domain.place.entity.Place;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
@@ -95,5 +96,15 @@ public class SearchPlaceCommentRepositoryImpl implements
             placeComment.visibility.eq(Visibility.TRUE))
         .fetch();
     return fetch;
+  }
+
+  @Override
+  public Long countByPlace(Place place) {
+    return jpaQueryFactory.select(Wildcard.count)
+        .from(placeComment)
+        .where(placeComment.place.eq(place),
+            placeComment.visibility.eq(Visibility.TRUE))
+        .fetch()
+        .get(0);
   }
 }
