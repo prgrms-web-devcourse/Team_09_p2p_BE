@@ -39,9 +39,13 @@ public class CommentConverter {
         .map(CommentConverter::toCourseCommentResponse)
         .collect(Collectors.toList());
 
+    int size = commentForQueryDsl.stream()
+        .filter(comment -> comment.getVisibility().equals(Visibility.TRUE))
+        .collect(Collectors.toList()).size();
+
     return CourseCommentResponse.builder()
         .id(courseId)
-        .totalCount((long) commentDtoList.size())
+        .totalCount((long) size)
         .courseComments(commentDtoList)
         .build();
   }
@@ -85,9 +89,13 @@ public class CommentConverter {
         .map(CommentConverter::toPlaceCommentResponse)
         .collect(Collectors.toList());
 
+    int size = commentForQueryDsl.stream()
+        .filter(comment -> comment.getVisibility().equals(Visibility.TRUE))
+        .collect(Collectors.toList()).size();
+
     return PlaceCommentResponse.builder()
         .id(placeId)
-        .totalCount((long) commentDtoList.size())
+        .totalCount((long) size)
         .placeComments(commentDtoList)
         .build();
   }
