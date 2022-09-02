@@ -6,6 +6,7 @@ import static com.prgrms.p2p.domain.user.entity.QUser.*;
 import com.prgrms.p2p.domain.comment.dto.CourseCommentForQueryDsl;
 import com.prgrms.p2p.domain.comment.entity.QCourseComment;
 import com.prgrms.p2p.domain.comment.entity.Visibility;
+import com.prgrms.p2p.domain.course.entity.Course;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
@@ -101,6 +102,16 @@ public class SearchCourseCommentRepositoryImpl implements SearchCourseCommentRep
         .where(courseComment.userId.eq(userId),
             courseComment.visibility.eq(Visibility.TRUE)
         )
+        .fetch()
+        .get(0);
+  }
+
+  @Override
+  public Long countByCourse(Course course) {
+    return jpaQueryFactory.select(Wildcard.count)
+        .from(courseComment)
+        .where(courseComment.course.eq(course),
+            courseComment.visibility.eq(Visibility.TRUE))
         .fetch()
         .get(0);
   }

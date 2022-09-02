@@ -20,7 +20,7 @@ public class CourseConverter {
   }
 
   public static DetailCourseResponse ofDetail(Course course, Boolean isLiked, Boolean isBookmarked,
-      Integer comments) {
+      Long comments) {
     return DetailCourseResponse.builder().id(course.getId()).title(course.getTitle())
         .thumbnail(pickThumbnail(course)).region(course.getRegion()).period(course.getPeriod())
         .themes(List.copyOf(course.getThemes())).spots(List.copyOf(course.getSpots())).places(

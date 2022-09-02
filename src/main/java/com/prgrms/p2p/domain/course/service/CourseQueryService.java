@@ -33,7 +33,7 @@ public class CourseQueryService {
         .orElseThrow(() -> new NotFoundException("존재하지 않는 코스입니다."));
     Boolean isLiked = likeRepository.existsByUserIdAndCourse(userId, course);
     Boolean isBookmarked = bookmarkRepository.existsByUserIdAndCourse(userId, course);
-    Integer comments = courseCommentRepository.countByCourse(course);
+    Long comments = courseCommentRepository.countByCourse(course);
     return CourseConverter.ofDetail(course, isLiked, isBookmarked, comments);
   }
 
