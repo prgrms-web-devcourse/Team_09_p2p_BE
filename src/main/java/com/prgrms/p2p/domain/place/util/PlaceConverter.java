@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class PlaceConverter {
 
-  public static DetailPlaceResponse toDetailPlaceResponse(Place place, Optional<Long> userId, Integer commentCount) {
+  public static DetailPlaceResponse toDetailPlaceResponse(Place place, Optional<Long> userId, Long commentCount) {
 
     Integer likeCount = place.getPlaceLikes().size();
     Integer usedCount = place.getCoursePlaces().size();

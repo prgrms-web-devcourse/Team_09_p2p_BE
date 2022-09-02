@@ -110,7 +110,7 @@ public class SearchCourseCommentRepositoryImpl implements SearchCourseCommentRep
   public Long countByCourse(Course course) {
     return jpaQueryFactory.select(Wildcard.count)
         .from(courseComment)
-        .where(courseComment.course.eq(course),
+        .where(courseComment.course.id.eq(course.getId()),
             courseComment.visibility.eq(Visibility.TRUE))
         .fetch()
         .get(0);

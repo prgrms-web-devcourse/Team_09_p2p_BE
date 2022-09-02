@@ -102,7 +102,7 @@ public class SearchPlaceCommentRepositoryImpl implements
   public Long countByPlace(Place place) {
     return jpaQueryFactory.select(Wildcard.count)
         .from(placeComment)
-        .where(placeComment.place.eq(place),
+        .where(placeComment.place.id.eq(place.getId()),
             placeComment.visibility.eq(Visibility.TRUE))
         .fetch()
         .get(0);

@@ -62,7 +62,7 @@ public class PlaceService {
     Place place = placeRepository.findById(placeId)
         .orElseThrow(() -> new NotFoundException("장소가 존재하지 않습니다."));
 
-    Integer commentCount = placeCommentRepository.countByPlace(place);
+    Long commentCount = placeCommentRepository.countByPlace(place);
 
     return toDetailPlaceResponse(place, userId, commentCount);
   }
