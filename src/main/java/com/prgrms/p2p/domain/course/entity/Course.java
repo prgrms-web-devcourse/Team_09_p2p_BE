@@ -170,6 +170,18 @@ public class Course extends BaseEntity {
     this.courseLikes.remove(courseLike);
   }
 
+  public boolean getAuthForDelete(User user) {
+
+    if (user.getAuthorities().contains("ROLE_ADMIN")) {
+      return true;
+    }
+
+    if (this.user.equals(user)) {
+      return true;
+    }
+    return false;
+  }
+
   private void setTitle(String title) {
     if (Strings.isBlank(title)) {
       throw new BadRequestException("제목에 값을 받을 수 없습니다.");

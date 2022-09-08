@@ -87,9 +87,15 @@ public class CourseService {
   public void deleteCourse(Long courseId, Long userId) {
     Course course = courseRepository.findById(courseId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 코가입니다."));
-    validateAuthorization(userId, course);
-    courseRepository.delete(course);
+    User user = userRepository.findById(userId)
+        .orElseThrow(RuntimeException::new);
 
+    boolean authForDelete = course.getAuthForDelete(user);
+    if (!authForDelete) {
+      throw new UnAuthorizedException("권한이 없습니다.");
+    }
+
+    courseRepository.delete(course);
   }
 
   private void validateAuthorization(Long userId, Course course) {

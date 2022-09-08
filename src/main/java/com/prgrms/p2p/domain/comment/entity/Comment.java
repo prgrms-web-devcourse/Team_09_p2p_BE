@@ -2,6 +2,7 @@ package com.prgrms.p2p.domain.comment.entity;
 
 import com.prgrms.p2p.domain.common.BaseEntity;
 import com.prgrms.p2p.domain.common.exception.BadRequestException;
+import com.prgrms.p2p.domain.user.entity.User;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -32,6 +33,25 @@ public abstract class Comment extends BaseEntity {
 
   public void changeComment(String newComment) {
     setComment(newComment);
+  }
+
+  public boolean getAuthForUpdate(User user) {
+    if (this.userId.equals(user.getId())) {
+      return true;
+    }
+    return false;
+  }
+
+  public boolean getAuthForDelete(User user) {
+
+    if (user.getAuthorities().contains("ROLE_ADMIN")) {
+      return true;
+    }
+
+    if (this.userId.equals(user.getId())) {
+      return true;
+    }
+    return false;
   }
 
   private void setComment(String comment) {
