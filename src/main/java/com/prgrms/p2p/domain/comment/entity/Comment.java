@@ -2,6 +2,7 @@ package com.prgrms.p2p.domain.comment.entity;
 
 import com.prgrms.p2p.domain.common.BaseEntity;
 import com.prgrms.p2p.domain.common.exception.BadRequestException;
+import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
 import com.prgrms.p2p.domain.user.entity.User;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -35,23 +36,23 @@ public abstract class Comment extends BaseEntity {
     setComment(newComment);
   }
 
-  public boolean getAuthForUpdate(User user) {
+  public void getAuthForUpdate(User user) {
     if (this.userId.equals(user.getId())) {
-      return true;
+      return ;
     }
-    return false;
+    throw new UnAuthorizedException("수정 권한이 없습니다.");
   }
 
-  public boolean getAuthForDelete(User user) {
+  public void getAuthForDelete(User user) {
 
     if (user.getAuthorities().contains("ROLE_ADMIN")) {
-      return true;
+      return ;
     }
 
     if (this.userId.equals(user.getId())) {
-      return true;
+      return ;
     }
-    return false;
+    throw new UnAuthorizedException("삭제 권한이 없습니다.");
   }
 
   private void setComment(String comment) {

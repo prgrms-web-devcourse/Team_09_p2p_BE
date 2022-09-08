@@ -4,6 +4,7 @@ import com.prgrms.p2p.domain.bookmark.entity.CourseBookmark;
 import com.prgrms.p2p.domain.comment.entity.CourseComment;
 import com.prgrms.p2p.domain.common.BaseEntity;
 import com.prgrms.p2p.domain.common.exception.BadRequestException;
+import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
 import com.prgrms.p2p.domain.like.entity.CourseLike;
 import com.prgrms.p2p.domain.user.entity.User;
 import java.util.ArrayList;
@@ -170,16 +171,16 @@ public class Course extends BaseEntity {
     this.courseLikes.remove(courseLike);
   }
 
-  public boolean getAuthForDelete(User user) {
+  public void getAuthForDelete(User user) {
 
     if (user.getAuthorities().contains("ROLE_ADMIN")) {
-      return true;
+      return ;
     }
 
     if (this.user.equals(user)) {
-      return true;
+      return ;
     }
-    return false;
+    throw new UnAuthorizedException("삭제 권한이 없습니다.");
   }
 
   private void setTitle(String title) {

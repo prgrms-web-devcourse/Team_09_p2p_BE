@@ -62,7 +62,7 @@ public class CourseCommentService {
 
     notFoundMessage(!courseComment.getCourse().equals(course), "해당 코스에 존재하지 않는 댓글입니다.");
 
-    validateAuth(!courseComment.getAuthForUpdate(user), "댓글의 수정 권한이 없습니다.");
+    courseComment.getAuthForUpdate(user);
 
     courseComment.changeComment(updateReq.getComment());
     return courseCommentId;
@@ -83,7 +83,7 @@ public class CourseCommentService {
       throw new BadRequestException("이미 삭제된 댓글은 삭제할 수 없습니다.");
     }
 
-    validateAuth(!courseComment.getAuthForDelete(user), "댓글의 삭제 권한이 없습니다.");
+    courseComment.getAuthForDelete(user);
 
     if (!Objects.isNull(courseComment.getRootCommentId())) {
       deleteParentComment(courseComment);
@@ -108,12 +108,6 @@ public class CourseCommentService {
   private void notFoundMessage(boolean courseComment, String message) {
     if (courseComment) {
       throw new NotFoundException(message);
-    }
-  }
-
-  private void validateAuth(boolean condition, String message) {
-    if (condition) {
-      throw new UnAuthorizedException(message);
     }
   }
 

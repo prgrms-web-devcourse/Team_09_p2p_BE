@@ -90,10 +90,7 @@ public class CourseService {
     User user = userRepository.findById(userId)
         .orElseThrow(RuntimeException::new);
 
-    boolean authForDelete = course.getAuthForDelete(user);
-    if (!authForDelete) {
-      throw new UnAuthorizedException("권한이 없습니다.");
-    }
+    course.getAuthForDelete(user);
 
     courseRepository.delete(course);
   }
