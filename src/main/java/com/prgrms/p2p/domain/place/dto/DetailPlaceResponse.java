@@ -3,6 +3,8 @@ package com.prgrms.p2p.domain.place.dto;
 import com.prgrms.p2p.domain.place.entity.Category;
 import com.prgrms.p2p.domain.place.entity.PhoneNumber;
 import io.swagger.annotations.ApiParam;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,7 +41,11 @@ public class DetailPlaceResponse {
   private PhoneNumber phoneNumber;
 
   @ApiParam(value = "장소 이미지")
-  private String imageUrl;
+  @Builder.Default
+  private List<String> imageUrls = new ArrayList<>();
+
+  @ApiParam(value = "장소 이미지 개수")
+  private Integer imageUrlCount;
 
   @ApiParam(value = "유저의 좋아요 여부", example = "true")
   private Boolean liked;

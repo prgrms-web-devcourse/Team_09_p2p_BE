@@ -1,6 +1,7 @@
 package com.prgrms.p2p.domain.place.util;
 
 import com.prgrms.p2p.domain.bookmark.entity.PlaceBookmark;
+import com.prgrms.p2p.domain.course.entity.CoursePlace;
 import com.prgrms.p2p.domain.course.entity.Region;
 import com.prgrms.p2p.domain.course.entity.Sorting;
 import com.prgrms.p2p.domain.like.entity.PlaceLike;
@@ -10,6 +11,7 @@ import com.prgrms.p2p.domain.place.dto.SummaryPlaceResponse;
 import com.prgrms.p2p.domain.place.entity.Place;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class PlaceConverter {
 
@@ -17,7 +19,10 @@ public class PlaceConverter {
 
     Integer likeCount = place.getPlaceLikes().size();
     Integer usedCount = place.getCoursePlaces().size();
-    String imageUrl = getString(place, usedCount);
+
+    List<String> imageUrls = place.getCoursePlaces().stream()
+        .map(CoursePlace::getImageUrl)
+        .collect(Collectors.toList());
 
     Boolean liked = getLiked(place, userId);
     Boolean bookmarked = getaBoolean(place, userId);
@@ -31,7 +36,8 @@ public class PlaceConverter {
         .longitude(place.getLongitude())
         .category(place.getCategory())
         .phoneNumber(place.getPhoneNumber())
-        .imageUrl(imageUrl)
+        .imageUrls(imageUrls)
+        .imageUrlCount(imageUrls.size())
         .liked(liked)
         .bookmarked(bookmarked)
         .likeCount(likeCount)
