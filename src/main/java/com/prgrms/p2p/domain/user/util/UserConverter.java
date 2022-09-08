@@ -23,7 +23,7 @@ public class UserConverter {
         signUpRequest.getBirth(),
         signUpRequest.getSex()
     );
-    user.addAuthority(Authority.ofUser(user));
+    Authority.addUserAuth(user);
     return user;
   }
 
@@ -35,7 +35,8 @@ public class UserConverter {
         signUpRequest.getBirth(),
         signUpRequest.getSex()
     );
-    user.addAuthority(Authority.ofAdmin(user));
+    Authority.addUserAuth(user);
+    Authority.addAdminAuth(user);
     return user;
   }
 
