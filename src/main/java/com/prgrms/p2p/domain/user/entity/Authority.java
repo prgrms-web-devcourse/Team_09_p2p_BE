@@ -46,17 +46,21 @@ public class Authority extends BaseEntity implements GrantedAuthority {
     return role;
   }
 
-  public static Authority ofUser(User user) {
-    return Authority.builder()
+  public static Authority addUserAuth(User user) {
+    Authority role_user = Authority.builder()
         .role("ROLE_USER")
         .user(user)
         .build();
+    user.addAuthority(role_user);
+    return role_user;
   }
 
-  public static Authority ofAdmin(User user) {
-    return Authority.builder()
+  public static Authority addAdminAuth(User user) {
+    Authority role_admin = Authority.builder()
         .role("ROLE_ADMIN")
         .user(user)
         .build();
+    user.addAuthority(role_admin);
+    return role_admin;
   }
 }

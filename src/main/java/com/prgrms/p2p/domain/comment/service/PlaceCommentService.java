@@ -12,6 +12,7 @@ import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.place.repository.PlaceRepository;
+import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,8 @@ public class PlaceCommentService {
 
     Place place = placeRepository.findById(placeId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 장소입니다."));
+    User user = userRepository.findById(userId)
+        .orElseThrow(RuntimeException::new);
 
     PlaceComment placeComment = placeCommentRepository.findById(placeCommentId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글입니다."));
@@ -62,7 +65,7 @@ public class PlaceCommentService {
       throw new NotFoundException("해당 장소에 존재하지 않는 댓글 입니다.");
     }
 
-    validateAuth(!placeComment.getUserId().equals(userId), "댓글의 수정 권한이 없습니다.");
+    placeComment.getAuthForUpdate(user);
 
     placeComment.changeComment(updateCommentRequest.getComment());
     return placeComment.getId();
@@ -73,6 +76,8 @@ public class PlaceCommentService {
     Place place = placeRepository.findById(placeId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 장소입니다."));
 
+    User user = userRepository.findById(userId)
+        .orElseThrow(RuntimeException::new);
 
     PlaceComment placeComment = placeCommentRepository.findById(placeCommentId)
         .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글입니다."));
@@ -81,11 +86,11 @@ public class PlaceCommentService {
       throw new NotFoundException("해당 장소에 존재하지 않는 댓글 입니다.");
     }
 
-
     if (!placeComment.getVisibility().equals(Visibility.TRUE)) {
       throw new BadRequestException("이미 삭제된 댓글은 삭제할 수 없습니다.");
     }
-    validateAuth(!placeComment.getUserId().equals(userId), "댓글의 수정 권한이 없습니다.");
+
+    placeComment.getAuthForDelete(user);
 
     if (!Objects.isNull(placeComment.getRootCommentId())) {
       checkDeleteParentComment(placeComment);
