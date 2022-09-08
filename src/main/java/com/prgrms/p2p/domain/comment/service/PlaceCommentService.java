@@ -65,7 +65,7 @@ public class PlaceCommentService {
       throw new NotFoundException("해당 장소에 존재하지 않는 댓글 입니다.");
     }
 
-    validateAuth(!placeComment.getAuthForUpdate(user), "댓글의 수정 권한이 없습니다.");
+    placeComment.getAuthForUpdate(user);
 
     placeComment.changeComment(updateCommentRequest.getComment());
     return placeComment.getId();
@@ -90,7 +90,7 @@ public class PlaceCommentService {
       throw new BadRequestException("이미 삭제된 댓글은 삭제할 수 없습니다.");
     }
 
-    validateAuth(!placeComment.getAuthForDelete(user), "댓글의 삭제 권한이 없습니다.");
+    placeComment.getAuthForDelete(user);
 
     if (!Objects.isNull(placeComment.getRootCommentId())) {
       checkDeleteParentComment(placeComment);
