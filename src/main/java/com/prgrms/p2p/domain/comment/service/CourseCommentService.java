@@ -14,6 +14,7 @@ import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.repository.CourseRepository;
+import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -53,13 +54,15 @@ public class CourseCommentService {
       Long courseId, Long userId) {
 
     Course course = getCourse(courseId);
+    User user = userRepository.findById(userId)
+        .orElseThrow(RuntimeException::new);
 
     CourseComment courseComment = courseCommentRepository.findById(courseCommentId)
         .orElseThrow(() -> new NotFoundException("수정 불가: 존재하지 않은 댓글입니다"));
 
     notFoundMessage(!courseComment.getCourse().equals(course), "해당 코스에 존재하지 않는 댓글입니다.");
 
-    validateAuth(!courseComment.getUserId().equals(userId), "댓글의 수정 권한이 없습니다.");
+    courseComment.getAuthForUpdate(user);
 
     courseComment.changeComment(updateReq.getComment());
     return courseCommentId;
@@ -68,6 +71,8 @@ public class CourseCommentService {
   public void deleteCourseComment(Long courseCommentId, Long courseId, Long userId) {
 
     Course course = getCourse(courseId);
+    User user = userRepository.findById(userId)
+        .orElseThrow(RuntimeException::new);
 
     CourseComment courseComment = courseCommentRepository.findById(courseCommentId)
         .orElseThrow(() -> new NotFoundException("삭제 불가: 존재하지 않은 댓글입니다"));
@@ -77,7 +82,8 @@ public class CourseCommentService {
     if (!courseComment.getVisibility().equals(TRUE)) {
       throw new BadRequestException("이미 삭제된 댓글은 삭제할 수 없습니다.");
     }
-    validateAuth(!courseComment.getUserId().equals(userId), "댓글의 삭제 권한이 없습니다.");
+
+    courseComment.getAuthForDelete(user);
 
     if (!Objects.isNull(courseComment.getRootCommentId())) {
       deleteParentComment(courseComment);
@@ -102,12 +108,6 @@ public class CourseCommentService {
   private void notFoundMessage(boolean courseComment, String message) {
     if (courseComment) {
       throw new NotFoundException(message);
-    }
-  }
-
-  private void validateAuth(boolean courseComment, String message) {
-    if (courseComment) {
-      throw new UnAuthorizedException(message);
     }
   }
 

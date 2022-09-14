@@ -1,8 +1,7 @@
 package com.prgrms.p2p.domain.user.dto;
 
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,10 +31,14 @@ public class LoginResponse {
     @Schema(description = "로그인한 유저의 프로필 이미지", example = "http://image.com")
     private String profileImage;
 
-    public Datas(Long id, String nickname, String profileImage) {
+    @Schema(description = "로그인한 유저의 권한")
+    private List<String> authorities;
+
+    public Datas(Long id, String nickname, String profileImage, List<String> authorities) {
       this.id = id;
       this.nickname = nickname;
       this.profileImage = profileImage;
+      this.authorities = authorities;
     }
   }
 

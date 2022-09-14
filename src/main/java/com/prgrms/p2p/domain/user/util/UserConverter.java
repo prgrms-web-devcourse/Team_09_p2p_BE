@@ -23,7 +23,7 @@ public class UserConverter {
         signUpRequest.getBirth(),
         signUpRequest.getSex()
     );
-    user.addAuthority(Authority.ofUser(user));
+    Authority.addUserAuth(user);
     return user;
   }
 
@@ -35,7 +35,8 @@ public class UserConverter {
         signUpRequest.getBirth(),
         signUpRequest.getSex()
     );
-    user.addAuthority(Authority.ofAdmin(user));
+    Authority.addUserAuth(user);
+    Authority.addAdminAuth(user);
     return user;
   }
 
@@ -57,6 +58,7 @@ public class UserConverter {
         .sex(user.getSex())
         .createdAt(fromLocalDateTime(user.getCreatedAt()))
         .updatedAt(fromLocalDateTime(user.getUpdatedAt()))
+        .authorities(user.getAuthorities())
         .build();
 
     UserCounts counts = UserCounts.builder()
@@ -112,7 +114,8 @@ public class UserConverter {
     LoginResponse.Datas data = response.new Datas(
         user.getId(),
         user.getNickname(),
-        profileUrl
+        profileUrl,
+        user.getAuthorities()
     );
     response.setUser(data);
     return response;
