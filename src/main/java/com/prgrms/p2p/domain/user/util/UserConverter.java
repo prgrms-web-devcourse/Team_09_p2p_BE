@@ -58,6 +58,7 @@ public class UserConverter {
         .sex(user.getSex())
         .createdAt(fromLocalDateTime(user.getCreatedAt()))
         .updatedAt(fromLocalDateTime(user.getUpdatedAt()))
+        .authorities(user.getAuthorities())
         .build();
 
     UserCounts counts = UserCounts.builder()
