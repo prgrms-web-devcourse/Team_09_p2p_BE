@@ -58,6 +58,7 @@ public class UserConverter {
         .sex(user.getSex())
         .createdAt(fromLocalDateTime(user.getCreatedAt()))
         .updatedAt(fromLocalDateTime(user.getUpdatedAt()))
+        .authorities(user.getAuthorities())
         .build();
 
     UserCounts counts = UserCounts.builder()
@@ -113,7 +114,8 @@ public class UserConverter {
     LoginResponse.Datas data = response.new Datas(
         user.getId(),
         user.getNickname(),
-        profileUrl
+        profileUrl,
+        user.getAuthorities()
     );
     response.setUser(data);
     return response;
