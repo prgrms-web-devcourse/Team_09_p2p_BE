@@ -113,7 +113,8 @@ public class UserConverter {
     LoginResponse.Datas data = response.new Datas(
         user.getId(),
         user.getNickname(),
-        profileUrl
+        profileUrl,
+        user.getAuthorities()
     );
     response.setUser(data);
     return response;
