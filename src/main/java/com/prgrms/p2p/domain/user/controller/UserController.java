@@ -99,7 +99,7 @@ public class UserController {
     userService.validateNickname(nicknameMap.get("nickname"));
   }
 
-  @PutMapping("/modify/{email}")
+  @PostMapping("/password/{email}")
   public ResponseEntity<Void> findPwdByEmail(@PathVariable String email) {
 
     userService.findPassword(email);
