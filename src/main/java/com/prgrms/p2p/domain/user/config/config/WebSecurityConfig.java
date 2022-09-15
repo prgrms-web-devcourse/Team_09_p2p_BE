@@ -44,25 +44,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .authorizeRequests() // 요청에 대한 사용권한 체크
         //회원
-        .antMatchers(HttpMethod.GET,"/api/v1/users").hasRole("USER")
-        .antMatchers(HttpMethod.POST,"/api/v1/users/password").hasRole("USER")
-        .antMatchers(HttpMethod.PUT,"/api/v1/users/users", "/api/v1/users/users").hasRole("USER")
-        .antMatchers(HttpMethod.DELETE,"/api/v1/users").hasRole("USER")
+        .antMatchers(HttpMethod.GET,"/api/v1/users").hasAnyRole("USER","ADMIN")
+        .antMatchers(HttpMethod.POST,"/api/v1/users/password").hasAnyRole("USER","ADMIN")
+        .antMatchers(HttpMethod.PUT,"/api/v1/users/users", "/api/v1/users/users").hasAnyRole("USER","ADMIN")
+        .antMatchers(HttpMethod.DELETE,"/api/v1/users").hasAnyRole("USER","ADMIN")
         //장소
-        .antMatchers(HttpMethod.POST,"/api/v1/places").hasRole("USER")
+        .antMatchers(HttpMethod.POST,"/api/v1/places").hasAnyRole("USER","ADMIN")
         //코스
-        .antMatchers(HttpMethod.POST,"/api/v1/courses").hasRole("USER")
-        .antMatchers(HttpMethod.PUT,"/api/v1/courses").hasRole("USER")
+        .antMatchers(HttpMethod.POST,"/api/v1/courses").hasAnyRole("USER","ADMIN")
+        .antMatchers(HttpMethod.PUT,"/api/v1/courses").hasAnyRole("USER","ADMIN")
         .antMatchers(HttpMethod.DELETE,"/api/v1/courses/**").hasAnyRole("USER","ADMIN")
         //댓글
-        .antMatchers(HttpMethod.POST,"/api/v1/courses/**/comments","/api/v1/places/**/comments").hasRole("USER")
-        .antMatchers(HttpMethod.PUT,"/api/v1/courses/**/comments/**","/api/v1/places/**/comments/**").hasRole("USER")
+        .antMatchers(HttpMethod.POST,"/api/v1/courses/**/comments","/api/v1/places/**/comments").hasAnyRole("USER","ADMIN")
+        .antMatchers(HttpMethod.PUT,"/api/v1/courses/**/comments/**","/api/v1/places/**/comments/**").hasAnyRole("USER","ADMIN")
         .antMatchers(HttpMethod.DELETE,"/api/v1/courses/**/comments/**","/api/v1/places/**/comments/**").hasAnyRole("USER","ADMIN")
 //        .antMatchers(HttpMethod.GET,"/api/v1/comments").hasRole("USER")
         //좋아요
-        .antMatchers(HttpMethod.GET,"/api/v1/likes/places/**","/api/v1/likes/courses/**").hasRole("USER")
+        .antMatchers(HttpMethod.GET,"/api/v1/likes/places/**","/api/v1/likes/courses/**").hasAnyRole("USER","ADMIN")
         //북마크
-        .antMatchers(HttpMethod.GET,"/api/v1/bookmarks/places/**","/api/v1/bookmarks/courses/**").hasRole("USER")
+        .antMatchers(HttpMethod.GET,"/api/v1/bookmarks/places/**","/api/v1/bookmarks/courses/**").hasAnyRole("USER","ADMIN")
         .anyRequest().permitAll() // 그외 나머지 요청은 누구나 접근 가능
         .and()
         .exceptionHandling()
