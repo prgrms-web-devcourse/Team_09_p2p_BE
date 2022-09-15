@@ -99,6 +99,13 @@ public class UserController {
     userService.validateNickname(nicknameMap.get("nickname"));
   }
 
+  @PutMapping("/modify/{email}")
+  public ResponseEntity<Void> findPwdByEmail(@PathVariable String email) {
+
+    userService.findPassword(email);
+
+    return ResponseEntity.ok().build();
+  }
 
   @Auth
   @Operation(summary = "내 정보 조회", description = "로그인한 유저가 토큰을 이용해 자신의 정보를 조회합니다.")

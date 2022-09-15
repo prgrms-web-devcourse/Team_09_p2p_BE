@@ -17,19 +17,28 @@ import com.prgrms.p2p.domain.user.exception.PwdConflictException;
 import com.prgrms.p2p.domain.user.exception.UserNotFoundException;
 import com.prgrms.p2p.domain.user.exception.WrongInfoException;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
+import com.prgrms.p2p.domain.user.util.GenerateCertPassword;
+import com.prgrms.p2p.domain.user.util.MailBodyUtil;
 import com.prgrms.p2p.domain.user.util.PasswordEncrypter;
 import com.prgrms.p2p.domain.user.util.UserConverter;
 import com.prgrms.p2p.domain.user.util.Validation;
 import java.util.Date;
 import java.util.Optional;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@PropertySource("classpath:application.yaml")
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
@@ -38,7 +47,10 @@ public class UserService {
   private final JwtTokenProvider jwtTokenProvider;
   private final RedisTemplate redisTemplate;
   private final UserFacadeService userFacadeService;
+  private final JavaMailSender mailSender;
 
+  @Value("${spring.mail.username}")
+  private String sendEmail;
 
   @Transactional
   public String signUp(SignUpRequest signUpRequest) {
@@ -84,6 +96,37 @@ public class UserService {
   }
 
   @Transactional
+  public void findPassword(String email) {
+
+    User user = userRepository.findByEmail(email)
+        .orElseThrow(UserNotFoundException::new);
+
+    String temporaryPwd = GenerateCertPassword.generatePassword();
+
+    String fromMail = sendEmail;
+    String toMail = email;
+    String title = MailBodyUtil.getMailTitle(user.getNickname());
+    String content = MailBodyUtil.getMailBody(user.getNickname(), temporaryPwd);
+
+    try {
+      MimeMessage message = mailSender.createMimeMessage();
+      MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "utf-8");
+
+      messageHelper.setFrom(fromMail);
+      messageHelper.setTo(toMail);
+      messageHelper.setSubject(title);
+      messageHelper.setText(content, true);
+
+      mailSender.send(message);
+
+    } catch (MessagingException e) {
+      e.printStackTrace();
+    }
+
+    changePassword(user.getId(), temporaryPwd);
+  }
+
+  @Transactional
   public void modify(Long userId, String nickname, String birth, Sex sex){
     User user = userRepository.findById(userId)
         .orElseThrow(UserNotFoundException::new);
@@ -107,6 +150,18 @@ public class UserService {
 
     Validation.validatePassword(newPassword);
     if(!user.matchPassword(oldPassword)) throw new WrongInfoException();
+    if(user.matchPassword(newPassword)) throw new PwdConflictException();
+    user.changePassword(PasswordEncrypter.encrypt(newPassword));
+
+    userRepository.save(user);
+  }
+
+  @Transactional
+  public void changePassword(Long userId, String newPassword){
+    User user = userRepository.findById(userId)
+        .orElseThrow(UserNotFoundException::new);
+
+    Validation.validatePassword(newPassword);
     if(user.matchPassword(newPassword)) throw new PwdConflictException();
     user.changePassword(PasswordEncrypter.encrypt(newPassword));
 
