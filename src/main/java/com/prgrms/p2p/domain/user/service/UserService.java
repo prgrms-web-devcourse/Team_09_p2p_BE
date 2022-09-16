@@ -48,6 +48,7 @@ public class UserService {
   private final RedisTemplate redisTemplate;
   private final UserFacadeService userFacadeService;
   private final JavaMailSender mailSender;
+  private final CertNumberService certNumberService;
 
   @Value("${spring.mail.username}")
   private String sendEmail;
@@ -96,17 +97,18 @@ public class UserService {
   }
 
   @Transactional
-  public void findPassword(String email) {
+  public String postEmail(String email) {
 
     User user = userRepository.findByEmail(email)
         .orElseThrow(UserNotFoundException::new);
 
     String temporaryPwd = GenerateCertPassword.generatePassword();
+    String certPwd = certNumberService.generateCertNumber(email);
 
     String fromMail = sendEmail;
     String toMail = email;
     String title = MailBodyUtil.getMailTitle(user.getNickname());
-    String content = MailBodyUtil.getMailBody(user.getNickname(), temporaryPwd);
+    String content = MailBodyUtil.getMailBody(user.getNickname(), certPwd);
 
     try {
       MimeMessage message = mailSender.createMimeMessage();
@@ -123,7 +125,7 @@ public class UserService {
       e.printStackTrace();
     }
 
-    changePassword(user.getId(), temporaryPwd);
+    return certPwd;
   }
 
   @Transactional
@@ -157,8 +159,8 @@ public class UserService {
   }
 
   @Transactional
-  public void changePassword(Long userId, String newPassword){
-    User user = userRepository.findById(userId)
+  public void changePassword(String email, String newPassword){
+    User user = userRepository.findByEmail(email)
         .orElseThrow(UserNotFoundException::new);
 
     Validation.validatePassword(newPassword);

@@ -5,6 +5,7 @@ import com.prgrms.p2p.domain.user.aop.annotation.Auth;
 import com.prgrms.p2p.domain.user.aop.annotation.CurrentUser;
 import com.prgrms.p2p.domain.user.dto.ChangePasswordRequest;
 import com.prgrms.p2p.domain.user.dto.ChangeProfileResponse;
+import com.prgrms.p2p.domain.user.dto.FindPasswordRequest;
 import com.prgrms.p2p.domain.user.dto.LoginFailResponse;
 import com.prgrms.p2p.domain.user.dto.LoginRequest;
 import com.prgrms.p2p.domain.user.dto.LoginResponse;
@@ -13,7 +14,9 @@ import com.prgrms.p2p.domain.user.dto.OtherUserDetailResponse;
 import com.prgrms.p2p.domain.user.dto.SignUpRequest;
 import com.prgrms.p2p.domain.user.dto.SignUpResponse;
 import com.prgrms.p2p.domain.user.dto.UserDetailResponse;
+import com.prgrms.p2p.domain.user.dto.ValidateCertPasswordRequest;
 import com.prgrms.p2p.domain.user.pojo.CustomUserDetails;
+import com.prgrms.p2p.domain.user.service.CertNumberService;
 import com.prgrms.p2p.domain.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -45,11 +48,14 @@ public class UserController {
 
   private final UserService userService;
   private final UploadServiceImpl uploadService;
+  private final CertNumberService certNumberService;
 
   public UserController(UserService userService,
-      UploadServiceImpl uploadService) {
+      UploadServiceImpl uploadService,
+      CertNumberService certNumberService) {
     this.userService = userService;
     this.uploadService = uploadService;
+    this.certNumberService = certNumberService;
   }
 
   @Operation(summary = "회원가입 기능", description = "회원가입을 위한 정보를 입력 후 회원가입 요청을 합니다.")
@@ -100,10 +106,17 @@ public class UserController {
   }
 
   @PostMapping("/password/{email}")
-  public ResponseEntity<Void> findPwdByEmail(@PathVariable String email) {
+  public ResponseEntity<String> postEmailToFindPwd(@PathVariable String email) {
 
-    userService.findPassword(email);
+    String certPassword = userService.postEmail(email);
 
+    return ResponseEntity.ok(certPassword);
+  }
+
+  @GetMapping("/password")
+  public ResponseEntity<Void> matchCertPwd(@RequestBody ValidateCertPasswordRequest request) {
+
+    certNumberService.matchCertNumber(request.getEmail(), request.getCertPassword());
     return ResponseEntity.ok().build();
   }
 
@@ -111,7 +124,7 @@ public class UserController {
   @Operation(summary = "내 정보 조회", description = "로그인한 유저가 토큰을 이용해 자신의 정보를 조회합니다.")
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "정보 조회 성공", response = UserDetailResponse.class),
-      @ApiResponse(code = 401, message = "토큰 인증 실패")
+      @ApiResponse(code = 401, message = "토큰 인증실패")
   })
   @GetMapping()
   public ResponseEntity<UserDetailResponse> getUserInfo(@CurrentUser CustomUserDetails user) {
@@ -158,9 +171,16 @@ public class UserController {
       @ApiResponse(code = 409, message = "원래 있던 패스워드와 같은 경우")
   })
   @PutMapping("/password")
-  public ResponseEntity changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, @CurrentUser CustomUserDetails user){
+  public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, @CurrentUser CustomUserDetails user){
     userService.changePassword(user.getId(), changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
 
+    return ResponseEntity.ok().build();
+  }
+
+  @PutMapping("/missedPassword")
+  public ResponseEntity<Void> changeMissedPassword(@RequestBody FindPasswordRequest findPasswordRequest) {
+    userService.changePassword(findPasswordRequest.getEmail(), findPasswordRequest.getPassword());
+    certNumberService.deleteCertNumber(findPasswordRequest.getEmail());
     return ResponseEntity.ok().build();
   }
 
