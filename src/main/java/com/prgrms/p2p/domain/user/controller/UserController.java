@@ -116,7 +116,7 @@ public class UserController {
   @GetMapping("/password")
   public ResponseEntity<Void> matchCertPwd(@RequestBody ValidateCertPasswordRequest request) {
 
-    certNumberService.matchCertNumber(request.getEmail(), request.getCertPassword());
+    certNumberService.matchCertNumber(request.getEmail(), request.getCertNumber());
     return ResponseEntity.ok().build();
   }
 

@@ -11,6 +11,6 @@ public class ValidateCertPasswordRequest {
 
   private String email;
 
-  private String certPassword;
+  private String certNumber;
 
 }
