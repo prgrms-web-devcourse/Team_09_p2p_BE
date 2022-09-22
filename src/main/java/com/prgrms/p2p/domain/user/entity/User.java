@@ -26,6 +26,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -61,12 +62,14 @@ public class User extends BaseEntity {
   @Column(name = "profile_url")
   private String profileUrl;
 
+  @BatchSize(size = 100)
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL ,orphanRemoval = true)
   private List<Course> courses = new ArrayList<>();
 
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
+  @BatchSize(size = 100)
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Authority> authorities = new HashSet<>();
 
