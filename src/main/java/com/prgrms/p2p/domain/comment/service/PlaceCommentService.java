@@ -12,6 +12,7 @@ import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
 import com.prgrms.p2p.domain.place.entity.Place;
 import com.prgrms.p2p.domain.place.repository.PlaceRepository;
+import com.prgrms.p2p.domain.user.entity.Point;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import java.util.Objects;
@@ -45,8 +46,12 @@ public class PlaceCommentService {
         throw new BadRequestException("대댓글에 대댓글을 작성할 수 없습니다.");
       }
     }
-
     PlaceComment placeComment = toPlaceComment(createCommentRequest, place, userId);
+
+    User user = userRepository.findById(userId)
+        .orElseThrow(RuntimeException::new);
+    user.addScore(Point.MAKE_COMMENT.getScore());
+    userRepository.save(user);
     return placeCommentRepository.save(placeComment).getId();
   }
 
@@ -104,6 +109,8 @@ public class PlaceCommentService {
     }
 
     placeComment.changeVisibility(Visibility.DELETED_INFORMATION);
+    user.addScore(Point.DELETE_COMMENT.getScore());
+    userRepository.save(user);
   }
 
   private void checkDeleteParentComment(PlaceComment placeComment) {
