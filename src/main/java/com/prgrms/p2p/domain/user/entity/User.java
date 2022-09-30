@@ -7,6 +7,7 @@ import com.prgrms.p2p.domain.common.BaseEntity;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.user.exception.InvalidPatternException;
 import com.prgrms.p2p.domain.user.util.PasswordEncrypter;
+import com.sun.istack.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,6 +27,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -54,6 +56,9 @@ public class User extends BaseEntity {
   @Column(name = "birth")
   private LocalDate birth;
 
+  @Column(name = "score")
+  private int score =0;
+
   @Enumerated(EnumType.STRING)
   @Column(name = "sex")
   private Sex sex;
@@ -61,12 +66,14 @@ public class User extends BaseEntity {
   @Column(name = "profile_url")
   private String profileUrl;
 
+  @BatchSize(size = 100)
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL ,orphanRemoval = true)
   private List<Course> courses = new ArrayList<>();
 
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
+  @BatchSize(size = 100)
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Authority> authorities = new HashSet<>();
 
@@ -111,6 +118,11 @@ public class User extends BaseEntity {
   public boolean matchPassword(String password) {
     if(!PasswordEncrypter.isMatch(password, this.password)) return false;
     return true;
+  }
+
+  public void addScore(int score){
+    //계산한 결과값이 필요하고 그이후 최솟값이 0 보다는 작아야함
+    this.score = Math.max(0, this.score + score);
   }
 
   public void changePassword(String newPassword) {

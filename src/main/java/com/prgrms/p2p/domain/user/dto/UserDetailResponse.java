@@ -1,5 +1,6 @@
 package com.prgrms.p2p.domain.user.dto;
 
+import com.prgrms.p2p.domain.user.entity.Grade;
 import com.prgrms.p2p.domain.user.entity.Sex;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
@@ -42,6 +43,10 @@ public class UserDetailResponse {
   private String updatedAt;
 
   private UserCounts counts;
+
+  private String grade;
+
+  private int score;
 
   private List<String> authorities;
 }

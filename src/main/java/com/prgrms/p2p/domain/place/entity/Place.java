@@ -22,6 +22,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -62,15 +63,19 @@ public class Place extends BaseEntity {
   @Column(name = "phone_number")
   private PhoneNumber phoneNumber;
 
+  @BatchSize(size = 100)
   @OneToMany(mappedBy = "place")
   private List<CoursePlace> coursePlaces = new ArrayList<>();
 
+  @BatchSize(size = 100)
   @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<PlaceComment> placeComments = new ArrayList<>();
 
+  @BatchSize(size = 100)
   @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<PlaceBookmark> placeBookmarks = new ArrayList<>();
 
+  @BatchSize(size = 100)
   @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<PlaceLike> placeLikes = new ArrayList<>();
 

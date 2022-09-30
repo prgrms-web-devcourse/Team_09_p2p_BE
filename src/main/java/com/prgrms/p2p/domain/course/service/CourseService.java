@@ -10,6 +10,7 @@ import com.prgrms.p2p.domain.course.dto.UpdateCourseRequest;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.exception.CoursePlaceAndImageSizeNotEqualException;
 import com.prgrms.p2p.domain.course.repository.CourseRepository;
+import com.prgrms.p2p.domain.user.entity.Point;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import java.util.List;
@@ -37,6 +38,9 @@ public class CourseService {
         .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
     Course course = courseRepository.save(toCourse(createCourseRequest, user));
     saveCoursePlaces(createCourseRequest, images, course);
+    //user 점수 추가
+    user.addScore(Point.MAKE_COURSE.getScore());
+    userRepository.save(user);
     return course.getId();
   }
 
@@ -91,8 +95,9 @@ public class CourseService {
         .orElseThrow(RuntimeException::new);
 
     course.getAuthForDelete(user);
-
     courseRepository.delete(course);
+    user.addScore(Point.DELETE_COURSE.getScore());
+    userRepository.save(user);
   }
 
   private void validateAuthorization(Long userId, Course course) {

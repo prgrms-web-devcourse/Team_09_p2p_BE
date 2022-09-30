@@ -29,6 +29,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -70,15 +71,19 @@ public class Course extends BaseEntity {
   @JoinColumn(name = "user_id")
   private User user;
 
+  @BatchSize(size = 100)
   @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<CoursePlace> coursePlaces = new ArrayList<>();
 
+  @BatchSize(size = 100)
   @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<CourseComment> courseComments = new ArrayList<>();
 
+  @BatchSize(size = 100)
   @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<CourseBookmark> courseBookmarks = new ArrayList<>();
 
+  @BatchSize(size = 100)
   @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<CourseLike> courseLikes = new ArrayList<>();
 

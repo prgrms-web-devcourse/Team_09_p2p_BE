@@ -14,9 +14,11 @@ import com.prgrms.p2p.domain.common.exception.NotFoundException;
 import com.prgrms.p2p.domain.common.exception.UnAuthorizedException;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.course.repository.CourseRepository;
+import com.prgrms.p2p.domain.user.entity.Point;
 import com.prgrms.p2p.domain.user.entity.User;
 import com.prgrms.p2p.domain.user.repository.UserRepository;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +48,9 @@ public class CourseCommentService {
     }
 
     CourseComment courseComment = toCourseComment(createCommentReq, course, userId);
-
+    User user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
+    user.addScore(Point.MAKE_COMMENT.getScore());
+    userRepository.save(user);
     return courseCommentRepository.save(courseComment).getId();
   }
 
@@ -97,6 +101,8 @@ public class CourseCommentService {
     }
 
     courseComment.changeVisibility(DELETED_INFORMATION);
+    user.addScore(Point.DELETE_COMMENT.getScore());
+    userRepository.save(user);
   }
 
   private Course getCourse(Long courseId) {
