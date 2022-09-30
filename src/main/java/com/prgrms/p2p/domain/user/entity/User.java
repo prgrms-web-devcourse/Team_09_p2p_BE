@@ -120,6 +120,11 @@ public class User extends BaseEntity {
     return true;
   }
 
+  public void addScore(int score){
+    //계산한 결과값이 필요하고 그이후 최솟값이 0 보다는 작아야함
+    this.score = Math.max(0, this.score + score);
+  }
+
   public void changePassword(String newPassword) {
     setPassword(newPassword);
   }
