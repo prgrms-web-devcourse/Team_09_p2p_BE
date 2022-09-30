@@ -59,6 +59,8 @@ public class UserConverter {
         .createdAt(fromLocalDateTime(user.getCreatedAt()))
         .updatedAt(fromLocalDateTime(user.getUpdatedAt()))
         .authorities(user.getAuthorities())
+        .score(user.getScore())
+        .grade(GradeUtil.getGrade(user.getScore()))
         .build();
 
     UserCounts counts = UserCounts.builder()
@@ -90,6 +92,8 @@ public class UserConverter {
         .birth(fromLocalDate(user.getBirth()))
         .sex(user.getSex())
         .createdAt(fromLocalDateTime(user.getCreatedAt()))
+        .score(user.getScore())
+        .grade(GradeUtil.getGrade(user.getScore()))
         .build();
 
     UserCounts counts = UserCounts.builder()
