@@ -7,6 +7,7 @@ import com.prgrms.p2p.domain.common.BaseEntity;
 import com.prgrms.p2p.domain.course.entity.Course;
 import com.prgrms.p2p.domain.user.exception.InvalidPatternException;
 import com.prgrms.p2p.domain.user.util.PasswordEncrypter;
+import com.sun.istack.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -54,6 +55,9 @@ public class User extends BaseEntity {
 
   @Column(name = "birth")
   private LocalDate birth;
+
+  @Column(name = "score")
+  private int score =0;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "sex")
