@@ -39,4 +39,7 @@ public class OtherUserDetailResponse {
 
   private UserCounts counts;
 
+  private String grade;
+
+  private int score;
 }
