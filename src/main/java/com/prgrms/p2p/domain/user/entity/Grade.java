@@ -5,8 +5,8 @@ public enum Grade {
   SLIVER(300),
   GOLD(500),
   PLATINUM(1000),
-  DIAMOND(3000);
-
+  DIAMOND(3000),
+  MASTER(5000);
   private int score;
 
   Grade(int score) {

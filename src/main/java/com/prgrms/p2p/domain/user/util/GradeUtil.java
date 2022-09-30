@@ -9,13 +9,15 @@ public class GradeUtil {
     if(score< Grade.BRONZE.getScore()){
       return Grade.BRONZE.name();
     }else if(score < Grade.SLIVER.getScore()){
-      return Grade.BRONZE.name();
+      return Grade.SLIVER.name();
     }else if(score < Grade.GOLD.getScore()){
       return Grade.GOLD.name();
     }else if(score < Grade.PLATINUM.getScore()){
       return Grade.PLATINUM.name();
-    }else{
+    }else if(score<Grade.DIAMOND.getScore()){
       return Grade.DIAMOND.name();
+    }else{
+      return Grade.MASTER.name();
     }
   }
 }
